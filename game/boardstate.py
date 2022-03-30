@@ -75,7 +75,63 @@ class BoardState:
     def piece_score(self, player: Player) -> int:
         return self.piece_count[player] + self.king_count[player]
 
-    def jump_successors(self, piece: Piece, pos: int):
+    def get_successors(self) -> list[BoardState]:
+        successors = self.get_successors_jump(True)
+        if Settings.FORCE_CAPTURE:
+            has_sucessors = len(successors) > 0
+            return successors if has_sucessors else self.get_successors_jump(False)
+        else:
+            successors.extend(self.get_successors_jump(False))
+            return successors
+
+    def get_successors_jump(self, jump: bool) -> list[BoardState]:
+        result: list[BoardState] = []
+        c_state = self.state
+        for i in range(len(c_state)):
+            cur_piece = c_state[i]
+            if cur_piece is None and cur_piece is self.turn:
+                result.extend(self.get_successors_pos_jump(i, jump))
+
+        return result
+
+    def get_successors_pos(self, pos: int) -> list[BoardState]:
+        if Settings.FORCE_CAPTURE:
+            jumps = self.get_successors_jump(True)
+            has_jumps = len(jumps) > 0
+            return self.get_successors_pos_jump(pos, has_jumps)
+        else:
+            result: list[BoardState] = []
+            result.extend(self.get_successors_pos_jump(pos, True))
+            result.extend(self.get_successors_pos_jump(pos, False))
+            return result
+
+    def get_successors_pos_jump(self, pos: int, jump: bool) -> list[BoardState]:
+        if self.get_piece(pos).player != self.turn:
+            raise ValueError("no piece in position ")
+
+        cpiece = self.state[pos]
+        if jump:
+            return self.jump_successors(cpiece, pos)
+        return self.non_jump_successors(cpiece, pos)
+
+    def non_jump_successors(self, piece: Piece, pos: int) -> list[BoardState]:
+        result: list[BoardState] = []
+        side_length = self.SIDE_LENGTH
+        x = pos % side_length
+        y = pos // side_length
+
+        for dx in piece.get_x_movements():
+            for dy in piece.get_y_movements():
+                new_x = x + dx
+                new_y = y + dy
+                if self.__is_valid(new_y, new_x):
+                    if self.__get_piece(new_y, new_x) is None:
+                        new_pos = side_length * new_y + new_x
+                        result.append(self.__create_new_state(pos, new_pos, piece, False, dy, dx))
+
+        return result
+
+    def jump_successors(self, piece: Piece, pos: int) -> list[BoardState]:
         result = []
         side_length = self.SIDE_LENGTH
         djump_pos = self.double_jump_pos
