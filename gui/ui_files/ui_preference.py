@@ -29,17 +29,22 @@ class Ui_Dialog(object):
         self.verticalLayout_3 = QVBoxLayout(self.groupBox)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.btn_rad_easy = QRadioButton(self.groupBox)
+        self.btngrp_difficulty = QButtonGroup(Dialog)
+        self.btngrp_difficulty.setObjectName(u"btngrp_difficulty")
+        self.btngrp_difficulty.addButton(self.btn_rad_easy)
         self.btn_rad_easy.setObjectName(u"btn_rad_easy")
         self.btn_rad_easy.setChecked(True)
 
         self.verticalLayout_3.addWidget(self.btn_rad_easy)
 
         self.btn_rad_med = QRadioButton(self.groupBox)
+        self.btngrp_difficulty.addButton(self.btn_rad_med)
         self.btn_rad_med.setObjectName(u"btn_rad_med")
 
         self.verticalLayout_3.addWidget(self.btn_rad_med)
 
         self.btn_rad_hard = QRadioButton(self.groupBox)
+        self.btngrp_difficulty.addButton(self.btn_rad_hard)
         self.btn_rad_hard.setObjectName(u"btn_rad_hard")
 
         self.verticalLayout_3.addWidget(self.btn_rad_hard)
@@ -51,23 +56,27 @@ class Ui_Dialog(object):
 
         self.verticalLayout.addWidget(self.groupBox)
 
-        self.groupBox_2 = QGroupBox(Dialog)
-        self.groupBox_2.setObjectName(u"groupBox_2")
-        self.horizontalLayout = QHBoxLayout(self.groupBox_2)
+        self.groupBox_1 = QGroupBox(Dialog)
+        self.groupBox_1.setObjectName(u"groupBox_1")
+        self.horizontalLayout = QHBoxLayout(self.groupBox_1)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.btn_rad_player = QRadioButton(self.groupBox_2)
+        self.btn_rad_player = QRadioButton(self.groupBox_1)
+        self.btngrp_player = QButtonGroup(Dialog)
+        self.btngrp_player.setObjectName(u"btngrp_player")
+        self.btngrp_player.addButton(self.btn_rad_player)
         self.btn_rad_player.setObjectName(u"btn_rad_player")
         self.btn_rad_player.setChecked(True)
 
         self.horizontalLayout.addWidget(self.btn_rad_player)
 
-        self.btn_rad_ai = QRadioButton(self.groupBox_2)
+        self.btn_rad_ai = QRadioButton(self.groupBox_1)
+        self.btngrp_player.addButton(self.btn_rad_ai)
         self.btn_rad_ai.setObjectName(u"btn_rad_ai")
 
         self.horizontalLayout.addWidget(self.btn_rad_ai)
 
 
-        self.verticalLayout.addWidget(self.groupBox_2)
+        self.verticalLayout.addWidget(self.groupBox_1)
 
         self.buttonBox = QDialogButtonBox(Dialog)
         self.buttonBox.setObjectName(u"buttonBox")
@@ -90,7 +99,7 @@ class Ui_Dialog(object):
         self.btn_rad_easy.setText(QCoreApplication.translate("Dialog", u"Easy", None))
         self.btn_rad_med.setText(QCoreApplication.translate("Dialog", u"Meduim", None))
         self.btn_rad_hard.setText(QCoreApplication.translate("Dialog", u"Hard", None))
-        self.groupBox_2.setTitle(QCoreApplication.translate("Dialog", u"First Player", None))
+        self.groupBox_1.setTitle(QCoreApplication.translate("Dialog", u"First Player", None))
         self.btn_rad_player.setText(QCoreApplication.translate("Dialog", u"Human", None))
         self.btn_rad_ai.setText(QCoreApplication.translate("Dialog", u"Computer", None))
     # retranslateUi
