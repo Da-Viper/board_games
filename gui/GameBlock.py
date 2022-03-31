@@ -14,7 +14,6 @@ class BTile(QGraphicsRectItem):
     def __init__(self, pos_x, pos_y, parent=None):
         super(BTile, self).__init__(parent)
 
-
         scale = Settings.G_WIDTH
         self.setRect(pos_x * scale, pos_y * scale, scale, scale)
 
@@ -42,7 +41,6 @@ class GPiece(QGraphicsRectItem):
 
         self.p_pos = pos
         scale = Settings.G_WIDTH
-        self.setPos(x, y)
         self.setRect(x * scale, y * scale, scale, scale)
         self.piece: Piece = piece
         self.color = Qt.black
@@ -54,11 +52,8 @@ class GPiece(QGraphicsRectItem):
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: typing.Optional[QWidget]) -> None:
         # super().paint(painter, option, widget)
-        # x, y = self.boundingRect().x(), self.boundingRect().y()
         center = self.boundingRect().center()
         print(f"gpiece_pos {center}")
-        # pos.setX(pos.x() )
-        # pos.setY(pos.y() + 75 / 3)
-        # painter.fillPath()
+        painter.setRenderHint(QPainter.HighQualityAntialiasing)
         painter.setBrush(self.color)
         painter.drawEllipse(center, 75 / 3, 75 / 3)

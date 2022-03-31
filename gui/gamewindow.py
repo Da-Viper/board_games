@@ -1,7 +1,6 @@
 from typing import List
 
-from PySide2.QtGui import QBrush, Qt, QPen, QPainter, QColor
-from PySide2.QtWidgets import QGraphicsScene, QGraphicsView, QMainWindow, QWidget, QDialog, QGraphicsItemGroup, \
+from PySide2.QtWidgets import QGraphicsScene, QGraphicsView, QDialog, QGraphicsItemGroup, \
     QGraphicsItem
 
 from game.boardstate import BoardState
@@ -18,7 +17,7 @@ class GDialog(QDialog):
         self.game = Game()
         self.possible_moves: List[BoardState] = []
 
-        ##  UI
+        # UI
         self.setMinimumSize(Settings.T_WIDTH * Settings.G_WIDTH + 20, Settings.T_HEIGHT * Settings.G_HEIGHT + 20)
         self.t_group: QGraphicsItemGroup = QGraphicsItemGroup()
         self.p_group: QGraphicsItemGroup = QGraphicsItemGroup()
@@ -28,7 +27,7 @@ class GDialog(QDialog):
         self.view: QGraphicsView = QGraphicsView(self.scene, self)
         self.tiles: List[QGraphicsItem] = [None] * Settings.SQUARE_NO
         self.create_scene()
-        # self.add_tiles()
+        self.add_tiles()
         self.add_pieces()
 
     def create_scene(self):

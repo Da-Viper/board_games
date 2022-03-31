@@ -1,5 +1,6 @@
 import sys
 
+from PySide2.QtCore import QCoreApplication, Qt
 from PySide2.QtWidgets import QApplication
 from typing import List
 
@@ -19,11 +20,12 @@ class GUI:
         hint_moves = []
 
     def run(self):
-        ## game setup
+        # game setup
+        QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
         app = QApplication(sys.argv)
         gmenu = GameMenu()
         gmenu.show()
-        ## end
+        # end
         self.setup()
         sys.exit(app.exec_())
 
