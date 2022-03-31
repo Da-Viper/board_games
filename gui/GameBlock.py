@@ -1,6 +1,5 @@
 import typing
 
-from PySide2.QtCore import QPointF
 from PySide2.QtGui import QPainter, Qt
 from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidget, QGraphicsItem
 
@@ -36,7 +35,8 @@ class GPiece(QGraphicsRectItem):
 
     def __init__(self, x: int, y: int, pos: int, piece: Piece, parent=None):
         super(GPiece, self).__init__(parent)
-        self.setFlag(QGraphicsItem.ItemIsMovable)
+        self.setFlag(QGraphicsItem.ItemIsMovable or QGraphicsItem.ItemSendsGeometryChanges)
+        self.setFlag(QGraphicsItem.ItemIsSelectable or QGraphicsItem.ItemSendsScenePositionChanges)
         self.Pressed = False
 
         self.p_pos = pos

@@ -1,7 +1,7 @@
 from typing import List
 
 from PySide2.QtWidgets import QGraphicsScene, QGraphicsView, QDialog, QGraphicsItemGroup, \
-    QGraphicsItem
+    QGraphicsItem, QVBoxLayout
 
 from game.boardstate import BoardState
 from game.game import Game
@@ -33,13 +33,15 @@ class GDialog(QDialog):
     def create_scene(self):
         scene = self.scene
         view = self.view
+        self.setLayout(QVBoxLayout())
+        self.layout().addWidget(view)
         scene.setSceneRect(0, 0, Settings.T_WIDTH * Settings.G_WIDTH, Settings.T_HEIGHT * Settings.G_HEIGHT)
         view.setGeometry(0, 0, Settings.T_WIDTH * Settings.G_WIDTH + 20, Settings.T_HEIGHT * Settings.G_HEIGHT + 20)
 
         scene.addItem(self.t_group)
         scene.addItem(self.p_group)
 
-        view.show()
+        # view.show()
 
     def add_tiles(self):
         for i in range(Settings.SQUARE_NO):
