@@ -1,6 +1,8 @@
 import random
 import sys
 
+from typing import List
+
 from game.boardstate import BoardState
 from game.player import Player
 from game.settings import Settings
@@ -17,7 +19,7 @@ class AI:
             successors = state.get_successors()
             return self.__minimax_move(successors)
 
-    def __minimax_move(self, sucessors: list[BoardState]) -> BoardState:
+    def __minimax_move(self, sucessors: List[BoardState]) -> BoardState:
         if len(sucessors) == 1:
             return sucessors[0]
 
@@ -37,7 +39,7 @@ class AI:
 
         return self.__random_move(equal_bests)
 
-    def __random_move(self, successors: list[BoardState]) -> BoardState:
+    def __random_move(self, successors: List[BoardState]) -> BoardState:
         successors_len = len(successors)
         if successors_len < 1:
             raise RuntimeError( "empty sucessors cant choose a random board")

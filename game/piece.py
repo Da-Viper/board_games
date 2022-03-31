@@ -1,4 +1,7 @@
+from typing import List
+
 from game.player import Player
+
 
 class Piece:
 
@@ -9,7 +12,7 @@ class Piece:
     def get_type(self):
         return self.player
 
-    def get_y_movements(self) -> list[int]:
+    def get_y_movements(self) -> List[int]:
         if self.is_king:
             return [-1, 1]
         else:
@@ -18,5 +21,5 @@ class Piece:
             else:
                 return [-1]
 
-    def get_x_movements(self) -> list[int]:
+    def get_x_movements(self) -> List[int]:
         return [-1, 1]
