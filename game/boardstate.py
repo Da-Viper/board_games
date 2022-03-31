@@ -52,7 +52,7 @@ class BoardState:
     #     if (Settings.HEURISTIC == 1):
     #         return heurisitic1
 
-    def heurisitic1(self, player: Player) -> int:
+    def heuristic1(self, player: Player) -> int:
         max_int = sys.maxsize * 2 + 1
         opp_player = get_opposite(player)
         if self.piece_count[opp_player] == 0:
@@ -62,7 +62,7 @@ class BoardState:
 
         return self.piece_score(player) - self.piece_score(opp_player)
 
-    def heurisitic2(self, player: Player) -> int:
+    def heuristic2(self, player: Player) -> int:
         max_int = sys.maxsize * 2 + 1
         opp_player = get_opposite(player)
         if self.piece_count[opp_player] == 0:
@@ -78,8 +78,8 @@ class BoardState:
     def get_successors(self) -> list[BoardState]:
         successors = self.get_successors_jump(True)
         if Settings.FORCE_CAPTURE:
-            has_sucessors = len(successors) > 0
-            return successors if has_sucessors else self.get_successors_jump(False)
+            has_successors = len(successors) > 0
+            return successors if has_successors else self.get_successors_jump(False)
         else:
             successors.extend(self.get_successors_jump(False))
             return successors
