@@ -1,7 +1,8 @@
 from enum import Enum
 
 from PySide2.QtCore import Qt, QLineF
-from PySide2.QtWidgets import QGraphicsItem, QGraphicsSceneMouseEvent, QApplication
+from PySide2.QtWidgets import QGraphicsSceneMouseEvent, QApplication, QGraphicsRectItem
+from typing import Tuple
 
 from game.piece import Piece
 
@@ -11,9 +12,9 @@ class Color(Enum):
     BLACK = 1
 
 
-class GamePiece(QGraphicsItem):
+class GamePiece(QGraphicsRectItem):
 
-    def __init__(self, pos: int, g_pos: tuple, piece: Piece, color: Color):
+    def __init__(self, pos: int, g_pos: Tuple[int, int], piece: Piece, color: Color):
         """
 
         :param pos: the position on the board in 1d
@@ -25,7 +26,7 @@ class GamePiece(QGraphicsItem):
         self.setAcceptedMouseButtons(Qt.LeftButton)
 
         self.pos = pos
-        self.g_pos = g_pos
+        self.setPos(*g_pos)
         self.piece = piece
         self.color = color
 
