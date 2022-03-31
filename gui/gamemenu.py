@@ -4,7 +4,7 @@ from PySide2 import QtCore
 from PySide2.QtCore import Slot
 from PySide2.QtWidgets import QWidget
 
-from gui.gamewindow import GameWindow
+from gui.gamewindow import GDialog
 from gui.preferencemenu import PreferenceMenu
 from gui.ui_files.ui_menu import Ui_Form as UIGameMenu
 
@@ -36,5 +36,5 @@ class GameMenu(QWidget):
 
     @Slot()
     def start_checkers(self):
-        gwin = GameWindow(self)
+        gwin = GDialog(self)
         gwin.show()
