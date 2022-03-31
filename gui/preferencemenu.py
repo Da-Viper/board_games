@@ -3,6 +3,7 @@ from PySide2.QtWidgets import QDialog
 
 from game.player import Player
 from game.settings import Settings
+from gui.gamewindow import GameWindow
 from gui.ui_files.ui_preference import Ui_Dialog as UIPreferenceDialog
 
 

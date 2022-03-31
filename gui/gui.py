@@ -16,10 +16,16 @@ class GUI:
     def __init__(self):
         self.game: Game = Game()
         possible_moves: List[BoardState] = []
+        hint_moves = []
 
     def run(self):
+        ## game setup
         app = QApplication(sys.argv)
         gmenu = GameMenu()
         gmenu.show()
-
+        ## end
+        self.setup()
         sys.exit(app.exec_())
+
+    def setup(self):
+        pass

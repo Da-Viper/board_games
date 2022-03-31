@@ -1,8 +1,10 @@
 import sys
 
+from PySide2 import QtCore
 from PySide2.QtCore import Slot
 from PySide2.QtWidgets import QWidget
 
+from gui.gamewindow import GameWindow
 from gui.preferencemenu import PreferenceMenu
 from gui.ui_files.ui_menu import Ui_Form as UIGameMenu
 
@@ -20,9 +22,9 @@ class GameMenu(QWidget):
 
     @Slot()
     def show_preference(self):
-        pref_dialog = PreferenceMenu()
+        pref_dialog = PreferenceMenu(self)
         pref_dialog.exec_()
-        pref_dialog.show()
+        self.start_checkers()
 
     @Slot()
     def show_rules(self):
@@ -31,3 +33,8 @@ class GameMenu(QWidget):
     @Slot()
     def exit_game(self):
         sys.exit()
+
+    @Slot()
+    def start_checkers(self):
+        gwin = GameWindow(self)
+        gwin.show()
