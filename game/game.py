@@ -7,16 +7,16 @@ from game.movefeedback import MoveFeedBack
 
 
 class Game:
-    __state: deque[BoardState] = deque()
-    __memory: int = Settings.UNDO_MEM
-    __ai: AI = AI()
-    __human_won: bool
 
     def __init__(self):
+        self.__memory = Settings.UNDO_MEM
+        self.__state: deque[BoardState] = deque()
         self.__state.append(BoardState())
+        self.__ai = AI()
+        self.__human_won = False
 
-    def playerMove(self, new_state: BoardState):
-        if self.is_over() and self.state_peek().getTurn() == Player.HUMAN:
+    def player_move(self, new_state: BoardState):
+        if not self.is_over() and (self.state_peek().get_turn() is Player.HUMAN):
             self.__update_state(new_state)
 
     def playerMove(self, from_pos: int, dx: int, dy: int) -> MoveFeedBack:
@@ -63,7 +63,7 @@ class Game:
             return MoveFeedBack.PIECE_BLOCKED
 
     def get_valid_moves(self, pos: int):
-        return self.state_peek().get_successors_pos_jump(pos)
+        return self.state_peek().get_successors_pos(pos)
 
     def ai_move(self):
         if not self.is_over() and self.state_peek().get_turn() == Player.AI:
@@ -71,7 +71,7 @@ class Game:
             self.__update_state(new_state)
 
     def state_peek(self):
-        return self.__state[len(self.__state) - 1]
+        return self.__state[-1]
 
     def __update_state(self, new_state: BoardState):
         self.__state.append(new_state)

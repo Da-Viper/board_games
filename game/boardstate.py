@@ -48,9 +48,10 @@ class BoardState:
         tmp_board_state.state = deepcopy(self.state)
         return tmp_board_state
 
-    # def compute_heuristic(self, player: Player) -> int:
-    #     if (Settings.HEURISTIC == 1):
-    #         return heurisitic1
+    def compute_heuristic(self, player: Player) -> int:
+        if Settings.HEURISTIC == 1:
+            return self.heuristic1(player)
+        return self.heuristic2(player)
 
     def heuristic1(self, player: Player) -> int:
         max_int = sys.maxsize * 2 + 1
