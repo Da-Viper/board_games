@@ -10,6 +10,7 @@ from gui.ui_files.ui_menu import Ui_Form as UIGameMenu
 
 
 class GameMenu(QWidget):
+
     def __init__(self, parent=None):
         super(GameMenu, self).__init__(parent)
 
