@@ -18,7 +18,8 @@ class GameMenu(QWidget):
         self.ui.setupUi(self)
 
         # connecting signal and slots
-        self.ui.btn_start.clicked.connect(self.show_preference)
+        # TODO set back to the preference page
+        self.ui.btn_start.clicked.connect(self.start_checkers)
         self.ui.btn_exit.clicked.connect(self.exit_game)
 
     @Slot()

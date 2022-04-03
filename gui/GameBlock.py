@@ -1,7 +1,7 @@
 import typing
 from typing import List
 
-from PySide2.QtCore import QPointF, QLineF
+from PySide2.QtCore import QPointF, QLineF, QRectF
 from PySide2.QtGui import QPainter, Qt, QCursor
 from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidget, QGraphicsItem, \
     QGraphicsSceneMouseEvent
@@ -14,10 +14,10 @@ from game.settings import Settings
 class BTile(QGraphicsRectItem):
 
     def __init__(self, pos_x, pos_y, parent=None):
-        super(BTile, self).__init__(parent)
-
         scale = Settings.G_WIDTH
-        self.setRect(pos_x * scale, pos_y * scale, scale, scale)
+        super(BTile, self).__init__(pos_x * scale, pos_y * scale, scale, scale, parent)
+        # self.setPos(pos_x * Settings.G_WIDTH, pos_y * Settings.G_WIDTH)
+        self.setPos(pos_x, pos_y)
 
         if ((pos_x % 2) + (pos_y % 2)) % 2 == 0:
             self.color = Qt.black
@@ -27,35 +27,32 @@ class BTile(QGraphicsRectItem):
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget):
         super().paint(painter, option, widget)
-        # print(f"the bounding rect is {self.boundingRect()}")
-        painter.drawRoundRect(self.boundingRect(), 5, 5)
-
-        painter.fillRect(self.boundingRect(), self.color)
-        # painter.drawRoundRect(-10, -10, constants.T_WIDTH, constants.T_HEIGHT, 5, 5)
+        painter.fillRect(self.rect(), self.color)
 
 
 class GPiece(QGraphicsRectItem):
 
-    def __init__(self, x: int, y: int, pos: int, piece: Piece, parent=None):
+    def __init__(self, x: int, y: int, piece: Piece, pos: int = 0, parent=None):
         self.scale = Settings.G_WIDTH
         scale = self.scale
         super(GPiece, self).__init__(x * scale, y * scale, scale, scale, parent)
+
+        # self.setPos(x * Settings.G_WIDTH, y * Settings.G_WIDTH)
+        self.setPos(x, y)
         self.piece: Piece = piece
         self.color = Qt.black
-        self.setFlags(QGraphicsItem.ItemIsSelectable
-                      | QGraphicsItem.ItemIsMovable)
-        self.last_pos = self.scenePos()
+        self.last_pos = self.pos()
         self._dragged = False
 
         if piece.player is Player.HUMAN:
+            self.setFlags(QGraphicsItem.ItemIsSelectable
+                          | QGraphicsItem.ItemIsMovable)
+
             self.color = Qt.red
             self.setCursor(Qt.ClosedHandCursor)
-        print(f" the type is {piece.player}")
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: typing.Optional[QWidget]) -> None:
-        # super().paint(painter, option, widget)
         center = self.boundingRect().center()
-        # print(f"gpiece_pos {center}")
         painter.setRenderHint(QPainter.HighQualityAntialiasing)
         painter.setBrush(self.color)
         scale = 0.8 * self.scale
@@ -66,6 +63,7 @@ class GPiece(QGraphicsRectItem):
         super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+
         if self._dragged:
             col_items: List[QGraphicsItem] = self.collidingItems()
 
@@ -73,26 +71,22 @@ class GPiece(QGraphicsRectItem):
             if not col_items:
                 self.setPos(self.last_pos)
             else:
-                closestItem = col_items[0]
-                short_dist = 100000
+                closest_item = col_items[0]
+                short_dist = 1000000
                 for item in col_items:
-                    if isinstance(item, GPiece):
-                        closestItem = self
-                        break
-
                     line = QLineF(item.sceneBoundingRect().center(), self.sceneBoundingRect().center())
 
                     if line.length() < short_dist:
                         short_dist = line.length()
-                        closestItem = item
 
-                if closestItem is self:
+                        closest_item = item
+
+                if isinstance(closest_item, GPiece):
                     self.setPos(self.last_pos)
                 else:
-                    self.setPos(closestItem.scenePos())
-                    self.last_pos = self.scenePos()
+                    self.setPos(closest_item.pos())
+                    self.last_pos = self.pos()
 
             self._dragged = False
 
         super().mouseReleaseEvent(event)
-

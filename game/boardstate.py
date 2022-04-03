@@ -8,7 +8,7 @@ import sys
 
 
 class BoardState:
-    SIDE_LENGTH = 8
+    SIDE_LENGTH = Settings.BOARD_DIMEN
     NO_SQUARES = SIDE_LENGTH * SIDE_LENGTH
 
     def __init__(self):
