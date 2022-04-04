@@ -2,7 +2,7 @@ import typing
 from typing import List
 
 from PySide2.QtCore import QPointF, QLineF, QRectF
-from PySide2.QtGui import QPainter, Qt, QCursor
+from PySide2.QtGui import QPainter, Qt, QCursor, QPen
 from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidget, QGraphicsItem, \
     QGraphicsSceneMouseEvent
 
@@ -53,8 +53,15 @@ class GPiece(QGraphicsRectItem):
         center = self.boundingRect().center()
         painter.setRenderHint(QPainter.HighQualityAntialiasing)
         painter.setBrush(self.color)
+        pen = QPen(Qt.SolidPattern, 5)
+        painter.setPen(pen)
         scale = 0.8 * self.scale
         painter.drawEllipse(center, scale / 3, scale / 3)
+        if self.piece.is_king:
+            painter.setPen(Qt.NoPen)
+            painter.setBrush(Qt.white)
+            painter.drawEllipse(center, scale / 9, scale / 9)
+
 
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         self._dragged = True
