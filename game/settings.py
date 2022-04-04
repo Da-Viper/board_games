@@ -14,5 +14,5 @@ class Settings:
 
     G_WIDTH: int = T_WIDTH * 10
     G_HEIGHT: int = T_HEIGHT * 10
-    G_BOARD_DIMEN = BOARD_DIMEN * 10
+    G_BOARD_DIMEN = BOARD_DIMEN * G_WIDTH
     G_SQUARE_NO = G_WIDTH * G_HEIGHT

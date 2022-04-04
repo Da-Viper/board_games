@@ -17,7 +17,6 @@ class BTile(QGraphicsRectItem):
         scale = Settings.G_WIDTH
         super(BTile, self).__init__(0, 0, scale, scale, parent)
         self.setPos(pos_x * scale, pos_y * scale)
-        # self.setPos(pos_x, pos_y)
 
         if ((pos_x % 2) + (pos_y % 2)) % 2 == 0:
             self.color = Qt.black
@@ -38,7 +37,6 @@ class GPiece(QGraphicsRectItem):
         super(GPiece, self).__init__(0, 0, scale, scale, parent)
 
         self.setPos(x * scale, y * scale)
-        # self.setPos(x, y)
         self.piece: Piece = piece
         self.color = Qt.black
         self.last_pos = self.pos()
@@ -60,8 +58,6 @@ class GPiece(QGraphicsRectItem):
 
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         self._dragged = True
-        print(f"mouse moved item: {self.pos()}")
-        print(f"col_item: {self.collidingItems()}")
         super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
@@ -85,11 +81,11 @@ class GPiece(QGraphicsRectItem):
 
                         closest_item = item
 
-                if isinstance(closest_item, GPiece):
-                    self.setPos(self.last_pos)
-                else:
+                if isinstance(closest_item, BTile) and closest_item.color is Qt.white:
                     self.setPos(closest_item.pos())
-                    self.last_pos = self.pos()
+                    self.last_pos= self.pos()
+                else:
+                    self.setPos(self.last_pos)
 
             self._dragged = False
 

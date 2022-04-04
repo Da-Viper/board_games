@@ -15,14 +15,14 @@ class GDialog(QMainWindow):
         super(GDialog, self).__init__(parent)
         ##
         self.game = Game()
-        self.possible_moves: List[BoardState] = []
-
-        self.p_group: QGraphicsItemGroup = QGraphicsItemGroup()
         self.scene: QGraphicsScene = QGraphicsScene(self)
         self.view: QGraphicsView = QGraphicsView(self.scene, self)
+        self._setup_ui()
+
+        self.possible_moves: List[BoardState] = []
         self.tiles: List[QGraphicsItem] = [None] * Settings.SQUARE_NO
         self.pieces: [QGraphicsItem] = []
-        self._setup_ui()
+
         self.add_tiles()
         self.add_pieces()
 
@@ -50,9 +50,10 @@ class GDialog(QMainWindow):
                 pieces.append(curr_gpiece)
 
     def _setup_ui(self):
+        self.setMinimumSize(Settings.G_BOARD_DIMEN, Settings.G_BOARD_DIMEN)
         scene = self.scene
         view = self.view
-        view.setGeometry(0, 0, Settings.T_WIDTH * Settings.G_WIDTH, Settings.T_HEIGHT * Settings.G_HEIGHT)
+        view.setGeometry(0, 0, Settings.G_BOARD_DIMEN, Settings.G_BOARD_DIMEN)
         scene.setSceneRect(view.geometry())
         self.setCentralWidget(view)
         scene.setSceneRect(view.geometry())
