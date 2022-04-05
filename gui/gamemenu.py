@@ -10,6 +10,7 @@ from gui.preferencemenu import PreferenceMenu
 from gui.ui_files.ui_menu import Ui_Form as UIGameMenu
 
 
+# Change to QMainwindow
 class GameMenu(QWidget):
 
     def __init__(self, parent=None):
@@ -39,6 +40,7 @@ class GameMenu(QWidget):
 
     @Slot()
     def start_checkers(self):
+        # TOD0 change to QWidget
         mainwindow = QMainWindow(self)
         mainwindow.setMinimumSize(Settings.G_BOARD_DIMEN, Settings.G_BOARD_DIMEN)
         scene = GDialog(self)

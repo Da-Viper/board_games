@@ -4,16 +4,15 @@ import typing
 from typing import List
 
 from PySide2.QtCore import QPointF, QLineF, QRectF
-from PySide2.QtGui import QPainter, Qt, QCursor, QPen
+from PySide2.QtGui import QPainter, Qt, QCursor, QPen, QTransform
 from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidget, QGraphicsItem, \
     QGraphicsSceneMouseEvent
 
+from game.game import Game
+from game.movefeedback import MoveFeedBack
 from game.piece import Piece
 from game.player import Player
 from game.settings import Settings
-
-
-GAME_WINDOW = None
 
 
 class BTile(QGraphicsRectItem):
@@ -33,6 +32,10 @@ class BTile(QGraphicsRectItem):
         super().paint(painter, option, widget)
         painter.fillRect(self.rect(), self.color)
 
+    def toggle_highlight(self):
+        self.color = Qt.gray
+        self.update()
+
 
 class GPiece(QGraphicsRectItem):
 
@@ -41,6 +44,7 @@ class GPiece(QGraphicsRectItem):
         scale = self.scale
         super(GPiece, self).__init__(0, 0, scale, scale, parent)
 
+        self.board_pos = pos
         self.setPos(x * scale, y * scale)
         self.piece: Piece = piece
         self.color = Qt.black
@@ -67,13 +71,9 @@ class GPiece(QGraphicsRectItem):
             painter.setBrush(Qt.white)
             painter.drawEllipse(center, scale / 9, scale / 9)
 
-
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         self._dragged = True
         super().mouseMoveEvent(event)
-
-    def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        print(GAME_WINDOW)
 
     def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
 
@@ -105,6 +105,3 @@ class GPiece(QGraphicsRectItem):
             self._dragged = False
 
         super().mouseReleaseEvent(event)
-
-        def update_ui_state():
-            pass

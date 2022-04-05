@@ -197,7 +197,7 @@ class BoardState:
         return (y == self.SIDE_LENGTH - 1) and (player is Player.AI)
 
     def get_to_pos(self):
-        return self.from_pos
+        return self.to_pos
 
     def get_from_pos(self):
         return self.from_pos

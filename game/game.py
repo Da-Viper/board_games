@@ -1,4 +1,7 @@
 from collections import deque
+
+from typing import List
+
 from game.boardstate import BoardState
 from game.ai import AI
 from game.settings import Settings
@@ -56,7 +59,7 @@ class Game:
         return MoveFeedBack.UNKNOWN_INVALID
 
     def move_feedback_click(self) -> MoveFeedBack:
-        jump_successors: list[BoardState] = self.state_peek().get_successors_jump(True)
+        jump_successors: List[BoardState] = self.state_peek().get_successors_jump(True)
         if len(jump_successors) > 0:
             return MoveFeedBack.FORCED_JUMP
         else:
