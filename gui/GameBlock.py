@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import typing
 from typing import List
 
@@ -9,6 +11,9 @@ from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidg
 from game.piece import Piece
 from game.player import Player
 from game.settings import Settings
+
+
+GAME_WINDOW = None
 
 
 class BTile(QGraphicsRectItem):
@@ -67,6 +72,9 @@ class GPiece(QGraphicsRectItem):
         self._dragged = True
         super().mouseMoveEvent(event)
 
+    def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+        print(GAME_WINDOW)
+
     def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
 
         # if self._dragged:
@@ -90,10 +98,13 @@ class GPiece(QGraphicsRectItem):
 
                 if isinstance(closest_item, BTile) and closest_item.color is Qt.white:
                     self.setPos(closest_item.pos())
-                    self.last_pos= self.pos()
+                    self.last_pos = self.pos()
                 else:
                     self.setPos(self.last_pos)
 
             self._dragged = False
 
         super().mouseReleaseEvent(event)
+
+        def update_ui_state():
+            pass

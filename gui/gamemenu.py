@@ -2,8 +2,9 @@ import sys
 
 from PySide2 import QtCore
 from PySide2.QtCore import Slot
-from PySide2.QtWidgets import QWidget
+from PySide2.QtWidgets import QWidget, QMainWindow, QGraphicsView, QDialog
 
+from game.settings import Settings
 from gui.gamewindow import GDialog
 from gui.preferencemenu import PreferenceMenu
 from gui.ui_files.ui_menu import Ui_Form as UIGameMenu
@@ -38,5 +39,12 @@ class GameMenu(QWidget):
 
     @Slot()
     def start_checkers(self):
-        gwin = GDialog(self)
-        gwin.show()
+        mainwindow = QMainWindow(self)
+        mainwindow.setMinimumSize(Settings.G_BOARD_DIMEN, Settings.G_BOARD_DIMEN)
+        scene = GDialog(self)
+        view = QGraphicsView(scene, mainwindow)
+        view.setGeometry(0, 0, Settings.G_BOARD_DIMEN, Settings.G_BOARD_DIMEN)
+        mainwindow.setCentralWidget(view)
+        scene.setSceneRect(view.geometry())
+        mainwindow.setWindowTitle("Checkers")
+        mainwindow.show()
