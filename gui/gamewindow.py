@@ -43,34 +43,34 @@ class GDialog(QGraphicsScene):
         if isinstance(clicked_piece, BTile):
             if clicked_piece.is_highlighted:
                 if not game.is_over() and game.get_turn() == Player.HUMAN:
-                    clicked_piece.toggle_highlight()
+                    clicked_piece.toggle_highlight()  # turn off highlight
                     self.possible_moves = []
                     game.player_move(clicked_piece.get_state())
                     self._update_checker_board()
                     self.ai_move()
                     if game.is_over():
-                        # TODO add __self.gameover()
                         return
+                        # TODO add __self.gameover()
+
         elif isinstance(clicked_piece, GPiece):
             pos = clicked_piece.board_pos
             self.possible_moves = game.get_valid_moves(pos)
             if clicked_piece.piece.player is Player.HUMAN:
-                self.possible_moves = game.get_valid_moves(pos)
-
-                self._update_checker_board()
-                # TODO update checker board here for ghost buttons
                 if len(self.possible_moves) == 0:
                     feedback = game.move_feedback_click()
+                    sucg = (game.state_peek().get_successors_jump(True))
+                    print(sucg)
                     if feedback is MoveFeedBack.FORCED_JUMP:
-                        self.on_help_movable_click()
+                        self.possible_moves = game.get_valid_moves(pos)
+                        print(feedback)
+                        self._update_checker_board()
+                        # self.on_help_movable_click()
 
-                else:
-                    print("")
+            self._update_checker_board()
         super().mouseMoveEvent(event)
 
     def on_help_movable_click(self):
         print(f"you need to play forced move")
-        self._update_checker_board()
 
     def ai_move(self):
         game = self.game
