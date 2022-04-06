@@ -80,7 +80,10 @@ class BoardState:
         successors = self.get_successors_jump(True)
         if Settings.FORCE_CAPTURE:
             has_successors = len(successors) > 0
-            return successors if has_successors else self.get_successors_jump(False)
+            if has_successors:
+                return successors
+            else:
+                return self.get_successors_jump(False)
         else:
             successors.extend(self.get_successors_jump(False))
             return successors
@@ -112,6 +115,7 @@ class BoardState:
         cpiece = self.state[pos]
         if jump:
             return self.jump_successors(cpiece, pos)
+
         return self.non_jump_successors(cpiece, pos)
 
     def non_jump_successors(self, piece: Piece, pos: int) -> list[BoardState]:

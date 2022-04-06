@@ -26,15 +26,27 @@ class BTile(QGraphicsRectItem):
             self.color = Qt.black
         else:
             self.color = Qt.white
-        self.highlight_color = Qt.gray
+        self.is_highlighted = False
+        self.__state = None
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget):
         super().paint(painter, option, widget)
         painter.fillRect(self.rect(), self.color)
 
     def toggle_highlight(self):
-        self.color = Qt.gray
+        if self.is_highlighted:
+            self.color = Qt.white
+        else:
+            self.is_highlighted = True
+            self.color = Qt.gray
+
         self.update()
+
+    def get_state(self):
+        return self.__state
+
+    def set_state(self, state):
+        self.__state = state
 
 
 class GPiece(QGraphicsRectItem):
@@ -43,7 +55,6 @@ class GPiece(QGraphicsRectItem):
         self.scale = Settings.G_WIDTH
         scale = self.scale
         super(GPiece, self).__init__(0, 0, scale, scale, parent)
-
         self.board_pos = pos
         self.setPos(x * scale, y * scale)
         self.piece: Piece = piece

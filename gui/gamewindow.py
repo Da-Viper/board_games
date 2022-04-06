@@ -37,12 +37,20 @@ class GDialog(QGraphicsScene):
 
         if clicked_piece is None:
             return
-        if not isinstance(clicked_piece, GPiece):
-            return
 
-        pos = clicked_piece.board_pos
-        self.possible_moves = game.get_valid_moves(pos)
+        if isinstance(clicked_piece, BTile):
+            if clicked_piece.is_highlighted:
+                if not game.is_over() and game.get_turn() == Player.HUMAN:
+                    clicked_piece.toggle_highlight()
+                    self.possible_moves = []
+                    game.player_move(clicked_piece.get_state())
+
+        if isinstance(clicked_piece, GPiece):
+            pos = clicked_piece.board_pos
+            self.possible_moves = game.get_valid_moves(pos)
+
         self._update_checker_board()
+        self.game.ai_move()
 
         # TODO update checker board here for ghost buttons
         if len(self.possible_moves) == 0:
@@ -93,3 +101,4 @@ class GDialog(QGraphicsScene):
             if not isinstance(current_tile, BTile):
                 return
             current_tile.toggle_highlight()
+            current_tile.set_state(state)
