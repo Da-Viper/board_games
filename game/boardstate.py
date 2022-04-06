@@ -25,18 +25,18 @@ class BoardState:
         SIDE_LENGTH = self.SIDE_LENGTH
         cur_state = self.state
         for i in range(len(self.state)):
-            y = i % SIDE_LENGTH
-            x = i // SIDE_LENGTH
+            y = i // SIDE_LENGTH
+            x = i % SIDE_LENGTH
 
             if (x + y) % 2 == 1:
 
-                if x < 3:
+                if y < 3:
                     cur_state[i] = Piece(Player.AI, False)
-                elif x > 4:
+                elif y > 4:
                     cur_state[i] = Piece(Player.HUMAN, False)
 
-        ai_count = filter(lambda piece: piece is not None and piece.get_player() is Player.AI, cur_state)
-        human_count = filter(lambda piece: piece is not None and piece.get_player() is Player.HUMAN, cur_state)
+        ai_count = len(list(filter(lambda piece: piece is not None and piece.player is Player.AI, cur_state)))
+        human_count = len(list(filter(lambda piece: piece is not None and piece.player is Player.HUMAN, cur_state)))
         self.piece_count[Player.AI] = ai_count
         self.piece_count[Player.HUMAN] = human_count
 
@@ -83,7 +83,8 @@ class BoardState:
             if has_successors:
                 return successors
             else:
-                return self.get_successors_jump(False)
+                ss = self.get_successors_jump(False)
+                return ss
         else:
             successors.extend(self.get_successors_jump(False))
             return successors
@@ -93,8 +94,10 @@ class BoardState:
         c_state = self.state
         for i in range(len(c_state)):
             cur_piece: Piece = c_state[i]
-            if cur_piece is not None and cur_piece.player is self.turn:
-                result.extend(self.get_successors_pos_jump(i, jump))
+            print(f"state {i}: {cur_piece}")
+            if cur_piece is not None:
+                if cur_piece.player is self.turn:
+                    result.extend(self.get_successors_pos_jump(i, jump))
         return result
 
     def get_successors_pos(self, pos: int) -> list[BoardState]:
