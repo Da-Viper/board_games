@@ -92,8 +92,8 @@ class BoardState:
         result: list[BoardState] = []
         c_state = self.state
         for i in range(len(c_state)):
-            cur_piece = c_state[i]
-            if cur_piece is None and cur_piece is self.turn:
+            cur_piece: Piece = c_state[i]
+            if cur_piece is not None and cur_piece.player is self.turn:
                 result.extend(self.get_successors_pos_jump(i, jump))
         return result
 
