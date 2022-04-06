@@ -4,7 +4,7 @@ from game.player import Player
 class Settings:
     FORCE_CAPTURE: bool = True
     FIRST_MOVE: Player = Player.HUMAN
-    AI_DEPTH: int = 7
+    AI_DEPTH: int = 8
     UNDO_MEM: int = 20
     HEURISTIC: int = 1
     T_WIDTH = 8

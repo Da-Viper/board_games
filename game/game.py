@@ -43,7 +43,7 @@ class Game:
         if self.get_state().state[to_pos] is not None:
             return MoveFeedBack.NO_FREE_SPACE
 
-        non_jump_successors: list[BoardState] = self.state_peek().get_successors_pos_jump(from_pos, False)
+        non_jump_successors: List[BoardState] = self.state_peek().get_successors_pos_jump(from_pos, False)
 
         for succ in non_jump_successors:
             if succ.get_from_pos() == from_pos and succ.get_to_pos() == to_pos:

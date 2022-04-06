@@ -1,6 +1,4 @@
 import random
-import sys
-
 from typing import List
 
 from game.boardstate import BoardState
@@ -51,16 +49,16 @@ class AI:
 
     def __minimax(self, node: BoardState, depth: int, alpha: int = None, beta: int = None) -> int:
         if alpha is None:
-            alpha = Settings.MAX_VALUE  # max
+            alpha = Settings.MIN_VALUE
         if beta is None:
-            beta = Settings.MIN_VALUE  # min
+            beta = Settings.MAX_VALUE
 
         if (depth == 0) or node.is_game_over():
             return node.compute_heuristic(self.player)
 
         # Max player
         if node.turn is self.player:
-            v = Settings.MIN_VALUE  # min
+            v = Settings.MIN_VALUE
             for child in node.get_successors():
                 v = max(v, self.__minimax(child, depth - 1, alpha, beta))
                 alpha = max(alpha, v)
