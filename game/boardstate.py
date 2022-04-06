@@ -25,14 +25,14 @@ class BoardState:
         SIDE_LENGTH = self.SIDE_LENGTH
         cur_state = self.state
         for i in range(len(self.state)):
-            y = i // SIDE_LENGTH
-            x = i % SIDE_LENGTH
+            y = i % SIDE_LENGTH
+            x = i // SIDE_LENGTH
 
             if (x + y) % 2 == 1:
 
-                if y < 3:
+                if x < 3:
                     cur_state[i] = Piece(Player.AI, False)
-                elif y > 4:
+                elif x > 4:
                     cur_state[i] = Piece(Player.HUMAN, False)
 
         ai_count = filter(lambda piece: piece is not None and piece.get_player() is Player.AI, cur_state)
@@ -92,7 +92,6 @@ class BoardState:
             cur_piece = c_state[i]
             if cur_piece is None and cur_piece is self.turn:
                 result.extend(self.get_successors_pos_jump(i, jump))
-
         return result
 
     def get_successors_pos(self, pos: int) -> list[BoardState]:
@@ -132,6 +131,11 @@ class BoardState:
 
         return result
 
+    """ 
+    Method used to check if a capture is possible
+        This checks if the new position contain an enemy piece. 
+        If none then it is handled as a normal move.
+    """
     def jump_successors(self, piece: Piece, pos: int) -> list[BoardState]:
         result = []
         side_length = self.SIDE_LENGTH

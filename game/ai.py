@@ -19,20 +19,20 @@ class AI:
             successors = state.get_successors()
             return self.__minimax_move(successors)
 
-    def __minimax_move(self, sucessors: List[BoardState]) -> BoardState:
-        if len(sucessors) == 1:
-            return sucessors[0]
+    def __minimax_move(self, successors: List[BoardState]) -> BoardState:
+        if len(successors) == 1:
+            return successors[0]
 
         best_score = sys.maxsize * 2 + 1
         equal_bests = []
-        for bstate in sucessors:
-            val = self.__minimax(bstate, self.depth)
+        for b_state in successors:
+            val = self.__minimax(b_state, self.depth)
             if val > best_score:
                 best_score = val
                 equal_bests.clear()
 
             if val == best_score:
-                equal_bests.append(bstate)
+                equal_bests.append(b_state)
 
         if len(equal_bests ) > 1:
             print(f"{self.player} choosing random best move")

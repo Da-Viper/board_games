@@ -17,7 +17,7 @@ class GDialog(QGraphicsScene):
     def __init__(self, parent=None):
         super(GDialog, self).__init__(parent)
         self.game = Game()
-        self.possible_moves: List[BoardState] = []  # ✅
+        self.possible_moves: List[BoardState] = []
         self.tiles: List[QGraphicsItem] = [None] * Settings.SQUARE_NO
         self.pieces: [QGraphicsItem] = []
         self.add_tiles()
