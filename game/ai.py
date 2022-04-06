@@ -46,7 +46,7 @@ class AI:
         if successors_len < 1:
             raise RuntimeError("empty sucessors cant choose a random board")
 
-        rand_num = random.randint(0, successors_len)
+        rand_num = random.randint(0, successors_len - 1)
         return successors[rand_num]
 
     def __minimax(self, node: BoardState, depth: int, alpha: int = None, beta: int = None) -> int:

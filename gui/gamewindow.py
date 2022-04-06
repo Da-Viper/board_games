@@ -46,25 +46,40 @@ class GDialog(QGraphicsScene):
                     clicked_piece.toggle_highlight()
                     self.possible_moves = []
                     game.player_move(clicked_piece.get_state())
-
-        if isinstance(clicked_piece, GPiece):
+                    self._update_checker_board()
+                    self.ai_move()
+                    if game.is_over():
+                        # TODO add __self.gameover()
+                        return
+        elif isinstance(clicked_piece, GPiece):
             pos = clicked_piece.board_pos
             self.possible_moves = game.get_valid_moves(pos)
+            if clicked_piece.piece.player is Player.HUMAN:
+                self.possible_moves = game.get_valid_moves(pos)
 
-        self._update_checker_board()
-        self.game.ai_move()
+                self._update_checker_board()
+                # TODO update checker board here for ghost buttons
+                if len(self.possible_moves) == 0:
+                    feedback = game.move_feedback_click()
+                    if feedback is MoveFeedBack.FORCED_JUMP:
+                        self.on_help_movable_click()
 
-        # TODO update checker board here for ghost buttons
-        if len(self.possible_moves) == 0:
-            feedback = game.move_feedback_click()
-            if feedback is MoveFeedBack.FORCED_JUMP:
-                self.on_help_movable_click()
-        else:
-            print("")
+                else:
+                    print("")
         super().mouseMoveEvent(event)
 
     def on_help_movable_click(self):
-        pass
+        print(f"you need to play forced move")
+        self._update_checker_board()
+
+    def ai_move(self):
+        game = self.game
+        game.ai_move()
+
+        ##  INVOKE AI UPDATE
+        self._update_checker_board()
+        if not game.is_over() and (game.get_turn() is Player.AI):
+            self.ai_move()
 
     def add_tiles(self):
         # scene = self.scene
