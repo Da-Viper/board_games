@@ -19,8 +19,7 @@ class GDialog(QGraphicsScene):
         self.possible_moves: List[BoardState] = []
         self.tiles: List[QGraphicsItem] = [None] * Settings.SQUARE_NO
         self.pieces: [QGraphicsItem] = []
-        self.add_tiles()
-        self.add_pieces()
+        self._setup_game_preferences()
 
     def _update_checker_board(self):
         self.clear()
@@ -115,3 +114,8 @@ class GDialog(QGraphicsScene):
                 f"BTile highlight pos:{current_tile.pos()}\n")
             current_tile.set_state(state)
             current_tile.update()
+
+    def _setup_game_preferences(self):
+        self._update_checker_board()
+        if Settings.FIRST_MOVE is Player.AI:
+            self.ai_move()

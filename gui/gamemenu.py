@@ -2,7 +2,7 @@ import sys
 
 from PySide2 import QtCore
 from PySide2.QtCore import Slot
-from PySide2.QtWidgets import QWidget, QMainWindow, QGraphicsView, QDialog
+from PySide2.QtWidgets import QWidget, QMainWindow, QGraphicsView, QDialog, QApplication
 
 from game.settings import Settings
 from gui.gamewindow import GDialog
@@ -35,7 +35,7 @@ class GameMenu(QWidget):
 
     @Slot()
     def exit_game(self):
-        sys.exit()
+        self.close()
 
     @Slot()
     def start_checkers(self):
