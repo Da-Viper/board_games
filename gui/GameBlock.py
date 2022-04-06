@@ -3,13 +3,11 @@ from __future__ import annotations
 import typing
 from typing import List
 
-from PySide2.QtCore import QPointF, QLineF, QRectF
-from PySide2.QtGui import QPainter, Qt, QCursor, QPen, QTransform
+from PySide2.QtCore import QLineF
+from PySide2.QtGui import QPainter, Qt, QPen
 from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidget, QGraphicsItem, \
     QGraphicsSceneMouseEvent
 
-from game.game import Game
-from game.movefeedback import MoveFeedBack
 from game.piece import Piece
 from game.player import Player
 from game.settings import Settings

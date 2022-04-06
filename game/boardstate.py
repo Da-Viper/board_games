@@ -8,10 +8,21 @@ import sys
 
 
 class BoardState:
+    """
+     This class is a logic controller for the current board state.
+     This class can also simulate possible states from the current state -
+        - for:
+                (a) Player movement - attack and non-attack moves
+                (b) AI movement (minmax algorithm simulation)
+    """
+
     SIDE_LENGTH = Settings.BOARD_DIMEN
     NO_SQUARES = SIDE_LENGTH * SIDE_LENGTH
 
     def __init__(self):
+        """
+            Initialises board attributes to default values.
+        """
         self.turn = Settings.FIRST_MOVE
         self.state: list[Piece | None] = [None] * self.NO_SQUARES
         self.piece_count: dict = {}
@@ -22,21 +33,28 @@ class BoardState:
         self.__initialize_board()
 
     def __initialize_board(self):
+        """
+            Method populates initial state with Pieces.
+            state contains null/None values for cells that are empty
+            state is filled with checker patten in mind
+        """
         SIDE_LENGTH = self.SIDE_LENGTH
         cur_state = self.state
         for i in range(len(self.state)):
-            y = i // SIDE_LENGTH
-            x = i % SIDE_LENGTH
+            y = i // SIDE_LENGTH  # row
+            x = i % SIDE_LENGTH  # col
 
-            if (x + y) % 2 == 1:
+            if (x + y) % 2 == 1:  # checks if position is even or odd
 
-                if y < 3:
+                if y < 3:  # row boundary for AI pieces
                     cur_state[i] = Piece(Player.AI, False)
-                elif y > 4:
+                elif y > 4:  # row boundary for Player pieces
                     cur_state[i] = Piece(Player.HUMAN, False)
 
+        # Declarative evaluation of the AI and HUMAN pieces from the current state using filter.
         ai_count = len(list(filter(lambda piece: piece is not None and piece.player is Player.AI, cur_state)))
         human_count = len(list(filter(lambda piece: piece is not None and piece.player is Player.HUMAN, cur_state)))
+
         self.piece_count[Player.AI] = ai_count
         self.piece_count[Player.HUMAN] = human_count
 
@@ -44,17 +62,31 @@ class BoardState:
         self.king_count[Player.HUMAN] = human_count
 
     def deep_copy(self):
+        """
+        Method used to copy the current state.
+        :return: temporary state to simulate player moves from given position
+        """
         tmp_board_state = BoardState()
         tmp_board_state.state = deepcopy(self.state)
         return tmp_board_state
 
     def compute_heuristic(self, player: Player) -> int:
+        """
+        Method for selecting
+        :param player:
+        :return:
+        """
         if Settings.HEURISTIC == 1:
             return self.heuristic1(player)
         return self.heuristic2(player)
 
     def heuristic1(self, player: Player) -> int:
-        max_int = sys.maxsize * 2 + 1
+        """
+
+        :param player:
+        :return:
+        """
+        max_int = Settings.MAX_VALUE
         opp_player = get_opposite(player)
         if self.piece_count[opp_player] == 0:
             return max_int
@@ -64,7 +96,7 @@ class BoardState:
         return self.piece_score(player) - self.piece_score(opp_player)
 
     def heuristic2(self, player: Player) -> int:
-        max_int = sys.maxsize * 2 + 1
+        max_int = Settings.MAX_VALUE
         opp_player = get_opposite(player)
         if self.piece_count[opp_player] == 0:
             return max_int
@@ -137,11 +169,6 @@ class BoardState:
 
         return result
 
-    """ 
-    Method used to check if a capture is possible
-        This checks if the new position contain an enemy piece. 
-        If none then it is handled as a normal move.
-    """
     def jump_successors(self, piece: Piece, pos: int) -> list[BoardState]:
         result = []
         side_length = self.SIDE_LENGTH
