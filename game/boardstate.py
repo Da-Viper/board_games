@@ -1,10 +1,10 @@
 from __future__ import annotations
+
 from copy import deepcopy
-from game.settings import Settings
+
 from game.piece import Piece
 from game.player import Player, get_opposite
-
-import sys
+from game.settings import Settings
 
 
 class BoardState:
@@ -72,7 +72,8 @@ class BoardState:
 
     def compute_heuristic(self, player: Player) -> int:
         """
-        Method for selecting
+        Method used to pick heuristic function
+        default is heuristic 1
         :param player:
         :return:
         """
