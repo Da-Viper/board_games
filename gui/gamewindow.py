@@ -1,8 +1,7 @@
 from typing import List
 
 from PySide2.QtGui import QTransform
-from PySide2.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsItemGroup, \
-    QGraphicsItem, QMainWindow, QGraphicsSceneMouseEvent
+from PySide2.QtWidgets import QGraphicsScene, QGraphicsItem, QGraphicsSceneMouseEvent
 
 from game.boardstate import BoardState
 from game.game import Game
@@ -58,25 +57,16 @@ class GDialog(QGraphicsScene):
             if clicked_piece.piece.player is Player.HUMAN:
                 if len(self.possible_moves) == 0:
                     feedback = game.move_feedback_click()
-                    sucg = (game.state_peek().get_successors_jump(True))
-                    print(sucg)
                     if feedback is MoveFeedBack.FORCED_JUMP:
                         self.possible_moves = game.get_valid_moves(pos)
-                        print(feedback)
                         self._update_checker_board()
-                        # self.on_help_movable_click()
 
             self._update_checker_board()
         super().mouseMoveEvent(event)
 
-    def on_help_movable_click(self):
-        print(f"you need to play forced move")
-
     def ai_move(self):
         game = self.game
         game.ai_move()
-
-        ##  INVOKE AI UPDATE
         self._update_checker_board()
         if not game.is_over() and (game.get_turn() is Player.AI):
             self.ai_move()
@@ -125,4 +115,3 @@ class GDialog(QGraphicsScene):
                 f"BTile highlight pos:{current_tile.pos()}\n")
             current_tile.set_state(state)
             current_tile.update()
-        # self.update()
