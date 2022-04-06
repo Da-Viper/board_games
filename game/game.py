@@ -31,7 +31,7 @@ class Game:
         can_jump: bool = len(jump_successors) > 0
         if can_jump:
             for succ in jump_successors:
-                if succ.get_from_pos == from_pos and succ.get_to_pos == to_pos:
+                if succ.get_from_pos() == from_pos and succ.get_to_pos == to_pos:
                     self.__update_state(succ)
                     return MoveFeedBack.SUCCESS
 
