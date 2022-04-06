@@ -109,13 +109,20 @@ class GDialog(QGraphicsScene):
         if not pos_moves:
             return
 
+        print(f"the possible moves: {len(pos_moves)}")
+
         for state in pos_moves:
             h_pos = state.get_to_pos()
-            print(f"the hpos: {h_pos}")
+            print(f"the possible GPiece pos: {h_pos % Settings.T_HEIGHT, h_pos // Settings.T_WIDTH}")
             x = (h_pos % Settings.BOARD_DIMEN) * Settings.G_WIDTH
             y = (h_pos // Settings.BOARD_DIMEN) * Settings.G_WIDTH
-            current_tile = self.itemAt(x, y, QTransform())
+            offset = Settings.G_WIDTH / 2
+            current_tile = self.itemAt(x + offset, y + offset, QTransform())
             if not isinstance(current_tile, BTile):
                 return
             current_tile.toggle_highlight()
+            print(
+                f"BTile highlight pos:{current_tile.pos()}\n")
             current_tile.set_state(state)
+            current_tile.update()
+        # self.update()
