@@ -12,7 +12,7 @@ class Piece:
     def get_type(self):
         return self.player
 
-    def get_y_movements(self) -> List[int]:
+    def y_moves(self) -> List[int]:
         if self.is_king:
             return [-1, 1]
         else:
@@ -21,5 +21,6 @@ class Piece:
             else:
                 return [-1]
 
-    def get_x_movements(self) -> List[int]:
+    @staticmethod
+    def x_moves() -> List[int]:
         return [-1, 1]

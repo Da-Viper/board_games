@@ -126,8 +126,8 @@ class BoardState:
         x = pos % side_length
         y = pos // side_length
 
-        for dx in piece.get_x_movements():
-            for dy in piece.get_y_movements():
+        for dx in piece.x_moves():
+            for dy in piece.y_moves():
                 new_x = x + dx
                 new_y = y + dy
                 if self.__is_valid(new_y, new_x):
@@ -153,8 +153,8 @@ class BoardState:
         x = pos % side_length
         y = pos // side_length
 
-        for dx in piece.get_x_movements():
-            for dy in piece.get_y_movements():
+        for dx in piece.x_moves():
+            for dy in piece.y_moves():
                 new_x = x + dx
                 new_y = y + dy
 
