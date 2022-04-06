@@ -35,6 +35,8 @@ class GDialog(QGraphicsScene):
             return
         clicked_piece = self.itemAt(event.scenePos(), QTransform())
 
+        print(f"the clicked piece: {clicked_piece}")
+
         if clicked_piece is None:
             return
 
