@@ -131,12 +131,11 @@ class GameScene(QGraphicsScene):
 
         res = msg_box.exec_()
         if res == QMessageBox.Ok:
-            self.clear()
-            self.__init__()
+            scene_parent = self.parent()
+            scene_parent.reset_scene()
+
         else:
-            pass
-            # a: QGraphicsView = self.views()[0]
-            # a.parent().close()
+            self.parent().close_window()
 
     @Slot()
     def slot_undo_clicked(self):

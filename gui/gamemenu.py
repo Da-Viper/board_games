@@ -57,6 +57,9 @@ class CheckersWindow(QDialog):
         self.ui.btn_reset.clicked.connect(self.reset_scene)
         self.ui.btn_undo.clicked.connect(self.scene.slot_undo_clicked)
 
+    def close_window(self):
+        self.close()
+
     @Slot()
     def reset_scene(self):
         self.scene = None
