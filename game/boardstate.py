@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import collections
 from copy import copy
 
 from game.piece import Piece
@@ -42,7 +43,7 @@ class BoardState:
         bs.turn = Settings.FIRST_MOVE
         SIDE_LENGTH = Settings.BOARD_DIMEN
         cur_state = bs.state
-        for i in range(len(bs.state)):
+        for i in range(len(cur_state)):
             y = i // SIDE_LENGTH  # row
             x = i % SIDE_LENGTH  # col
 
@@ -53,9 +54,10 @@ class BoardState:
                 elif y > 4:  # row boundary for Player pieces
                     cur_state[i] = Piece(Player.HUMAN, False)
 
-        # Declarative evaluation of the AI and HUMAN pieces from the current state using filter.
-        ai_count = len(list(filter(lambda piece: piece is not None and piece.player is Player.AI, cur_state)))
-        human_count = len(list(filter(lambda piece: piece is not None and piece.player is Player.HUMAN, cur_state)))
+        # count the ai and human using collections
+        counts = collections.Counter(piece.player for piece in cur_state if piece)
+        ai_count = counts.get(Player.AI, 0)
+        human_count = counts.get(Player.HUMAN, 0)
 
         bs.piece_count[Player.AI] = ai_count
         bs.piece_count[Player.HUMAN] = human_count
@@ -128,10 +130,11 @@ class BoardState:
     def get_successors_jump(self, jump: bool) -> list[BoardState]:
         result: list[BoardState] = []
         c_state = self.state
+        turn_ = self.turn
         for i in range(len(c_state)):
             cur_piece: Piece = c_state[i]
             if cur_piece is not None:
-                if cur_piece.player is self.turn:
+                if cur_piece.player is turn_:
                     result.extend(self.get_successors_pos_jump(i, jump))
         return result
 

@@ -26,8 +26,10 @@ class AI:
 
         best_score = Settings.MIN_VALUE
         equal_bests = []
+        depth_ = self.depth
+        minimax_ = self.__minimax
         for b_state in successors:
-            val = self.__minimax(b_state, self.depth)
+            val = minimax_(b_state, depth_)
             if val > best_score:
                 best_score = val
                 equal_bests.clear()
