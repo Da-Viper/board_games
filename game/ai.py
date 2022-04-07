@@ -17,7 +17,7 @@ class AI:
 
     def move(self, state: BoardState, player: Player):
         if state.turn is player:
-            successors = state.get_successors()
+            successors = state.get_all_states()
             rv = self.__minimax_move(successors)
             print(f"minimax {rv}")
             return rv
@@ -68,7 +68,7 @@ class AI:
         # Max player
         if node.turn is self.player:
             v = Settings.MIN_VALUE
-            for child in node.get_successors():
+            for child in node.get_all_states():
                 v = max(v, self.minimax_(depth - 1, child, alpha, beta))
                 alpha = max(alpha, v)
                 if alpha >= beta:
@@ -78,7 +78,7 @@ class AI:
         # Min player
         else:
             v = Settings.MAX_VALUE
-            for child in node.get_successors():
+            for child in node.get_all_states():
                 v = min(v, self.minimax_(depth - 1, child, alpha, beta))
                 beta = min(beta, v)
                 if alpha >= beta:

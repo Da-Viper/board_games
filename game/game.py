@@ -6,7 +6,7 @@ from game.boardstate import BoardState
 from game.ai import AI
 from game.settings import Settings
 from game.player import Player
-from game.movefeedback import MoveFeedBack
+from game.gameresponse import GameResponse
 
 
 class Game:
@@ -22,10 +22,10 @@ class Game:
         if not self.is_over() and (self.state_peek().get_turn() is Player.HUMAN):
             self.__update_state(new_state)
 
-    def playerMove(self, from_pos: int, dx: int, dy: int) -> MoveFeedBack:
+    def playerMove(self, from_pos: int, dx: int, dy: int) -> GameResponse:
         to_pos: int = from_pos + dx + BoardState.SIDE_LENGTH * dy
         if to_pos > len(self.get_state().state):
-            return MoveFeedBack.NOT_ON_BOARD
+            return GameResponse.NOT_ON_BOARD
 
         jump_successors: List[BoardState] = self.state_peek().get_successors_jump(True)
         can_jump: bool = len(jump_successors) > 0
@@ -33,37 +33,37 @@ class Game:
             for succ in jump_successors:
                 if succ.get_from_pos() == from_pos and succ.get_to_pos == to_pos:
                     self.__update_state(succ)
-                    return MoveFeedBack.SUCCESS
+                    return GameResponse.SUCCESS
 
-            return MoveFeedBack.FORCED_JUMP
+            return GameResponse.FORCED_JUMP
 
         if abs(dx) != abs(dy):
-            return MoveFeedBack.NOT_DIAGONAL
+            return GameResponse.NOT_DIAGONAL
 
         if self.get_state().state[to_pos] is not None:
-            return MoveFeedBack.NO_FREE_SPACE
+            return GameResponse.NO_FREE_SPACE
 
         non_jump_successors: List[BoardState] = self.state_peek().get_successors_pos_jump(from_pos, False)
 
         for succ in non_jump_successors:
             if succ.get_from_pos() == from_pos and succ.get_to_pos() == to_pos:
                 self.__update_state(succ)
-                return MoveFeedBack.SUCCESS
+                return GameResponse.SUCCESS
 
         if dy > 1:
-            return MoveFeedBack.NO_BACKWARD_MOVES_FOR_SINGLES
+            return GameResponse.NO_BACKWARD_MOVES_FOR_SINGLES
 
         if abs(dx) == 2:
-            return MoveFeedBack.ONLY_SINGLE_DIAGONALS
+            return GameResponse.ONLY_SINGLE_DIAGONALS
 
-        return MoveFeedBack.UNKNOWN_INVALID
+        return GameResponse.UNKNOWN_INVALID
 
-    def move_feedback_click(self) -> MoveFeedBack:
+    def move_feedback_click(self) -> GameResponse:
         jump_successors: List[BoardState] = self.state_peek().get_successors_jump(True)
         if len(jump_successors) > 0:
-            return MoveFeedBack.FORCED_JUMP
+            return GameResponse.FORCED_JUMP
         else:
-            return MoveFeedBack.PIECE_BLOCKED
+            return GameResponse.PIECE_BLOCKED
 
     def get_valid_moves(self, pos: int):
         return self.state_peek().get_successors_pos(pos)

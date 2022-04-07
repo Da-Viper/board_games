@@ -15,8 +15,6 @@ class PreferenceMenu(QDialog):
         self.ui.btngrp_difficulty.setId(self.ui.btn_rad_easy, 1)
         self.ui.btngrp_difficulty.setId(self.ui.btn_rad_med, 2)
         self.ui.btngrp_difficulty.setId(self.ui.btn_rad_hard, 3)
-        # self.accept.connect(self.selected_preference)
-        # self.reject.connect()
         self.ui.buttonBox.accepted.connect(self.selected_preference)
 
     @Slot()

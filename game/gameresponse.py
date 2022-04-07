@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class MoveFeedBack(Enum):
+class GameResponse(Enum):
     NOT_DIAGONAL = "You can only move diagonally."
     FORCED_JUMP = "You're forced to take."
     NO_FREE_SPACE = "You can't move onto another piece."

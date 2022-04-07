@@ -5,22 +5,21 @@ from PySide2.QtWidgets import QGraphicsScene, QGraphicsItem, QGraphicsSceneMouse
 
 from game.boardstate import BoardState
 from game.game import Game
-from game.movefeedback import MoveFeedBack
+from game.gameresponse import GameResponse
 from game.player import Player
 from game.settings import Settings
-from gui.GameBlock import BTile, GPiece
+from gui.gameblock import BTile, GPiece
 
 
-class GDialog(QGraphicsScene):
+class GameScene(QGraphicsScene):
 
     def __init__(self, parent=None):
-        super(GDialog, self).__init__(parent)
+        super(GameScene, self).__init__(parent)
         self.game = Game()
         self.possible_moves: List[BoardState] = []
         self.tiles: List[QGraphicsItem] = [None] * Settings.SQUARE_NO
         self.pieces: [QGraphicsItem] = []
         self._setup_game_preferences()
-        self._show_game_over_dialog()
 
     def _update_checker_board(self):
         self.clear()
@@ -59,7 +58,7 @@ class GDialog(QGraphicsScene):
             if clicked_piece.piece.player is Player.HUMAN:
                 if len(self.possible_moves) == 0:
                     feedback = game.move_feedback_click()
-                    if feedback is MoveFeedBack.FORCED_JUMP:
+                    if feedback is GameResponse.FORCED_JUMP:
                         self.possible_moves = game.get_valid_moves(pos)
                         self._update_checker_board()
 

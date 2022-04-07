@@ -68,7 +68,7 @@ class BoardState:
         bs.king_count[Player.HUMAN] = 0
         return bs
 
-    def deep_copy(self):
+    def copy_board_state(self):
         """
         Method used to copy the current state.
         :return: temporary state to simulate player moves from given position
@@ -116,7 +116,7 @@ class BoardState:
     def piece_score(self, player: Player) -> int:
         return self.piece_count[player] + self.king_count[player]
 
-    def get_successors(self) -> list[BoardState]:
+    def get_all_states(self) -> list[BoardState]:
         successors = self.get_successors_jump(True)
         if Settings.FORCE_CAPTURE:
             has_successors = len(successors) > 0
@@ -207,7 +207,7 @@ class BoardState:
         return result
 
     def __create_new_state(self, old_pos: int, new_pos: int, piece: Piece, jumped: bool, dy: int, dx: int):
-        result: BoardState = self.deep_copy()
+        result: BoardState = self.copy_board_state()
         result.piece_count = copy(self.piece_count)
         result.king_count = copy(self.piece_count)
         # TODO may be missing
