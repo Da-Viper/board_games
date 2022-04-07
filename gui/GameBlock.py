@@ -58,7 +58,7 @@ class GPiece(QGraphicsRectItem):
         self.piece: Piece = piece
         self.color = Qt.black
         self.last_pos = self.pos()
-        self._dragged = False
+        # self._dragged = False
 
         if piece.player is Player.HUMAN:
             self.setFlags(QGraphicsItem.ItemIsSelectable
@@ -80,37 +80,37 @@ class GPiece(QGraphicsRectItem):
             painter.setBrush(Qt.white)
             painter.drawEllipse(center, scale / 9, scale / 9)
 
-    def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        self._dragged = True
-        super().mouseMoveEvent(event)
+    # def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+    #     # self._dragged = True
+    #     super().mouseMoveEvent(event)
 
-    def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-
-        # if self._dragged:
-        print(f"dragged item: {self.pos()}")
-        if self._dragged:
-            col_items: List[QGraphicsItem] = self.collidingItems()
-
-            # TODO use contains
-            if not col_items:
-                self.setPos(self.last_pos)
-            else:
-                closest_item = col_items[0]
-                short_dist = 1000000
-                for item in col_items:
-                    line = QLineF(item.sceneBoundingRect().center(), self.sceneBoundingRect().center())
-
-                    if line.length() < short_dist:
-                        short_dist = line.length()
-
-                        closest_item = item
-
-                if isinstance(closest_item, BTile) and closest_item.color is Qt.white:
-                    self.setPos(closest_item.pos())
-                    self.last_pos = self.pos()
-                else:
-                    self.setPos(self.last_pos)
-
-            self._dragged = False
-
-        super().mouseReleaseEvent(event)
+    # def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+    #
+    #     # if self._dragged:
+    #     print(f"dragged item: {self.pos()}")
+    #     if self._dragged:
+    #         col_items: List[QGraphicsItem] = self.collidingItems()
+    #
+    #         # TODO use contains
+    #         if not col_items:
+    #             self.setPos(self.last_pos)
+    #         else:
+    #             closest_item = col_items[0]
+    #             short_dist = 1000000
+    #             for item in col_items:
+    #                 line = QLineF(item.sceneBoundingRect().center(), self.sceneBoundingRect().center())
+    #
+    #                 if line.length() < short_dist:
+    #                     short_dist = line.length()
+    #
+    #                     closest_item = item
+    #
+    #             if isinstance(closest_item, BTile) and closest_item.color is Qt.white:
+    #                 self.setPos(closest_item.pos())
+    #                 self.last_pos = self.pos()
+    #             else:
+    #                 self.setPos(self.last_pos)
+    #
+    #         self._dragged = False
+    #
+    #     super().mouseReleaseEvent(event)
