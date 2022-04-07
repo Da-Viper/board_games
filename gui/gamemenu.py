@@ -1,8 +1,5 @@
-import sys
-
-from PySide2 import QtCore
 from PySide2.QtCore import Slot
-from PySide2.QtWidgets import QWidget, QMainWindow, QGraphicsView, QDialog, QApplication
+from PySide2.QtWidgets import QWidget, QMainWindow, QGraphicsView
 
 from game.settings import Settings
 from gui.gamewindow import GDialog

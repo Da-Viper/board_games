@@ -27,7 +27,7 @@ class Game:
         if to_pos > len(self.get_state().state):
             return MoveFeedBack.NOT_ON_BOARD
 
-        jump_successors: list[BoardState] = self.state_peek().get_successors_jump(True)
+        jump_successors: List[BoardState] = self.state_peek().get_successors_jump(True)
         can_jump: bool = len(jump_successors) > 0
         if can_jump:
             for succ in jump_successors:

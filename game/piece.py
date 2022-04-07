@@ -16,10 +16,7 @@ class Piece:
         if self.is_king:
             return [-1, 1]
         else:
-            if self.player is Player.AI:
-                return [1]
-            else:
-                return [-1]
+            return [1] if self.player is Player.AI else [-1]
 
     @staticmethod
     def x_moves() -> List[int]:

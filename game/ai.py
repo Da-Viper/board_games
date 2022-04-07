@@ -42,7 +42,8 @@ class AI:
 
         return self.__random_move(equal_bests)
 
-    def __random_move(self, successors: List[BoardState]) -> BoardState:
+    @staticmethod
+    def __random_move(successors: List[BoardState]) -> BoardState:
         successors_len = len(successors)
         if successors_len < 1:
             raise RuntimeError("empty sucessors cant choose a random board")
@@ -51,13 +52,13 @@ class AI:
         return successors[rand_num]
 
     def __minimax(self, node: BoardState, depth: int, alpha: int = None, beta: int = None) -> int:
+        if (depth == 0) or node.is_game_over():
+            return node.compute_heuristic(self.player)
+
         if alpha is None:
             alpha = Settings.MIN_VALUE  # max
         if beta is None:
             beta = Settings.MAX_VALUE  # min
-
-        if (depth == 0) or node.is_game_over():
-            return node.compute_heuristic(self.player)
 
         # Max player
         if node.turn is self.player:
