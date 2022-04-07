@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from copy import deepcopy
+from copy import copy
 
 from game.piece import Piece
 from game.player import Player, get_opposite
@@ -67,7 +67,7 @@ class BoardState:
         :return: temporary state to simulate player moves from given position
         """
         tmp_board_state = BoardState()
-        tmp_board_state.state = deepcopy(self.state)
+        tmp_board_state.state = copy(self.state)
         return tmp_board_state
 
     def compute_heuristic(self, player: Player) -> int:
