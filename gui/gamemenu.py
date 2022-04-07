@@ -1,11 +1,11 @@
 from PySide2.QtCore import Slot
-from PySide2.QtWidgets import QWidget, QMainWindow, QGraphicsView, QDialog
+from PySide2.QtWidgets import QWidget, QDialog
 
 from game.settings import Settings
 from gui.gamescene import GameScene
 from gui.preferencemenu import PreferenceMenu
-from gui.ui_files.ui_menu import Ui_Form as UIGameMenu
 from gui.ui_files.ui_checkers import Ui_Form as UICheckers
+from gui.ui_files.ui_menu import Ui_Form as UIGameMenu
 
 
 # Change to QMainwindow
@@ -55,9 +55,11 @@ class CheckersWindow(QDialog):
 
         # connect buttons
         self.ui.btn_reset.clicked.connect(self.reset_scene)
+        self.ui.btn_undo.clicked.connect(self.scene.slot_undo_clicked)
 
     @Slot()
     def reset_scene(self):
         self.scene = None
         self.scene = GameScene(self)
         self.ui.gview.setScene(self.scene)
+        self.ui.btn_undo.clicked.connect(self.scene.slot_undo_clicked)

@@ -1,5 +1,6 @@
 from typing import List
 
+from PySide2.QtCore import Slot
 from PySide2.QtGui import QTransform
 from PySide2.QtWidgets import QGraphicsScene, QGraphicsItem, QGraphicsSceneMouseEvent, QMessageBox
 
@@ -136,3 +137,8 @@ class GameScene(QGraphicsScene):
             pass
             # a: QGraphicsView = self.views()[0]
             # a.parent().close()
+
+    @Slot()
+    def slot_undo_clicked(self):
+        self.game.undo()
+        self._update_checker_board()
