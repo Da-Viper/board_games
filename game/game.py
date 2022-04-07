@@ -14,7 +14,7 @@ class Game:
     def __init__(self):
         self.__memory = Settings.UNDO_MEM
         self.__state: deque[BoardState] = deque()
-        self.__state.append(BoardState())
+        self.__state.append(BoardState.initialize_board())
         self.__ai = AI(Settings.AI_DEPTH)
         self.__human_won = False
 

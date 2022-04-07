@@ -23,24 +23,26 @@ class BoardState:
         """
             Initialises board attributes to default values.
         """
-        self.turn = Settings.FIRST_MOVE
+        self.turn: Player = Settings.FIRST_MOVE
         self.state: list[Piece | None] = [None] * self.NO_SQUARES
-        self.piece_count: dict = {}
-        self.king_count: dict = {}
+        self.piece_count: dict = {Player.AI: 0, Player.HUMAN: 0}
+        self.king_count: dict = {Player.AI: 0, Player.HUMAN: 0}
         self.from_pos = -1
         self.to_pos = -1
         self.double_jump_pos = -1
-        self.__initialize_board()
 
-    def __initialize_board(self):
+    @staticmethod
+    def initialize_board() -> BoardState:
         """
             Method populates initial state with Pieces.
             state contains null/None values for cells that are empty
             state is filled with checker patten in mind
         """
-        SIDE_LENGTH = self.SIDE_LENGTH
-        cur_state = self.state
-        for i in range(len(self.state)):
+        bs = BoardState()
+        bs.turn = Settings.FIRST_MOVE
+        SIDE_LENGTH = Settings.BOARD_DIMEN
+        cur_state = bs.state
+        for i in range(len(bs.state)):
             y = i // SIDE_LENGTH  # row
             x = i % SIDE_LENGTH  # col
 
@@ -55,11 +57,12 @@ class BoardState:
         ai_count = len(list(filter(lambda piece: piece is not None and piece.player is Player.AI, cur_state)))
         human_count = len(list(filter(lambda piece: piece is not None and piece.player is Player.HUMAN, cur_state)))
 
-        self.piece_count[Player.AI] = ai_count
-        self.piece_count[Player.HUMAN] = human_count
+        bs.piece_count[Player.AI] = ai_count
+        bs.piece_count[Player.HUMAN] = human_count
 
-        self.king_count[Player.AI] = ai_count
-        self.king_count[Player.HUMAN] = human_count
+        bs.king_count[Player.AI] = 0
+        bs.king_count[Player.HUMAN] = 0
+        return bs
 
     def deep_copy(self):
         """
@@ -200,6 +203,8 @@ class BoardState:
 
     def __create_new_state(self, old_pos: int, new_pos: int, piece: Piece, jumped: bool, dy: int, dx: int):
         result: BoardState = self.deep_copy()
+        result.piece_count = copy(self.piece_count)
+        result.king_count = copy(self.piece_count)
         # TODO may be missing
         king_conversion = False
 
