@@ -22,15 +22,15 @@ class PreferenceMenu(QDialog):
     @Slot()
     def selected_preference(self):
         checked_button = self.ui.btngrp_difficulty.checkedId()
-
         print(f"the checked button {checked_button}")
         if checked_button == 1:
-            Settings.AI_DEPTH = 1
+            difficulty = 1
         elif checked_button == 2:
-            Settings.AI_DEPTH = 5
+            difficulty = 5
         else:
-            Settings.AI_DEPTH = 8
+            difficulty = 8
 
+        Settings.AI_DEPTH = difficulty
         Settings.FIRST_MOVE = Player.HUMAN if self.ui.btn_rad_player.isChecked() else Player.AI
         Settings.FORCE_CAPTURE = True
 

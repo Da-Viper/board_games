@@ -1,3 +1,4 @@
+import asyncio
 from typing import List
 
 from PySide2.QtGui import QTransform
@@ -26,6 +27,7 @@ class GDialog(QGraphicsScene):
         self.add_tiles()
         self.add_pieces()
         self.highlight_new_pos()
+        self.update()
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         game = self.game
@@ -45,10 +47,11 @@ class GDialog(QGraphicsScene):
                     self.possible_moves = []
                     game.player_move(clicked_piece.get_state())
                     self._update_checker_board()
+                    print("updating board")
                     self.ai_move()
-                    if game.is_over():
-                        return
-                        # TODO add __self.gameover()
+                    # if game.is_over():
+                    #     return
+                    # TODO add __self.gameover()
 
         elif isinstance(clicked_piece, GPiece):
             pos = clicked_piece.board_pos

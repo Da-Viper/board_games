@@ -15,7 +15,7 @@ class Game:
         self.__memory = Settings.UNDO_MEM
         self.__state: deque[BoardState] = deque()
         self.__state.append(BoardState())
-        self.__ai = AI()
+        self.__ai = AI(Settings.AI_DEPTH)
         self.__human_won = False
 
     def player_move(self, new_state: BoardState):
