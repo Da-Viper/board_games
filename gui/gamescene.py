@@ -16,11 +16,13 @@ class GameScene(QGraphicsScene):
 
     def __init__(self, parent=None):
         super(GameScene, self).__init__(parent)
+        self.forced_moves: List[int] = None
         self.game = Game()
         self.possible_moves: List[BoardState] = []
-        self.tiles: List[QGraphicsItem] = [None] * Settings.SQUARE_NO
+        self.tiles: List[BTile] = [None] * Settings.SQUARE_NO
         self.pieces: [QGraphicsItem] = []
         self._setup_game_preferences()
+        self.feedback = None
 
     def _update_checker_board(self):
         self.clear()
@@ -43,6 +45,7 @@ class GameScene(QGraphicsScene):
         if isinstance(clicked_piece, BTile):
             if clicked_piece.is_highlighted:
                 if not game.is_over() and game.get_turn() == Player.HUMAN:
+                    self.forced_moves = []
                     clicked_piece.toggle_highlight()  # turn off highlight
                     self.possible_moves = []
                     game.player_move(clicked_piece.get_state())
@@ -60,6 +63,8 @@ class GameScene(QGraphicsScene):
                 if len(self.possible_moves) == 0:
                     feedback = game.move_feedback_click()
                     if feedback is GameResponse.FORCED_JUMP:
+                        allstate: List[BoardState] = game.get_state().get_possible_state(True)
+                        self.forced_moves = list(map(lambda x: x.get_from_pos(), allstate))
                         self.possible_moves = game.get_valid_moves(pos)
                         self._update_checker_board()
 
@@ -76,12 +81,17 @@ class GameScene(QGraphicsScene):
     def add_tiles(self):
         # scene = self.scene
         tiles = self.tiles
+        force_moves: List[int] = self.forced_moves
         for i in range(Settings.SQUARE_NO):
             grid_x = i % Settings.BOARD_DIMEN
             grid_y = i // Settings.BOARD_DIMEN
             curr_tile = BTile(grid_x, grid_y)
             self.addItem(curr_tile)
             tiles[i] = curr_tile
+
+            if force_moves is not None:
+                if i in force_moves:
+                    tiles[i].toggle_highlight()
 
     def add_pieces(self):
         # scene = self.scene
@@ -105,17 +115,14 @@ class GameScene(QGraphicsScene):
 
         for state in pos_moves:
             h_pos = state.get_to_pos()
-            print(f"the possible GPiece pos: {h_pos % Settings.T_HEIGHT, h_pos // Settings.T_WIDTH}")
             x = (h_pos % Settings.BOARD_DIMEN) * gui_width
             y = (h_pos // Settings.BOARD_DIMEN) * gui_width
             current_tile = self.itemAt(x + offset, y + offset, QTransform())
             if not isinstance(current_tile, BTile):
                 return
             current_tile.toggle_highlight()
-            print(
-                f"BTile highlight pos:{current_tile.pos()}\n")
             current_tile.set_state(state)
-            # current_tile.update()
+
 
     def _setup_game_preferences(self):
         self._update_checker_board()
@@ -131,11 +138,20 @@ class GameScene(QGraphicsScene):
 
         res = msg_box.exec_()
         if res == QMessageBox.Ok:
-            scene_parent = self.parent()
-            scene_parent.reset_scene()
-
+            self.clear()
+            self.reset_game()
         else:
-            self.parent().close_window()
+            pass
+            # a: QGraphicsView = self.views()[0]
+            # a.parent().close()
+
+    def reset_game(self):
+        self.game = Game()
+        self.possible_moves: List[BoardState] = []
+        self.tiles: List[BTile] = [None] * Settings.SQUARE_NO
+        self.pieces: [QGraphicsItem] = []
+        self.forced_moves = None
+        self._setup_game_preferences()
 
     @Slot()
     def slot_undo_clicked(self):
