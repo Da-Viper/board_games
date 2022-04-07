@@ -3,6 +3,8 @@ from __future__ import annotations
 import collections
 from copy import copy
 
+import numpy as np
+
 from game.piece import Piece
 from game.player import Player, get_opposite
 from game.settings import Settings
@@ -72,7 +74,7 @@ class BoardState:
         :return: temporary state to simulate player moves from given position
         """
         tmp_board_state = BoardState()
-        tmp_board_state.state = copy(self.state)
+        tmp_board_state.state = np.copy(self.state)
         return tmp_board_state
 
     def compute_heuristic(self, player: Player) -> int:

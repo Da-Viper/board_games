@@ -1,4 +1,6 @@
 import random
+from itertools import repeat
+from multiprocessing import Pool
 
 from typing import List
 
@@ -27,15 +29,18 @@ class AI:
         best_score = Settings.MIN_VALUE
         equal_bests = []
         depth_ = self.depth
-        minimax_ = self.__minimax
-        for b_state in successors:
-            val = minimax_(b_state, depth_)
-            if val > best_score:
-                best_score = val
-                equal_bests.clear()
 
-            if val == best_score:
-                equal_bests.append(b_state)
+        # use multiprocessing
+        with Pool() as pl:
+            result = pl.starmap(self.minimax_, zip(repeat(depth_), successors))
+
+            for i, val in enumerate(result):
+                if val > best_score:
+                    best_score = val
+                    equal_bests.clear()
+
+                if val == best_score:
+                    equal_bests.append(successors[i])
 
         if len(equal_bests) > 1:
             print(f"{self.player} choosing random best move")
@@ -51,7 +56,7 @@ class AI:
         rand_num = random.randint(0, successors_len - 1)
         return successors[rand_num]
 
-    def __minimax(self, node: BoardState, depth: int, alpha: int = None, beta: int = None) -> int:
+    def minimax_(self, depth: int, node: BoardState, alpha: int = None, beta: int = None) -> int:
         if (depth == 0) or node.is_game_over():
             return node.compute_heuristic(self.player)
 
@@ -64,7 +69,7 @@ class AI:
         if node.turn is self.player:
             v = Settings.MIN_VALUE
             for child in node.get_successors():
-                v = max(v, self.__minimax(child, depth - 1, alpha, beta))
+                v = max(v, self.minimax_(depth - 1, child, alpha, beta))
                 alpha = max(alpha, v)
                 if alpha >= beta:
                     break
@@ -74,7 +79,7 @@ class AI:
         else:
             v = Settings.MAX_VALUE
             for child in node.get_successors():
-                v = min(v, self.__minimax(child, depth - 1, alpha, beta))
+                v = min(v, self.minimax_(depth - 1, child, alpha, beta))
                 beta = min(beta, v)
                 if alpha >= beta:
                     break
