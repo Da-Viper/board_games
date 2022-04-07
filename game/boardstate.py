@@ -19,8 +19,8 @@ class BoardState:
                 (b) AI movement (minmax algorithm simulation)
     """
 
-    SIDE_LENGTH = Settings.BOARD_DIMEN
-    NO_SQUARES = SIDE_LENGTH * SIDE_LENGTH
+    DIMENSION = Settings.BOARD_DIMEN
+    NO_SQUARES = DIMENSION * DIMENSION
 
     def __init__(self):
         """
@@ -117,19 +117,17 @@ class BoardState:
         return self.piece_count[player] + self.king_count[player]
 
     def get_all_states(self) -> list[BoardState]:
-        successors = self.get_successors_jump(True)
+        gen_states = self.get_possible_state(True)
         if Settings.FORCE_CAPTURE:
-            has_successors = len(successors) > 0
-            if has_successors:
-                return successors
+            if len(gen_states) > 0:
+                return gen_states
             else:
-                ss = self.get_successors_jump(False)
-                return ss
+                return self.get_possible_state(False)
         else:
-            successors.extend(self.get_successors_jump(False))
-            return successors
+            gen_states.extend(self.get_possible_state(False))
+            return gen_states
 
-    def get_successors_jump(self, jump: bool) -> list[BoardState]:
+    def get_possible_state(self, jump: bool) -> list[BoardState]:
         result: list[BoardState] = []
         c_state = self.state
         turn_ = self.turn
@@ -137,35 +135,35 @@ class BoardState:
             cur_piece: Piece = c_state[i]
             if cur_piece is not None:
                 if cur_piece.player is turn_:
-                    result.extend(self.get_successors_pos_jump(i, jump))
+                    result.extend(self.get_possible_states(i, jump))
         return result
 
-    def get_successors_pos(self, pos: int) -> list[BoardState]:
+    def get_states_from_position(self, pos: int) -> list[BoardState]:
         if Settings.FORCE_CAPTURE:
-            jumps = self.get_successors_jump(True)
+            jumps = self.get_possible_state(True)
             has_jumps = len(jumps) > 0
-            return self.get_successors_pos_jump(pos, has_jumps)
+            return self.get_possible_states(pos, has_jumps)
         else:
             result: list[BoardState] = []
-            result.extend(self.get_successors_pos_jump(pos, True))
-            result.extend(self.get_successors_pos_jump(pos, False))
+            result.extend(self.get_possible_states(pos, True))
+            result.extend(self.get_possible_states(pos, False))
             return result
 
-    def get_successors_pos_jump(self, pos: int, jump: bool) -> list[BoardState]:
+    def get_possible_states(self, pos: int, jump: bool) -> list[BoardState]:
         if self.get_piece(pos).player != self.turn:
             raise ValueError(" This is not your piece in this position ")
 
         cpiece = self.state[pos]
         if jump:
-            return self.jump_successors(cpiece, pos)
+            return self.get_attacking_states(cpiece, pos)
 
-        return self.non_jump_successors(cpiece, pos)
+        return self.get_non_attacking_states(cpiece, pos)
 
-    def non_jump_successors(self, piece: Piece, pos: int) -> list[BoardState]:
+    def get_non_attacking_states(self, piece: Piece, pos: int) -> list[BoardState]:
         result: list[BoardState] = []
-        side_length = self.SIDE_LENGTH
-        x = pos % side_length
-        y = pos // side_length
+        board_dimen = self.DIMENSION
+        x = pos % board_dimen
+        y = pos // board_dimen
 
         for dx in piece.x_moves():
             for dy in piece.y_moves():
@@ -173,14 +171,14 @@ class BoardState:
                 new_y = y + dy
                 if self.__is_valid(new_y, new_x):
                     if self.__get_piece(new_y, new_x) is None:
-                        new_pos = side_length * new_y + new_x
+                        new_pos = board_dimen * new_y + new_x
                         result.append(self.__create_new_state(pos, new_pos, piece, False, dy, dx))
 
         return result
 
-    def jump_successors(self, piece: Piece, pos: int) -> list[BoardState]:
+    def get_attacking_states(self, piece: Piece, pos: int) -> list[BoardState]:
         result = []
-        side_length = self.SIDE_LENGTH
+        side_length = self.DIMENSION
         djump_pos = self.double_jump_pos
 
         if (djump_pos > 0) and pos != djump_pos:
@@ -229,20 +227,14 @@ class BoardState:
         result.turn = opp_player
 
         if jumped:
-            result.state[new_pos - self.SIDE_LENGTH * dy - dx] = None
+            result.state[new_pos - self.DIMENSION * dy - dx] = None
             result.piece_count[opp_player] -= 1
 
-            if len(result.jump_successors(piece, new_pos)) > 0 and king_conversion is False:
+            if len(result.get_attacking_states(piece, new_pos)) > 0 and king_conversion is False:
                 result.turn = pplayer
                 result.double_jump_pos = new_pos
 
         return result
-
-    def __is_king_pos(self, pos: int, player: Player) -> bool:
-        y = pos // self.SIDE_LENGTH
-        if (y == 0) and player is Player.HUMAN:
-            return True
-        return (y == self.SIDE_LENGTH - 1) and (player is Player.AI)
 
     def get_to_pos(self):
         return self.to_pos
@@ -260,8 +252,14 @@ class BoardState:
     def get_piece(self, rel_pos: int) -> Piece:
         return self.state[rel_pos]
 
+    def __is_king_pos(self, pos: int, player: Player) -> bool:
+        y = pos // self.DIMENSION
+        if (y == 0) and player is Player.HUMAN:
+            return True
+        return (y == self.DIMENSION - 1) and (player is Player.AI)
+
     def __get_piece(self, y: int, x: int) -> Piece:
-        return self.get_piece(self.SIDE_LENGTH * y + x)
+        return self.get_piece(self.DIMENSION * y + x)
 
     def __is_valid(self, x: int, y: int) -> bool:
-        return (0 <= y < self.SIDE_LENGTH) and (0 <= x < self.SIDE_LENGTH)
+        return (0 <= y < self.DIMENSION) and (0 <= x < self.DIMENSION)

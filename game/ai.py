@@ -17,8 +17,8 @@ class AI:
 
     def move(self, state: BoardState, player: Player):
         if state.turn is player:
-            successors = state.get_all_states()
-            rv = self.__minimax_move(successors)
+            generated_states = state.get_all_states()
+            rv = self.__minimax_move(generated_states)
             print(f"minimax {rv}")
             return rv
 
@@ -51,7 +51,7 @@ class AI:
     def __random_move(successors: List[BoardState]) -> BoardState:
         successors_len = len(successors)
         if successors_len < 1:
-            raise RuntimeError("empty sucessors cant choose a random board")
+            raise RuntimeError("empty successors cant choose a random board")
 
         rand_num = random.randint(0, successors_len - 1)
         return successors[rand_num]
@@ -60,14 +60,17 @@ class AI:
         if (depth == 0) or node.is_game_over():
             return node.compute_heuristic(self.player)
 
+        max_value = Settings.MAX_VALUE
+        min_value = Settings.MIN_VALUE
+
         if alpha is None:
-            alpha = Settings.MIN_VALUE  # max
+            alpha = min_value  # max
         if beta is None:
-            beta = Settings.MAX_VALUE  # min
+            beta = max_value  # min
 
         # Max player
         if node.turn is self.player:
-            v = Settings.MIN_VALUE
+            v = min_value
             for child in node.get_all_states():
                 v = max(v, self.minimax_(depth - 1, child, alpha, beta))
                 alpha = max(alpha, v)
@@ -77,7 +80,7 @@ class AI:
 
         # Min player
         else:
-            v = Settings.MAX_VALUE
+            v = max_value
             for child in node.get_all_states():
                 v = min(v, self.minimax_(depth - 1, child, alpha, beta))
                 beta = min(beta, v)

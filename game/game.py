@@ -22,51 +22,15 @@ class Game:
         if not self.is_over() and (self.state_peek().get_turn() is Player.HUMAN):
             self.__update_state(new_state)
 
-    def playerMove(self, from_pos: int, dx: int, dy: int) -> GameResponse:
-        to_pos: int = from_pos + dx + BoardState.SIDE_LENGTH * dy
-        if to_pos > len(self.get_state().state):
-            return GameResponse.NOT_ON_BOARD
-
-        jump_successors: List[BoardState] = self.state_peek().get_successors_jump(True)
-        can_jump: bool = len(jump_successors) > 0
-        if can_jump:
-            for succ in jump_successors:
-                if succ.get_from_pos() == from_pos and succ.get_to_pos == to_pos:
-                    self.__update_state(succ)
-                    return GameResponse.SUCCESS
-
-            return GameResponse.FORCED_JUMP
-
-        if abs(dx) != abs(dy):
-            return GameResponse.NOT_DIAGONAL
-
-        if self.get_state().state[to_pos] is not None:
-            return GameResponse.NO_FREE_SPACE
-
-        non_jump_successors: List[BoardState] = self.state_peek().get_successors_pos_jump(from_pos, False)
-
-        for succ in non_jump_successors:
-            if succ.get_from_pos() == from_pos and succ.get_to_pos() == to_pos:
-                self.__update_state(succ)
-                return GameResponse.SUCCESS
-
-        if dy > 1:
-            return GameResponse.NO_BACKWARD_MOVES_FOR_SINGLES
-
-        if abs(dx) == 2:
-            return GameResponse.ONLY_SINGLE_DIAGONALS
-
-        return GameResponse.UNKNOWN_INVALID
-
     def move_feedback_click(self) -> GameResponse:
-        jump_successors: List[BoardState] = self.state_peek().get_successors_jump(True)
+        jump_successors: List[BoardState] = self.state_peek().get_possible_state(True)
         if len(jump_successors) > 0:
             return GameResponse.FORCED_JUMP
         else:
             return GameResponse.PIECE_BLOCKED
 
     def get_valid_moves(self, pos: int):
-        return self.state_peek().get_successors_pos(pos)
+        return self.state_peek().get_states_from_position(pos)
 
     def ai_move(self):
         if not self.is_over() and self.state_peek().get_turn() == Player.AI:
