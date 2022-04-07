@@ -1,7 +1,7 @@
 from typing import List
 
 from PySide2.QtGui import QTransform
-from PySide2.QtWidgets import QGraphicsScene, QGraphicsItem, QGraphicsSceneMouseEvent
+from PySide2.QtWidgets import QGraphicsScene, QGraphicsItem, QGraphicsSceneMouseEvent, QMessageBox
 
 from game.boardstate import BoardState
 from game.game import Game
@@ -20,6 +20,7 @@ class GDialog(QGraphicsScene):
         self.tiles: List[QGraphicsItem] = [None] * Settings.SQUARE_NO
         self.pieces: [QGraphicsItem] = []
         self._setup_game_preferences()
+        self._show_game_over_dialog()
 
     def _update_checker_board(self):
         self.clear()
@@ -48,8 +49,8 @@ class GDialog(QGraphicsScene):
                     self._update_checker_board()
                     print("updating board")
                     self.ai_move()
-                    # if game.is_over():
-                    #     return
+                    if game.is_over():
+                        self._show_game_over_dialog()
                     # TODO add __self.gameover()
 
         elif isinstance(clicked_piece, GPiece):
@@ -120,3 +121,19 @@ class GDialog(QGraphicsScene):
         self._update_checker_board()
         if Settings.FIRST_MOVE is Player.AI:
             self.ai_move()
+
+    def _show_game_over_dialog(self):
+        msg_box = QMessageBox()
+        msg_box.setText(self.game.get_game_over_message())
+        msg_box.setInformativeText("Do you want to play again ?")
+        msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg_box.setDefaultButton(QMessageBox.Cancel)
+
+        res = msg_box.exec_()
+        if res == QMessageBox.Ok:
+            self.clear()
+            self.__init__()
+        else:
+            pass
+            # a: QGraphicsView = self.views()[0]
+            # a.parent().close()
