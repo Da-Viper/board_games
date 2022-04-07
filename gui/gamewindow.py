@@ -99,15 +99,14 @@ class GDialog(QGraphicsScene):
         pos_moves = self.possible_moves
         if not pos_moves:
             return
-
-        print(f"the possible moves: {len(pos_moves)}")
+        gui_width = Settings.G_WIDTH
+        offset = gui_width / 2
 
         for state in pos_moves:
             h_pos = state.get_to_pos()
             print(f"the possible GPiece pos: {h_pos % Settings.T_HEIGHT, h_pos // Settings.T_WIDTH}")
-            x = (h_pos % Settings.BOARD_DIMEN) * Settings.G_WIDTH
-            y = (h_pos // Settings.BOARD_DIMEN) * Settings.G_WIDTH
-            offset = Settings.G_WIDTH / 2
+            x = (h_pos % Settings.BOARD_DIMEN) * gui_width
+            y = (h_pos // Settings.BOARD_DIMEN) * gui_width
             current_tile = self.itemAt(x + offset, y + offset, QTransform())
             if not isinstance(current_tile, BTile):
                 return
@@ -115,7 +114,7 @@ class GDialog(QGraphicsScene):
             print(
                 f"BTile highlight pos:{current_tile.pos()}\n")
             current_tile.set_state(state)
-            current_tile.update()
+            # current_tile.update()
 
     def _setup_game_preferences(self):
         self._update_checker_board()

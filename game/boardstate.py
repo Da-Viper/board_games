@@ -151,7 +151,7 @@ class BoardState:
 
     def get_successors_pos_jump(self, pos: int, jump: bool) -> list[BoardState]:
         if self.get_piece(pos).player != self.turn:
-            raise ValueError("no piece in position ")
+            raise ValueError(" This is not your piece in this position ")
 
         cpiece = self.state[pos]
         if jump:
