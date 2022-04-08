@@ -25,7 +25,7 @@ class BTile(QGraphicsRectItem):
         self.__state = None
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget):
-        super().paint(painter, option, widget)
+        # super().paint(painter, option, widget)
         painter.fillRect(self.rect(), self.color)
 
     def toggle_highlight(self):
@@ -47,8 +47,8 @@ class BTile(QGraphicsRectItem):
 class GPiece(QGraphicsRectItem):
 
     def __init__(self, x: int, y: int, piece: Piece, pos: int = 0, parent=None):
-        self.scale = Settings.G_WIDTH
-        scale = self.scale
+        self.g_scale = Settings.G_WIDTH
+        scale = self.g_scale
         super(GPiece, self).__init__(0, 0, scale, scale, parent)
         self.board_pos = pos
         self.setPos(x * scale, y * scale)
@@ -69,7 +69,7 @@ class GPiece(QGraphicsRectItem):
         painter.setBrush(self.color)
         pen = QPen(Qt.SolidPattern, 5)
         painter.setPen(pen)
-        scale = 0.8 * self.scale
+        scale = 0.8 * self.g_scale
         painter.drawEllipse(center, scale / 3, scale / 3)
         if self.piece.is_king:
             painter.setPen(Qt.NoPen)

@@ -6,7 +6,7 @@ class Settings:
     FIRST_MOVE: Player = Player.HUMAN
     AI_DEPTH: int = 8
     UNDO_MEM: int = 20
-    HEURISTIC: int = 1
+    HEURISTIC: int = 2
     T_WIDTH = 8
     T_HEIGHT = 8
     BOARD_DIMEN = T_WIDTH
