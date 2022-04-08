@@ -2,7 +2,7 @@ from collections import deque
 from typing import List
 
 from game.boardstate import BoardState
-from game.ai import AI
+from game import AI
 from game.settings import Settings
 from game.player import Player
 from game.gameresponse import GameResponse
@@ -14,7 +14,6 @@ class Game:
         self.prev_states: deque[BoardState] = deque()
         self.prev_states.append(BoardState.initialize_board())
         self._undo_size = Settings.UNDO_MEM
-        self._ai = AI(Settings.AI_DEPTH)
         self.__human_won = False
 
     def player_move(self, new_state: BoardState):
@@ -32,8 +31,8 @@ class Game:
         return self._last_state().get_states_from_position(pos)
 
     def ai_move(self):
-        if not self.is_over() and self._last_state().get_turn() == Player.AI:
-            new_state: BoardState = self._ai.move(self._last_state(), Player.AI)
+        if not self.is_over() and self.get_turn() == Player.AI:
+            new_state: BoardState = AI.move(self._last_state(), Player.AI)
             self._update_state(new_state)
 
     def get_state(self) -> BoardState:
