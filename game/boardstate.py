@@ -27,7 +27,7 @@ class BoardState:
             Initialises board attributes to default values.
         """
         self.turn: Player = Settings.FIRST_MOVE
-        self.state = np.empty([BoardState.NO_SQUARES], dtype=Piece)
+        self.state: np.ndarray = np.empty([BoardState.NO_SQUARES], dtype=Piece)
         self.piece_count: dict = {Player.AI: 0, Player.HUMAN: 0}
         self.king_count: dict = {Player.AI: 0, Player.HUMAN: 0}
 

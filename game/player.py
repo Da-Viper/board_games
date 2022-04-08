@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class Player(Enum):
+class Player(IntEnum):
     AI = 0
     HUMAN = 1
 
