@@ -24,7 +24,7 @@ class PreferenceMenu(QDialog):
         if checked_button == 1:
             difficulty = 1
         elif checked_button == 2:
-            difficulty = 5
+            difficulty = 6
         else:
             difficulty = 8
 

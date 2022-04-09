@@ -3,6 +3,7 @@ from itertools import repeat
 from multiprocessing import Pool
 
 from typing import List
+from math import inf
 
 from game.boardstate import BoardState
 from game.player import Player
@@ -12,38 +13,44 @@ from game.settings import Settings
 def move(state: BoardState, player: Player):
     if state.turn is player:
         generated_states = state.get_all_states()
-        return __minimax_move(generated_states)
+        return _minimax_move(generated_states, player)
 
 
-# def pos_moves(self, state: BoardState, player: Player):
-#     generated_states = state.get_all_states()
-
-
-def __minimax_move(successors: List[BoardState]) -> BoardState:
+def _minimax_move(successors: List[BoardState], max_player: Player) -> BoardState:
     if len(successors) == 1:
         return successors[0]
 
-    best_score = Settings.MIN_VALUE
+    best_score = -inf
     equal_bests = []
     depth_ = Settings.AI_DEPTH
     print(f"the minimax depth: {depth_}")
+    res = "AI" if max_player == 0 else "HUMAN"
+    print(f"maximizing player: {res}")
 
-    # use multiprocessing
-    with Pool() as pl:
-        result = pl.starmap(minimax_, zip(repeat(depth_), successors))
+    # # use multiprocessing
+    # with Pool() as pl:
+    #     result = pl.starmap(_alpha_beta, zip(repeat(depth_), successors, repeat(max_player)))
+    #
+    #     for i, val in enumerate(result):
+    #         if val > best_score:
+    #             best_score = val
+    #             equal_bests.clear()
+    #
+    #         if val == best_score:
+    #             equal_bests.append(successors[i])
+    for b_state in successors:
+        val = _alpha_beta(depth_, b_state, max_player)
+        if val > best_score:
+            best_score = val
+            equal_bests.clear()
 
-        for i, val in enumerate(result):
-            if val > best_score:
-                best_score = val
-                equal_bests.clear()
+        if val == best_score:
+            equal_bests.append(b_state)
 
-            if val == best_score:
-                equal_bests.append(successors[i])
-
-    return __random_move(equal_bests)
+    return _random_move(equal_bests)
 
 
-def __random_move(successors: List[BoardState]) -> BoardState:
+def _random_move(successors: List[BoardState]) -> BoardState:
     successors_len = len(successors)
     if successors_len < 1:
         raise RuntimeError("empty successors cant choose a random board")
@@ -52,34 +59,32 @@ def __random_move(successors: List[BoardState]) -> BoardState:
     return successors[rand_num]
 
 
-def minimax_(depth: int, node: BoardState, alpha: int = None, beta: int = None) -> int:
+def _alpha_beta(depth: int, node: BoardState, max_player: Player, alpha: int = -inf, beta: int = inf) -> int:
     if (depth == 0) or node.is_game_over():
         return node.compute_heuristic(Player.AI)
 
-    max_value = Settings.MAX_VALUE
-    min_value = Settings.MIN_VALUE
+    node_states = node.get_all_states()
 
-    if alpha is None:
-        alpha = min_value  # max
-    if beta is None:
-        beta = max_value  # min
+    node_states.sort(key=lambda x: x.compute_heuristic(max_player))
 
     # Max player
     if node.turn is Player.AI:
-        v = min_value
-        for child in node.get_all_states():
-            v = max(v, minimax_(depth - 1, child, alpha, beta))
-            alpha = max(alpha, v)
+        val = -inf
+        for child in node_states:
+            val = max(val, _alpha_beta(depth - 1, child, max_player, alpha, beta))
+            alpha = max(alpha, val)
             if alpha >= beta:
                 break
-        return v
+        return val
 
     # Min player
     else:
-        v = max_value
-        for child in node.get_all_states():
-            v = min(v, minimax_(depth - 1, child, alpha, beta))
-            beta = min(beta, v)
+        val = inf
+        for child in node_states:
+            val = min(val, _alpha_beta(depth - 1, child, max_player, alpha, beta))
+            beta = min(beta, val)
             if alpha >= beta:
                 break
-        return v
+        return val
+
+# def _nega_max()

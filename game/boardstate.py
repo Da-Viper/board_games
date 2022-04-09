@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import collections
 from copy import copy
+from math import inf
 
 import numpy as np
 
@@ -27,7 +28,7 @@ class BoardState:
             Initialises board attributes to default values.
         """
         self.turn: Player = Settings.FIRST_MOVE
-        self.state: np.ndarray = np.empty([BoardState.NO_SQUARES], dtype=Piece)
+        self.state = np.empty([BoardState.NO_SQUARES], dtype=Piece)
         self.piece_count: dict = {Player.AI: 0, Player.HUMAN: 0}
         self.king_count: dict = {Player.AI: 0, Player.HUMAN: 0}
 
@@ -89,28 +90,28 @@ class BoardState:
             return self.heuristic1(player)
         return self.heuristic2(player)
 
-    def heuristic1(self, player: Player) -> int:
+    def heuristic1(self, player: Player) -> float | int:
         """
 
         :param player:
         :return:
         """
-        max_int = Settings.MAX_VALUE
+        # max_int = Settings.MAX_VALUE
         opp_player = get_opposite(player)
         if self.piece_count[opp_player] == 0:
-            return max_int
+            return inf
         if self.piece_count[player] == 0:
-            return -max_int
+            return -inf
 
         return self.piece_score(player) - self.piece_score(opp_player)
 
-    def heuristic2(self, player: Player) -> int:
-        max_int = Settings.MAX_VALUE
+    def heuristic2(self, player: Player) -> float | int:
+        # max_int = Settings.MAX_VALUE
         opp_player = get_opposite(player)
         if self.piece_count[opp_player] == 0:
-            return max_int
+            return inf
         if self.piece_count[player] == 0:
-            return -max_int
+            return -inf
 
         return self.piece_score(player) // self.piece_score(opp_player)
 
