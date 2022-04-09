@@ -7,7 +7,7 @@ from math import inf
 import numpy as np
 
 from game.piece import Piece
-from game.player import Player, get_opposite
+from game.player import Player
 from game.settings import Settings
 
 
@@ -167,42 +167,45 @@ class BoardState:
         x = pos % board_dimen
         y = pos // board_dimen
 
-        for dx in piece.x_moves():
-            for dy in piece.y_moves():
-                new_x = x + dx
-                new_y = y + dy
-                if self.__is_valid(new_y, new_x):
-                    if self.__get_piece(new_y, new_x) is None:
-                        new_pos = board_dimen * new_y + new_x
-                        result.append(self.__create_new_state(pos, new_pos, piece, False, dy, dx))
+        for dx, dy in piece.pos_moves():
+            new_x = x + dx
+            new_y = y + dy
+
+            if not self._is_valid(new_y, new_x):
+                continue
+            if self._get_piece(new_y, new_x) is not None:
+                continue
+
+            new_pos = board_dimen * new_y + new_x
+            result.append(self.__create_new_state(pos, new_pos, piece, False, dy, dx))
 
         return result
 
     def get_attacking_states(self, piece: Piece, pos: int) -> list[BoardState]:
+        djump_pos = self.double_jump_pos
+        if (djump_pos > 0) and pos != djump_pos:
+            return []
+
         result = []
         side_length = self.DIMENSION
-        djump_pos = self.double_jump_pos
-
-        if (djump_pos > 0) and pos != djump_pos:
-            return result
-
         x = pos % side_length
         y = pos // side_length
+        _get_piece = self._get_piece
 
-        for dx in piece.x_moves():
-            for dy in piece.y_moves():
-                new_x = x + dx
-                new_y = y + dy
+        for dx, dy in piece.pos_moves():
+            new_x = x + dx
+            new_y = y + dy
 
-                if self.__is_valid(new_y, new_x):
-                    if (self.__get_piece(new_y, new_x) is not None) and (
-                            self.__get_piece(new_y, new_x).player == get_opposite(piece.player)):
-                        new_x += dx
-                        new_y += dy
-                        if self.__is_valid(new_y, new_x):
-                            if self.__get_piece(new_y, new_x) is None:
-                                new_pos = side_length * new_y + new_x
-                                result.append(self.__create_new_state(pos, new_pos, piece, True, dy, dx))
+            if not self._is_valid(new_y, new_x):
+                continue
+            piece_pos = _get_piece(new_y, new_x)
+            if (piece_pos is not None) and (piece_pos.player == get_opposite(piece.player)):
+                new_x += dx
+                new_y += dy
+                if self._is_valid(new_y, new_x):
+                    if _get_piece(new_y, new_x) is None:
+                        new_pos = side_length * new_y + new_x
+                        result.append(self.__create_new_state(pos, new_pos, piece, True, dy, dx))
 
         return result
 
@@ -260,8 +263,13 @@ class BoardState:
             return True
         return (y == self.DIMENSION - 1) and (player is Player.AI)
 
-    def __get_piece(self, y: int, x: int) -> Piece:
+    def _get_piece(self, y: int, x: int) -> Piece:
         return self.get_piece(self.DIMENSION * y + x)
 
-    def __is_valid(self, x: int, y: int) -> bool:
+    def _is_valid(self, x: int, y: int) -> bool:
         return (0 <= y < self.DIMENSION) and (0 <= x < self.DIMENSION)
+
+
+def get_opposite(ptype: Player) -> Player:
+    # return ptype * -1
+    return Player.AI if ptype is Player.HUMAN else Player.HUMAN

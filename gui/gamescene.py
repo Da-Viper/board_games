@@ -81,7 +81,7 @@ class GameScene(QGraphicsScene):
     def add_tiles(self):
         # scene = self.scene
         tiles = self.tiles
-        force_moves: List[int] = self.forced_moves
+        force_moves = self.forced_moves
         for i in range(Settings.SQUARE_NO):
             grid_x = i % Settings.BOARD_DIMEN
             grid_y = i // Settings.BOARD_DIMEN
@@ -96,11 +96,12 @@ class GameScene(QGraphicsScene):
     def add_pieces(self):
         # scene = self.scene
         pieces = self.pieces
+        curr_state = self.game.get_state()
         for i in range(Settings.SQUARE_NO):
 
             grid_x = i % Settings.BOARD_DIMEN
             grid_y = i // Settings.BOARD_DIMEN
-            curr_piece = self.game.get_state().get_piece(i)
+            curr_piece = curr_state.get_piece(i)
             if curr_piece is not None:
                 curr_gpiece = GPiece(grid_x, grid_y, curr_piece, i)
                 self.addItem(curr_gpiece)
@@ -114,6 +115,8 @@ class GameScene(QGraphicsScene):
         offset = gui_width / 2
 
         for state in pos_moves:
+            print(f"type of state : {type(state)}")
+            print(f"type of state : {pos_moves}")
             h_pos = state.get_to_pos()
             x = (h_pos % Settings.BOARD_DIMEN) * gui_width
             y = (h_pos // Settings.BOARD_DIMEN) * gui_width
@@ -122,7 +125,6 @@ class GameScene(QGraphicsScene):
                 return
             current_tile.toggle_highlight()
             current_tile.set_state(state)
-
 
     def _setup_game_preferences(self):
         self._update_checker_board()

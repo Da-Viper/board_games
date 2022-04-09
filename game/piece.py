@@ -1,4 +1,5 @@
-from typing import List
+import itertools
+from typing import Iterable, Tuple
 
 from game.player import Player
 
@@ -9,15 +10,13 @@ class Piece:
         self.player = player_type
         self.is_king = is_king
 
-    def get_type(self):
-        return self.player
-
-    def y_moves(self) -> List[int]:
+    def pos_moves(self) -> Iterable[Tuple[int, int]]:
+        x_moves = (-1, 1)
         if self.is_king:
-            return [-1, 1]
+            y_moves = (-1, 1)
         else:
-            return [1] if self.player is Player.AI else [-1]
-
-    @staticmethod
-    def x_moves() -> List[int]:
-        return [-1, 1]
+            if self.player is Player.AI:
+                y_moves = (1,)
+            else:
+                y_moves = (-1,)
+        return itertools.product(x_moves, y_moves)
