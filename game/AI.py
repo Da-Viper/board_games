@@ -27,26 +27,17 @@ def _minimax_move(successors: List[BoardState], max_player: Player) -> BoardStat
     res = "AI" if max_player == 0 else "HUMAN"
     print(f"maximizing player: {res}")
 
-    # # use multiprocessing
-    # with Pool() as pl:
-    #     result = pl.starmap(_alpha_beta, zip(repeat(depth_), successors, repeat(max_player)))
-    #
-    #     for i, val in enumerate(result):
-    #         if val > best_score:
-    #             best_score = val
-    #             equal_bests.clear()
-    #
-    #         if val == best_score:
-    #             equal_bests.append(successors[i])
-    for b_state in successors:
-        val = _alpha_beta(depth_, b_state, max_player)
-        if val > best_score:
-            best_score = val
-            equal_bests.clear()
+    # use multiprocessing
+    with Pool() as pl:
+        result = pl.starmap(_alpha_beta, zip(repeat(depth_), successors, repeat(max_player)))
 
-        if val == best_score:
-            equal_bests.append(b_state)
+        for i, val in enumerate(result):
+            if val > best_score:
+                best_score = val
+                equal_bests.clear()
 
+            if val == best_score:
+                equal_bests.append(successors[i])
     return _random_move(equal_bests)
 
 

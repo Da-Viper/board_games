@@ -48,8 +48,7 @@ class BoardState:
         SIDE_LENGTH = Settings.BOARD_DIMEN
         cur_state = bs.state
         for i in range(len(cur_state)):
-            y = i // SIDE_LENGTH  # row
-            x = i % SIDE_LENGTH  # col
+            y, x = divmod(i, SIDE_LENGTH)
 
             if (x + y) % 2 == 1:  # checks if position is even or odd
 
@@ -76,7 +75,7 @@ class BoardState:
         :return: temporary state to simulate player moves from given position
         """
         tmp_board_state = BoardState()
-        tmp_board_state.state = np.copy(self.state)
+        tmp_board_state.state = self.state.copy()
         return tmp_board_state
 
     def compute_heuristic(self, player: Player) -> int:
@@ -152,7 +151,7 @@ class BoardState:
             return result
 
     def get_possible_states(self, pos: int, jump: bool) -> list[BoardState]:
-        if self.get_piece(pos).player != self.turn:
+        if self.state[pos].player != self.turn:
             raise ValueError(" This is not your piece in this position ")
 
         cpiece = self.state[pos]
@@ -164,8 +163,7 @@ class BoardState:
     def get_non_attacking_states(self, piece: Piece, pos: int) -> list[BoardState]:
         result: list[BoardState] = []
         board_dimen = self.DIMENSION
-        x = pos % board_dimen
-        y = pos // board_dimen
+        y, x = divmod(pos, board_dimen)
 
         for dx, dy in piece.pos_moves():
             new_x = x + dx
@@ -188,8 +186,7 @@ class BoardState:
 
         result = []
         side_length = self.DIMENSION
-        x = pos % side_length
-        y = pos // side_length
+        y, x = divmod(pos, side_length)
         _get_piece = self._get_piece
 
         for dx, dy in piece.pos_moves():
@@ -217,7 +214,7 @@ class BoardState:
         king_conversion = False
 
         pplayer = piece.player
-        if self.__is_king_pos(new_pos, pplayer):
+        if self._is_king_pos(new_pos, pplayer):
             piece = Piece(pplayer, True)
             king_conversion = True
             result.king_count[pplayer] += 1
@@ -254,20 +251,19 @@ class BoardState:
         pc = self.piece_count
         return (pc[Player.AI] == 0) or (pc[Player.HUMAN] == 0)
 
-    def get_piece(self, rel_pos: int) -> Piece:
-        return self.state[rel_pos]
+    @staticmethod
+    def _is_king_pos(pos: int, player: Player) -> bool:
+        row = pos // BoardState.DIMENSION
+        king_row = 0 if player is Player.HUMAN else BoardState.DIMENSION - 1
 
-    def __is_king_pos(self, pos: int, player: Player) -> bool:
-        y = pos // self.DIMENSION
-        if (y == 0) and player is Player.HUMAN:
-            return True
-        return (y == self.DIMENSION - 1) and (player is Player.AI)
+        return row == king_row
 
     def _get_piece(self, y: int, x: int) -> Piece:
-        return self.get_piece(self.DIMENSION * y + x)
+        return self.state[BoardState.DIMENSION * y + x]
 
-    def _is_valid(self, x: int, y: int) -> bool:
-        return (0 <= y < self.DIMENSION) and (0 <= x < self.DIMENSION)
+    @staticmethod
+    def _is_valid(x: int, y: int) -> bool:
+        return (0 <= y < BoardState.DIMENSION) and (0 <= x < BoardState.DIMENSION)
 
 
 def get_opposite(ptype: Player) -> Player:

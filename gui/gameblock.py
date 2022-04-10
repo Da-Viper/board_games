@@ -25,7 +25,6 @@ class BTile(QGraphicsRectItem):
         self.__state = None
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget):
-        # super().paint(painter, option, widget)
         painter.fillRect(self.rect(), self.color)
 
     def toggle_highlight(self):

@@ -83,8 +83,7 @@ class GameScene(QGraphicsScene):
         tiles = self.tiles
         force_moves = self.forced_moves
         for i in range(Settings.SQUARE_NO):
-            grid_x = i % Settings.BOARD_DIMEN
-            grid_y = i // Settings.BOARD_DIMEN
+            grid_y, grid_x = divmod(i, Settings.BOARD_DIMEN)
             curr_tile = BTile(grid_x, grid_y)
             self.addItem(curr_tile)
             tiles[i] = curr_tile
@@ -99,9 +98,8 @@ class GameScene(QGraphicsScene):
         curr_state = self.game.get_state()
         for i in range(Settings.SQUARE_NO):
 
-            grid_x = i % Settings.BOARD_DIMEN
-            grid_y = i // Settings.BOARD_DIMEN
-            curr_piece = curr_state.get_piece(i)
+            grid_y, grid_x = divmod(i, Settings.BOARD_DIMEN)
+            curr_piece = curr_state.state[i]
             if curr_piece is not None:
                 curr_gpiece = GPiece(grid_x, grid_y, curr_piece, i)
                 self.addItem(curr_gpiece)
