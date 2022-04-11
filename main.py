@@ -4,7 +4,7 @@ import sys
 from PySide2.QtCore import QCoreApplication, Qt
 from PySide2.QtWidgets import QApplication, QStyleFactory
 
-from gui.gamemenu import GameMenu
+from game.checkers.gui.gamemenu import GameMenu
 
 
 def main():
