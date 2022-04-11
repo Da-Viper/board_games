@@ -1,9 +1,9 @@
 from PySide2.QtCore import Slot
 from PySide2.QtWidgets import QDialog
 
-from game.player import Player
+from game.checkers.engine.player import Player
 from game.settings import Settings
-from gui.ui_files.ui_preference import Ui_Dialog as UIPreferenceDialog
+from game.checkers.gui.ui_files.ui_preference import Ui_Dialog as UIPreferenceDialog
 
 
 class PreferenceMenu(QDialog):

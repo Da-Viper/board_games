@@ -1,7 +1,7 @@
 import itertools
 from typing import Iterable, Tuple
 
-from game.player import Player
+from game.checkers.engine.player import Player
 
 
 class Piece:

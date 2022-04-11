@@ -5,8 +5,8 @@ from multiprocessing import Pool
 from typing import List
 from math import inf
 
-from game.snode import SNode
-from game.player import Player
+from game.checkers.engine.snode import SNode
+from game.checkers.engine.player import Player
 from game.settings import Settings
 
 

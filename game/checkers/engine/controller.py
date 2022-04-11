@@ -1,10 +1,10 @@
 from collections import deque
 from typing import List
 
-from game.snode import SNode
-from game import AI
+from game.checkers.engine.snode import SNode
+from game.checkers.engine import AI
 from game.settings import Settings
-from game.player import Player
+from game.checkers.engine.player import Player
 from game.gameresponse import GameResponse
 
 

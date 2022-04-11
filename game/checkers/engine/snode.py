@@ -6,8 +6,8 @@ from math import inf
 
 import numpy as np
 
-from game.piece import Piece
-from game.player import Player
+from game.checkers.engine.piece import Piece
+from game.checkers.engine.player import Player
 from game.settings import Settings
 
 

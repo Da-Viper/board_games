@@ -1,4 +1,4 @@
-from game.player import Player
+from game.checkers.engine.player import Player
 
 
 class Settings:

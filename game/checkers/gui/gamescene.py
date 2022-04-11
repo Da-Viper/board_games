@@ -4,12 +4,12 @@ from PySide2.QtCore import Slot
 from PySide2.QtGui import QTransform
 from PySide2.QtWidgets import QGraphicsScene, QGraphicsItem, QGraphicsSceneMouseEvent, QMessageBox
 
-from game.snode import SNode
-from game.controller import Controller
+from game.checkers.engine.snode import SNode
+from game.checkers.engine.controller import Controller
 from game.gameresponse import GameResponse
-from game.player import Player
+from game.checkers.engine.player import Player
 from game.settings import Settings
-from gui.models import BTile, GPiece
+from game.checkers.gui.models import BTile, GPiece
 
 
 class GameScene(QGraphicsScene):

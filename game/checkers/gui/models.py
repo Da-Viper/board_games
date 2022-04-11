@@ -5,8 +5,8 @@ import typing
 from PySide2.QtGui import QPainter, Qt, QPen
 from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidget, QGraphicsItem
 
-from game.piece import Piece
-from game.player import Player
+from game.checkers.engine.piece import Piece
+from game.checkers.engine.player import Player
 from game.settings import Settings
 
 
