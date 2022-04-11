@@ -9,7 +9,7 @@ from game.controller import Controller
 from game.gameresponse import GameResponse
 from game.player import Player
 from game.settings import Settings
-from gui.gameblock import BTile, GPiece
+from gui.models import BTile, GPiece
 
 
 class GameScene(QGraphicsScene):
@@ -62,7 +62,7 @@ class GameScene(QGraphicsScene):
                     feedback = game.move_feedback_click()
                     if feedback is GameResponse.FORCED_JUMP:
                         allstate: List[SNode] = game.get_state().get_possible_state(True)
-                        self.forced_moves = list(map(lambda x: x.get_from_pos(), allstate))
+                        self.forced_moves = list(map(lambda x: x.from_pos, allstate))
                         self.possible_moves = game.get_valid_moves(pos)
                         self._update_checker_board()
 
@@ -84,7 +84,7 @@ class GameScene(QGraphicsScene):
         offset = gui_width / 2
 
         for state in pos_moves:
-            h_pos = state.get_to_pos()
+            h_pos = state.to_pos
             col = (h_pos % Settings.BOARD_DIMEN) * gui_width
             row = (h_pos // Settings.BOARD_DIMEN) * gui_width
 

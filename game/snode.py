@@ -238,12 +238,6 @@ class SNode:
 
         return result
 
-    def get_to_pos(self):
-        return self.to_pos
-
-    def get_from_pos(self):
-        return self.from_pos
-
     def get_turn(self):
         return self.turn
 

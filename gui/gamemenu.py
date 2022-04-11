@@ -7,7 +7,6 @@ from gui.preferencemenu import PreferenceMenu
 from gui.ui_files.ui_checkers import Ui_Form as UICheckers
 from gui.ui_files.ui_menu import Ui_Form as UIGameMenu
 
-
 # Change to QMainwindow
 class GameMenu(QWidget):
 
