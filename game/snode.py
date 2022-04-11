@@ -11,7 +11,7 @@ from game.player import Player
 from game.settings import Settings
 
 
-class BoardState:
+class SNode:
     """
      This class is a logic controller for the current board state.
      This class can also simulate possible states from the current state -
@@ -28,7 +28,7 @@ class BoardState:
             Initialises board attributes to default values.
         """
         self.turn: Player = Settings.FIRST_MOVE
-        self.state = np.empty([BoardState.NO_SQUARES], dtype=Piece)
+        self.state = np.empty([SNode.NO_SQUARES], dtype=Piece)
         self.piece_count: dict = {Player.AI: 0, Player.HUMAN: 0}
         self.king_count: dict = {Player.AI: 0, Player.HUMAN: 0}
 
@@ -37,13 +37,13 @@ class BoardState:
         self.double_jump_pos = -1
 
     @staticmethod
-    def initialize_board() -> BoardState:
+    def initialize_board() -> SNode:
         """
             Method populates initial state with Pieces.
             state contains null/None values for cells that are empty
             state is filled with checker patten in mind
         """
-        bs = BoardState()
+        bs = SNode()
         bs.turn = Settings.FIRST_MOVE
         SIDE_LENGTH = Settings.BOARD_DIMEN
         cur_state = bs.state
@@ -74,7 +74,7 @@ class BoardState:
         Method used to copy the current state.
         :return: temporary state to simulate player moves from given position
         """
-        tmp_board_state = BoardState()
+        tmp_board_state = SNode()
         tmp_board_state.state = self.state.copy()
         return tmp_board_state
 
@@ -117,7 +117,7 @@ class BoardState:
     def piece_score(self, player: Player) -> int:
         return self.piece_count[player] + self.king_count[player]
 
-    def get_all_states(self) -> list[BoardState]:
+    def get_all_states(self) -> list[SNode]:
         gen_states = self.get_possible_state(True)
         if Settings.FORCE_CAPTURE:
             if len(gen_states) > 0:
@@ -128,8 +128,8 @@ class BoardState:
             gen_states.extend(self.get_possible_state(False))
             return gen_states
 
-    def get_possible_state(self, jump: bool) -> list[BoardState]:
-        result: list[BoardState] = []
+    def get_possible_state(self, jump: bool) -> list[SNode]:
+        result: list[SNode] = []
         c_state = self.state
         turn_ = self.turn
         for i in range(len(c_state)):
@@ -139,18 +139,18 @@ class BoardState:
                     result.extend(self.get_possible_states(i, jump))
         return result
 
-    def get_states_from_position(self, pos: int) -> list[BoardState]:
+    def get_states_from_position(self, pos: int) -> list[SNode]:
         if Settings.FORCE_CAPTURE:
             jumps = self.get_possible_state(True)
             has_jumps = len(jumps) > 0
             return self.get_possible_states(pos, has_jumps)
         else:
-            result: list[BoardState] = []
+            result: list[SNode] = []
             result.extend(self.get_possible_states(pos, True))
             result.extend(self.get_possible_states(pos, False))
             return result
 
-    def get_possible_states(self, pos: int, jump: bool) -> list[BoardState]:
+    def get_possible_states(self, pos: int, jump: bool) -> list[SNode]:
         if self.state[pos].player != self.turn:
             raise ValueError(" This is not your piece in this position ")
 
@@ -160,8 +160,8 @@ class BoardState:
 
         return self.get_non_attacking_states(cpiece, pos)
 
-    def get_non_attacking_states(self, piece: Piece, pos: int) -> list[BoardState]:
-        result: list[BoardState] = []
+    def get_non_attacking_states(self, piece: Piece, pos: int) -> list[SNode]:
+        result: list[SNode] = []
         board_dimen = self.DIMENSION
         y, x = divmod(pos, board_dimen)
 
@@ -179,7 +179,7 @@ class BoardState:
 
         return result
 
-    def get_attacking_states(self, piece: Piece, pos: int) -> list[BoardState]:
+    def get_attacking_states(self, piece: Piece, pos: int) -> list[SNode]:
         djump_pos = self.double_jump_pos
         if (djump_pos > 0) and pos != djump_pos:
             return []
@@ -207,7 +207,7 @@ class BoardState:
         return result
 
     def __create_new_state(self, old_pos: int, new_pos: int, piece: Piece, jumped: bool, dy: int, dx: int):
-        result: BoardState = self.copy_board_state()
+        result: SNode = self.copy_board_state()
         result.piece_count = copy(self.piece_count)
         result.king_count = copy(self.piece_count)
         # TODO may be missing
@@ -253,17 +253,17 @@ class BoardState:
 
     @staticmethod
     def _is_king_pos(pos: int, player: Player) -> bool:
-        row = pos // BoardState.DIMENSION
-        king_row = 0 if player is Player.HUMAN else BoardState.DIMENSION - 1
+        row = pos // SNode.DIMENSION
+        king_row = 0 if player is Player.HUMAN else SNode.DIMENSION - 1
 
         return row == king_row
 
     def _get_piece(self, y: int, x: int) -> Piece:
-        return self.state[BoardState.DIMENSION * y + x]
+        return self.state[SNode.DIMENSION * y + x]
 
     @staticmethod
     def _is_valid(x: int, y: int) -> bool:
-        return (0 <= y < BoardState.DIMENSION) and (0 <= x < BoardState.DIMENSION)
+        return (0 <= y < SNode.DIMENSION) and (0 <= x < SNode.DIMENSION)
 
 
 def get_opposite(ptype: Player) -> Player:

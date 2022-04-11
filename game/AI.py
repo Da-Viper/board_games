@@ -5,18 +5,18 @@ from multiprocessing import Pool
 from typing import List
 from math import inf
 
-from game.boardstate import BoardState
+from game.snode import SNode
 from game.player import Player
 from game.settings import Settings
 
 
-def move(state: BoardState, player: Player):
+def move(state: SNode, player: Player):
     if state.turn is player:
         generated_states = state.get_all_states()
         return _minimax_move(generated_states, player)
 
 
-def _minimax_move(successors: List[BoardState], max_player: Player) -> BoardState:
+def _minimax_move(successors: List[SNode], max_player: Player) -> SNode:
     if len(successors) == 1:
         return successors[0]
 
@@ -41,7 +41,7 @@ def _minimax_move(successors: List[BoardState], max_player: Player) -> BoardStat
     return _random_move(equal_bests)
 
 
-def _random_move(successors: List[BoardState]) -> BoardState:
+def _random_move(successors: List[SNode]) -> SNode:
     successors_len = len(successors)
     if successors_len < 1:
         raise RuntimeError("empty successors cant choose a random board")
@@ -50,7 +50,7 @@ def _random_move(successors: List[BoardState]) -> BoardState:
     return successors[rand_num]
 
 
-def _alpha_beta(depth: int, node: BoardState, max_player: Player, alpha: int = -inf, beta: int = inf) -> int:
+def _alpha_beta(depth: int, node: SNode, max_player: Player, alpha: int = -inf, beta: int = inf) -> int:
     if (depth == 0) or node.is_game_over():
         return node.compute_heuristic(Player.AI)
 
