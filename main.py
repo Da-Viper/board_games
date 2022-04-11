@@ -5,14 +5,10 @@ from PySide2.QtCore import QCoreApplication, Qt
 from PySide2.QtWidgets import QApplication, QStyleFactory
 
 from game.checkers.gui.gamemenu import GameMenu
+from gui.mainmenu import MainMenu
 
 
 def main():
-    run_checkers()
-
-
-def run_checkers():
-    # game setup
     QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
     app = QApplication(sys.argv)
     pt = "QT_QPA_PLATFORMTHEME"
@@ -21,13 +17,9 @@ def run_checkers():
     print(f"env {os.environ.get(pt)}")
     app.setStyle("Adwaita-Dark")
     print(f"style: {app.style().objectName()}")
-    # with open("../style.qss", "r") as f:
-    #     _style = f.read()
-    #     app.setStyleSheet(_style)
-    # app.setStyle("Windows")
-    gmenu = GameMenu()
+
+    gmenu = MainMenu()
     gmenu.show()
-    # end
     sys.exit(app.exec_())
 
 

@@ -9,7 +9,7 @@ from game.checkers.gui.ui_files.ui_menu import Ui_Form as UIGameMenu
 
 
 # Change to QMainwindow
-class GameMenu(QWidget):
+class GameMenu(QDialog):
 
     def __init__(self, parent=None):
         super(GameMenu, self).__init__(parent)
