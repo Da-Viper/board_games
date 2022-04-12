@@ -10,32 +10,33 @@ from game.tictactoe.gui.ui_files.ui_tictactoemenu import Ui_TictactoeMenu
 
 
 class TScene(QGraphicsScene):
-    tile_clicked = Signal(int)
+    tile_clicked = Signal(Tile)
 
-    def __init__(self, board_size:int, rect: QRect, parent=None):
+    def __init__(self, board_size: int, rect: QRect, parent=None):
         super(TScene, self).__init__(rect, parent)
 
-        self._controller = TTTController()
+        self._controller = TTTController(board_size)
         self._tiles = []
-        self.board = TBoard(board_size)
         self.init_grid(board_size)
         self.init_connections()
 
-    def init_grid(self, size: int) -> List[QPushButton]:
+    def init_grid(self, size: int) -> List[Tile]:
         tile_count = size * size
 
         item_width = int(self.width() // size)
         item_height = int(self.height() // size)
         for i in range(tile_count):
-            row, col = divmod(i, size)
+            col, row = divmod(i, size)
+            # print(f"current row and column {row,col}")
             item_pos = QRect(row * item_width, col * item_height, item_width, item_height)
+            # print(f"item pos : {item_pos}")
             curr_tile = Tile(i, item_pos)
             self.addItem(curr_tile)
             self._tiles.append(curr_tile)
         return self._tiles
 
     def init_connections(self):
-        self.tile_clicked[int].connect(self._controller.update_cell)
+        self.tile_clicked[Tile].connect(self._controller.update_cell)
 
 
 class TTTMenu(QDialog):
