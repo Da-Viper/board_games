@@ -1,6 +1,8 @@
 from typing import Optional
 
-from PySide2.QtGui import QPainter, QPixmap
+from PySide2.QtCore import QSize, QRectF
+from PySide2.QtGui import QPainter
+from PySide2.QtSvg import QSvgRenderer
 from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidget, QGraphicsSceneMouseEvent
 
 from game.tictactoe.engine.board import Player
@@ -17,12 +19,16 @@ class Tile(QGraphicsRectItem):
         self.player: int = Player.EMPTY
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: Optional[QWidget] = ...) -> None:
-        rect = self.rect().toRect()
-        if self.player:
-            svg = Tile.X if self.player == Player.ONE else Tile.O
-            pixmap = QPixmap(svg)
 
-            painter.drawPixmap(rect, pixmap)
+        if self.player:
+            self_rect = self.rect()
+            rect = QRectF(self_rect)
+            rect.setSize(QSize(self_rect.width() * 0.6, self_rect.height() * 0.6))
+            rect.moveCenter(self.rect().center())
+            svg = Tile.X if self.player == Player.ONE else Tile.O
+            renderer = QSvgRenderer(svg)
+            renderer.render(painter, rect)
+
         else:
             painter.drawRect(self.rect())
 

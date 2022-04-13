@@ -14,6 +14,7 @@ class TScene(QGraphicsScene):
 
     def __init__(self, board_size: int, rect: QRect, parent=None):
         super(TScene, self).__init__(rect, parent)
+        self.setItemIndexMethod(QGraphicsScene.NoIndex)
 
         self._controller = TTTController(board_size)
         self._tiles = []
