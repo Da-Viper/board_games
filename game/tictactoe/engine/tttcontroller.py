@@ -1,7 +1,7 @@
 from PySide2.QtCore import Slot, QObject
-from PySide2.QtWidgets import QPushButton
+from PySide2.QtWidgets import QPushButton, QMessageBox
 
-from game.tictactoe.engine.board import TBoard, Player
+from game.tictactoe.engine.board import TBoard, Player, GameState
 from game.tictactoe.gui.tile import Tile
 
 
@@ -30,10 +30,20 @@ class TTTController(QObject):
         print(f"from controller current pos : {tile.pos}")
         print(f"Next player {self.current_player}")
 
+        game_state: GameState = self._board.get_game_state(tile_pos)
+        self.has_won(game_state)
+
         self.current_player *= -1
 
-    def update(self, tile: QPushButton):
-        print(f"clicked button {self.view.ui.board_grid.indexOf(tile)}")
+    @staticmethod
+    def has_won(state: GameState):
+        if state != GameState.NO_WINS:
+            msg_box = QMessageBox(QMessageBox.Information, "Game Over", f"Game Over Player {state} wins !!")
+            msg_box.exec_()
+
+    def evaluateBoard(self, board: TBoard, last_pos: int) -> int:
+        player_at_pos: Player = board.get_piece(last_pos)
+        pass
 
     @staticmethod
     def is_valid_pos(pos: int, bound: int):
