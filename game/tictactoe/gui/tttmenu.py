@@ -21,15 +21,12 @@ class TScene(QGraphicsScene):
         self.init_connections()
 
     def init_grid(self, size: int) -> List[Tile]:
-        tile_count = size * size
-
         item_width = int(self.width() // size)
         item_height = int(self.height() // size)
-        for i in range(tile_count):
+
+        for i in range(size * size):
             col, row = divmod(i, size)
-            # print(f"current row and column {row,col}")
             item_pos = QRect(row * item_width, col * item_height, item_width, item_height)
-            # print(f"item pos : {item_pos}")
             curr_tile = Tile(i, item_pos)
             self.addItem(curr_tile)
             self._tiles.append(curr_tile)
@@ -49,7 +46,7 @@ class TTTMenu(QDialog):
         self.view.setGeometry(0, 0, 600, 600)
         print(f"view rect {self.view.sceneRect(), self.view.geometry()}")
         # self.scene = TScene(QRect(0, 0, 600 + , 600), self)
-        self.scene = TScene(3, self.view.geometry(), self)
+        self.scene = TScene(4, self.view.geometry(), self)
         self.view.setScene(self.scene)
         self.setMinimumSize(600, 600)
         self.adjustSize()

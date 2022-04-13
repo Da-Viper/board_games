@@ -1,5 +1,3 @@
-from enum import IntEnum
-
 from PySide2.QtCore import Slot, QObject
 from PySide2.QtWidgets import QPushButton
 
@@ -13,7 +11,7 @@ class TTTController(QObject):
         super(TTTController, self).__init__(parent)
         self._cell_count = board_size * board_size
         self._board = TBoard(board_size)
-        self.turn = Player.ONE
+        self.current_player = Player.ONE
 
     def run(self):
         pass
@@ -25,13 +23,14 @@ class TTTController(QObject):
     def update_cell(self, tile: Tile):
         tile.toggled = True
         tile_pos = tile.pos
-        if not TTTController.is_valid_pos(tile_pos, self._cell_count):
+        if not self._board.place_piece(self.current_player, tile_pos):
             return
-        self._board.cells[tile.pos] = self.turn
-        tile.player = self.turn
-        self.turn *= -1
-        print(f"from controller current pos : {tile.pos}")
+        tile.player = self.current_player
         tile.update()
+        print(f"from controller current pos : {tile.pos}")
+        print(f"Next player {self.current_player}")
+
+        self.current_player *= -1
 
     def update(self, tile: QPushButton):
         print(f"clicked button {self.view.ui.board_grid.indexOf(tile)}")
