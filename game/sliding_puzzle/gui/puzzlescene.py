@@ -1,6 +1,4 @@
-import typing
-
-from PySide2.QtCore import QRect, Signal, QSize, QObject, QTimer, Slot
+from PySide2.QtCore import QRect, Signal, QTimer
 from PySide2.QtWidgets import QGraphicsScene, QDialog
 
 from game.sliding_puzzle.engine.pcontroller import PController
@@ -17,8 +15,6 @@ class PuzzleScene(QGraphicsScene):
         md_board = self._draw_board()
         self._controller = PController(md_board, board_size)
         self._init_connections()
-        self._timer = QTimer()
-        # self._timer.timeout.connect(self.advance)
 
     def _draw_board(self):
         size = self.board_size
@@ -49,7 +45,6 @@ class SlidingMenu(QDialog):
         self.view = self.ui.g_view
         self.view.setGeometry(0, 0, 600, 600)
         print(f"view rect {self.view.sceneRect(), self.view.geometry()}")
-        # self.scene = TScene(QRect(0, 0, 600 + , 600), self)
         self.scene = PuzzleScene(4, self.view.geometry(), self)
         self.view.setScene(self.scene)
         self.setMinimumSize(600, 600)
@@ -60,4 +55,4 @@ class SlidingMenu(QDialog):
 
     def _init_connections(self):
         self._timer.timeout.connect(self.scene.advance)
-        self._timer.start(50)
+        self._timer.start(30)

@@ -17,8 +17,7 @@ class Tile(QGraphicsRectItem):
 
         self._text: str = str(text + 1)
         self._font = QFont()
-        self._font.setPixelSize(50)
-        print(f" init pos {self.pos()}")
+        self._font.setPixelSize((_width * _height) ** 0.43)
 
     def set_new_pos(self, new_pos: Tuple[int, int]):
         print(f"new pos {new_pos}")
@@ -41,7 +40,7 @@ class Tile(QGraphicsRectItem):
         painter.drawText(self.boundingRect(), Qt.AlignCenter, self._text)
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        print(f"from press event {self.idx_pos}")
+        pass
 
     def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         self.scene().tile_clicked.emit(self)
