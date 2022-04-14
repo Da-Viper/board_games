@@ -11,7 +11,7 @@ class PBoard:
         self._blank = 0
         self._size = size
 
-    def get_blank_pos(self, pos: Tuple[int, int]) -> Tuple[int, int]:
+    def click_tile(self, pos: Tuple[int, int]) -> Tuple[int, int]:
         old_row, old_col = pos
         view = self._view
 

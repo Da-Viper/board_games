@@ -14,7 +14,7 @@ class PController:
     @Slot(Tile)
     def tile_clicked(self, tile: Tile):
         print(f"\tTile clicked from pos: {tile.idx_pos}")
-        new_pos = self._board.get_blank_pos(tile.idx_pos)
+        new_pos = self._board.click_tile(tile.idx_pos)
         print(f"\tView : \n{self._board._view}")
         tile.new_pos = new_pos
         if new_pos != (-1, -1):
