@@ -10,6 +10,7 @@ class Piece:
         self.player = player_type
         self.is_king = is_king
 
+    @property
     def pos_moves(self) -> Iterable[Tuple[int, int]]:
         x_moves = (-1, 1)
         if self.is_king:

@@ -47,7 +47,7 @@ class SNode:
         bs.turn = Settings.FIRST_MOVE
         SIDE_LENGTH = Settings.BOARD_DIMEN
         cur_state = bs.state
-        for i in range(len(cur_state)):
+        for i, _ in enumerate(cur_state):
             y, x = divmod(i, SIDE_LENGTH)
 
             if (x + y) % 2 == 1:  # checks if position is even or odd
@@ -62,8 +62,7 @@ class SNode:
         ai_count = counts.get(Player.AI, 0)
         human_count = counts.get(Player.HUMAN, 0)
 
-        bs.piece_count[Player.AI] = ai_count
-        bs.piece_count[Player.HUMAN] = human_count
+        bs.piece_count = {Player.AI: ai_count, Player.HUMAN: human_count}
 
         bs.king_count[Player.AI] = 0
         bs.king_count[Player.HUMAN] = 0
@@ -96,11 +95,12 @@ class SNode:
         :return:
         """
         # max_int = Settings.MAX_VALUE
+        if self.piece_count[player] == 0:
+            return -inf
+
         opp_player = get_opposite(player)
         if self.piece_count[opp_player] == 0:
             return inf
-        if self.piece_count[player] == 0:
-            return -inf
 
         return self.piece_score(player) - self.piece_score(opp_player)
 
@@ -130,10 +130,9 @@ class SNode:
 
     def get_possible_state(self, jump: bool) -> list[SNode]:
         result: list[SNode] = []
-        c_state = self.state
         turn_ = self.turn
-        for i in range(len(c_state)):
-            cur_piece: Piece = c_state[i]
+
+        for i, cur_piece in enumerate(self.state):
             if cur_piece is not None:
                 if cur_piece.player is turn_:
                     result.extend(self.get_possible_states(i, jump))
@@ -165,7 +164,7 @@ class SNode:
         board_dimen = self.DIMENSION
         y, x = divmod(pos, board_dimen)
 
-        for dx, dy in piece.pos_moves():
+        for dx, dy in piece.pos_moves:
             new_x = x + dx
             new_y = y + dy
 
@@ -189,7 +188,7 @@ class SNode:
         y, x = divmod(pos, side_length)
         _get_piece = self._get_piece
 
-        for dx, dy in piece.pos_moves():
+        for dx, dy in piece.pos_moves:
             new_x = x + dx
             new_y = y + dy
 

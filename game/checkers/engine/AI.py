@@ -1,4 +1,5 @@
 import random
+from functools import lru_cache
 from itertools import repeat
 from multiprocessing import Pool
 
@@ -38,18 +39,10 @@ def _minimax_move(successors: List[SNode], max_player: Player) -> SNode:
 
             if val == best_score:
                 equal_bests.append(successors[i])
-    return _random_move(equal_bests)
+    return random.choice(successors)
 
 
-def _random_move(successors: List[SNode]) -> SNode:
-    successors_len = len(successors)
-    if successors_len < 1:
-        raise RuntimeError("empty successors cant choose a random board")
-
-    rand_num = random.randint(0, successors_len - 1)
-    return successors[rand_num]
-
-
+@lru_cache(maxsize=None)
 def _alpha_beta(depth: int, node: SNode, max_player: Player, alpha: int = -inf, beta: int = inf) -> int:
     if (depth == 0) or node.is_game_over():
         return node.compute_heuristic(Player.AI)
@@ -77,5 +70,3 @@ def _alpha_beta(depth: int, node: SNode, max_player: Player, alpha: int = -inf, 
             if alpha >= beta:
                 break
         return val
-
-# def _nega_max()
