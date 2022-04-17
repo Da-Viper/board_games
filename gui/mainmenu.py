@@ -2,7 +2,8 @@ from PySide2.QtCore import Slot, QTimer, QObject
 from PySide2.QtWidgets import QWidget
 
 from game.checkers.gui.gamemenu import GameMenu
-from game.sliding_puzzle.gui.puzzlescene import SlidingMenu
+from game.n_queens.gui.queenscene import NQueensMenu
+from game.sliding_puzzle.gui.puzzlemenu import SlidingMenu
 from game.tictactoe.gui.tttmenu import TTTMenu
 from gui.ui_files.ui_mainmenu import Ui_GameMainMenu
 
@@ -17,6 +18,7 @@ class MainMenu(QWidget):
         self.ui.btn_checkers.clicked.connect(self.show_checkers)
         self.ui.btn_ttt.clicked.connect(self.show_tic_tac_toe)
         self.ui.btn_15_puzzle.clicked.connect(self.show_15_puzzle)
+        self.ui.btn_nqueens.clicked.connect(self.show_n_queens)
 
     @Slot()
     def show_checkers(self):
@@ -32,3 +34,8 @@ class MainMenu(QWidget):
     def show_15_puzzle(self):
         puzzle_15 = SlidingMenu()
         puzzle_15.exec_()
+
+    @Slot()
+    def show_n_queens(self):
+        dialog = NQueensMenu(self)
+        dialog.show()

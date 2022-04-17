@@ -9,13 +9,12 @@ from game.tictactoe.engine.board import Player
 
 
 class Tile(QGraphicsRectItem):
-    X = "assets/x-mark.svg"
-    O = "assets/o-mark.svg"
+    QUEEN = "assets/queen.svg"
+    INVALID = "assets/x-mark-red.svg"
 
     def __init__(self, pos, rect):
         super(Tile, self).__init__(rect)
         self.pos = pos
-        # self.toggled = False
         self.player: int = Player.EMPTY
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: Optional[QWidget] = ...) -> None:
@@ -25,7 +24,7 @@ class Tile(QGraphicsRectItem):
             rect = QRectF(self_rect)
             rect.setSize(QSize(self_rect.width() * 0.6, self_rect.height() * 0.6))
             rect.moveCenter(self.rect().center())
-            svg = Tile.X if self.player == Player.ONE else Tile.O
+            svg = Tile.QUEEN if self.player == Player.ONE else Tile.INVALID
             renderer = QSvgRenderer(svg)
             renderer.render(painter, rect)
 

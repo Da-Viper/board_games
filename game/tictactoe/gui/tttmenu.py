@@ -46,7 +46,6 @@ class TTTMenu(QDialog):
         self.view = self.ui.g_view
         self.view.setGeometry(0, 0, 600, 600)
         print(f"view rect {self.view.sceneRect(), self.view.geometry()}")
-        # self.scene = TScene(QRect(0, 0, 600 + , 600), self)
         self.scene = TScene(4, self.view.geometry(), self)
         self.view.setScene(self.scene)
         self.setMinimumSize(600, 600)
