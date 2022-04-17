@@ -7,23 +7,35 @@ class PBoard:
 
     def __init__(self, board: List, size: int):
         self._cells = np.array(board, dtype=np.int8)
+        self.goal_hash = hash(tuple(self._cells))
         self._view = self._cells.view().reshape(size, size)
-        self._blank = 0
-        self._size = size
+        self._blank_val = 0
+        self.blank_idx = divmod(size * size - 1, size)
+        self.size = size
 
-    def click_tile(self, pos: Tuple[int, int]) -> Tuple[int, int]:
-        old_row, old_col = pos
-        view = self._view
+    def swap_pos(self, pos: Tuple[int, int]) -> Tuple[int, int]:
+        if pos in self.get_blank_neighbours():
+            new_row, new_col = self.blank_idx
+            pos_row, pos_col = pos
 
-        for row, col in self._valid_moves(old_row, old_col):
-            curr_val = view[row][col]
-            if curr_val == self._blank:
-                view[row][col] = view[old_row][old_col]
-                view[old_row][old_col] = curr_val
-                return row, col
+            self.swap_with_blank(pos_row, pos_col)
+
+            return new_row, new_col
+
         return -1, -1
 
-    def _valid_moves(self, row: int, col: int):
-        size = self._size
+    def swap_with_blank(self, pos_row: int, pos_col: int):
+        view = self._view
+        new_row, new_col = self.blank_idx
+
+        pos_val = view[pos_row][pos_col]
+        view[new_row][new_col] = pos_val
+        view[pos_row][pos_col] = self._blank_val
+        self.blank_idx = (pos_row, pos_col)
+
+
+    def get_blank_neighbours(self):
+        size = self.size
+        row, col = self.blank_idx
         moves = ((row + 1, col), (row - 1, col), (row, col - 1), (row, col + 1))
         return filter(lambda rc: 0 <= rc[0] < size and 0 <= rc[1] < size, moves)
