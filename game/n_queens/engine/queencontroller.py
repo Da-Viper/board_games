@@ -1,7 +1,7 @@
 from PySide2.QtCore import Slot, Signal, QObject
 from PySide2.QtWidgets import QMessageBox
 
-from game.n_queens.engine.board import NQueen, Piece
+from game.n_queens.engine.board import NQueen
 from game.n_queens.gui.queenscene import NQueenScene
 from game.n_queens.gui.tile import Tile
 
@@ -50,15 +50,26 @@ class QueenController(QObject):
         msg_box.exec_()
 
     def show_solution(self, next_solution: bool):
+        self.solution_idx += 1 if next_solution else - 1
+        no_of_sol = len(self.board_solutions)
+        if no_of_sol < 1:
+            return
+        self.solution_idx = min(self.solution_idx, no_of_sol - 1)
+        self.solution_idx = max(self.solution_idx, 0)
 
-        pass
+        self.scene.draw_board_solution(self.board_solutions[self.solution_idx])
 
     def generate_solution(self):
         self.board_solutions = self.board.generate_all_solutions()
-        print("done ")
+        self.solution_idx = 0
+        print(f"board solution {self.board_solutions}")
+        if len(self.board_solutions) < 1:
+            return
+        self.scene.draw_board_solution(self.board_solutions[self.solution_idx])
 
     def reset_game(self):
-
+        self.board_solutions = []
+        self.solution_idx = 0
         self.board.reset()
         self.update_gui.emit((0, 0))
 

@@ -5,7 +5,7 @@ from PySide2.QtCore import QRect, Signal, Slot
 from PySide2.QtWidgets import QGraphicsScene
 from numpy import ndarray
 
-from game.n_queens.engine.board import Pos
+from game.n_queens.engine.board import Pos, Piece
 from game.n_queens.gui.tile import Tile
 
 
@@ -33,5 +33,16 @@ class NQueenScene(QGraphicsScene):
             self.addItem(curr_tile)
             board_b[row][col] = nqueen_pos
             self.tiles[row][col] = curr_tile
-            # self._tiles.append(curr_tile)
         return board_b
+
+    def draw_board_solution(self, sol_board: ndarray):
+        tiles = self.tiles
+        for row, r_val in enumerate(sol_board):
+            for col, col_val in enumerate(r_val):
+                current_tile: Tile = tiles[row][col]
+                if col_val == Piece.Q_VALUE:
+                    current_tile.p_pos.has_queen = True
+                else:
+                    current_tile.p_pos.has_queen = False
+                current_tile.p_pos.conflicts = 0
+        self.update()
