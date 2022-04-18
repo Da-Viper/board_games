@@ -53,9 +53,7 @@ class NQueensMenu(QDialog):
         self.enable_btns(True)
         self._controller.generate_solution()
 
-
     @Slot(bool)
     def enable_btns(self, enabled: bool):
         self.ui.btn_prev_sol.setVisible(enabled)
         self.ui.btn_next_sol.setVisible(enabled)
-

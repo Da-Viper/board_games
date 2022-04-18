@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 import numpy as np
 from PySide2.QtCore import QRect, Signal, Slot
-from PySide2.QtWidgets import QGraphicsScene
+from PySide2.QtWidgets import QGraphicsScene, QGraphicsSceneMouseEvent
 from numpy import ndarray
 
 from game.n_queens.engine.board import Pos, Piece
@@ -16,7 +16,8 @@ class NQueenScene(QGraphicsScene):
         super(NQueenScene, self).__init__(rect, parent)
         self.tiles: ndarray = None
         self.setItemIndexMethod(QGraphicsScene.NoIndex)
-        # self._tiles = np.zeros()
+        self.enable_mouse_press = True
+        # self._tiles = np.zeros()k
 
     def init_grid(self, size: int):
         self.tiles = np.empty((size, size), dtype=Tile)
@@ -34,6 +35,11 @@ class NQueenScene(QGraphicsScene):
             board_b[row][col] = nqueen_pos
             self.tiles[row][col] = curr_tile
         return board_b
+
+    def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+        if not self.enable_mouse_press:
+            return
+        super().mousePressEvent(event)
 
     def draw_board_solution(self, sol_board: ndarray):
         tiles = self.tiles

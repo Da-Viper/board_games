@@ -46,8 +46,9 @@ class QueenController(QObject):
     @Slot()
     def slot_game_over(self):
         print("game is solved ")
-        msg_box = QMessageBox(QMessageBox.Information, "Gameover", "You Win")
+        msg_box = QMessageBox(QMessageBox.Information, "Game-over", "You Win")
         msg_box.exec_()
+        self.scene.enable_mouse_press = False
 
     def show_solution(self, next_solution: bool):
         self.solution_idx += 1 if next_solution else - 1
@@ -60,6 +61,7 @@ class QueenController(QObject):
         self.scene.draw_board_solution(self.board_solutions[self.solution_idx])
 
     def generate_solution(self):
+        self.scene.enable_mouse_press = False
         self.board_solutions = self.board.generate_all_solutions()
         self.solution_idx = 0
         print(f"board solution {self.board_solutions}")
@@ -72,6 +74,7 @@ class QueenController(QObject):
         self.solution_idx = 0
         self.board.reset()
         self.update_gui.emit((0, 0))
+        self.scene.enable_mouse_press = True
 
     def _init_connection(self):
         self.scene.tile_clicked[Tile].connect(self.update_cell)
