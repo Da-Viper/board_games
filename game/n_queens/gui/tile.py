@@ -1,10 +1,11 @@
 from typing import Optional
 
 from PySide2.QtCore import QSize, QRectF
-from PySide2.QtGui import QPainter
+from PySide2.QtGui import QPainter, QBrush, Qt
 from PySide2.QtSvg import QSvgRenderer
 from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidget, QGraphicsSceneMouseEvent
 
+from game.n_queens.engine.board import Piece, Pos
 from game.tictactoe.engine.board import Player
 
 
@@ -12,21 +13,31 @@ class Tile(QGraphicsRectItem):
     QUEEN = "assets/queen.svg"
     INVALID = "assets/x-mark-red.svg"
 
-    def __init__(self, pos, rect):
+    def __init__(self, piece: Pos, pos, rect):
         super(Tile, self).__init__(rect)
         self.pos = pos
-        self.player: int = Player.EMPTY
+        self.p_pos = piece
+        # self.piece_type: int = Piece.EMPTY
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: Optional[QWidget] = ...) -> None:
         super().paint(painter, option, widget)
-        if self.player:
-            self_rect = self.rect()
-            rect = QRectF(self_rect)
-            rect.setSize(QSize(self_rect.width() * 0.6, self_rect.height() * 0.6))
-            rect.moveCenter(self.rect().center())
-            svg = Tile.QUEEN if self.player == Player.ONE else Tile.INVALID
-            renderer = QSvgRenderer(svg)
-            renderer.render(painter, rect)
+        piece_pos = self.p_pos
+        conflict, has_queen = piece_pos.conflicts > 0, piece_pos.has_queen
+        svg = None
+        if not conflict and not has_queen:
+            return
+        if has_queen:
+            if conflict:
+                painter.setBrush(QBrush(Qt.red))
+            svg = Tile.QUEEN
+        elif conflict:
+            svg = Tile.INVALID
+        self_rect = self.rect()
+        rect = QRectF(self_rect)
+        rect.setSize(QSize(self_rect.width() * 0.6, self_rect.height() * 0.6))
+        rect.moveCenter(self.rect().center())
+        renderer = QSvgRenderer(svg)
+        renderer.render(painter, rect)
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         print(f"from press event {self.pos}")

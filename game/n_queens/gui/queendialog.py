@@ -15,7 +15,7 @@ class NQueensMenu(QDialog):
         self.view.setGeometry(0, 0, 600, 600)
         print(f"view rect {self.view.sceneRect(), self.view.geometry()}")
         self.scene = NQueenScene(self.view.geometry(), self)
-        self._controller = QueenController(self.scene, 4)
+        self._controller = QueenController(self.scene, 8)
         self.view.setScene(self.scene)
         self.setMinimumSize(600, 600)
         self.adjustSize()

@@ -3,6 +3,9 @@ from enum import IntEnum
 from typing import Tuple
 
 import numpy as np
+from dataclasses import dataclass
+
+from numpy import ndarray
 
 Q_VALUE = "Q"
 EMPTY = "_"
@@ -15,11 +18,21 @@ class Piece(IntEnum):
     CONFLICT = -1
 
 
+@dataclass
+class Pos:
+    has_queen: bool
+    conflicts: np.int8
+
+    def __repr__(self):
+        return str(self.conflicts)
+
+
 class NQueen:
 
-    def __init__(self, _dimension: int) -> None:
+    def __init__(self, board_state: ndarray, _dimension: int) -> None:
         self.dimension = _dimension
-        self.board = np.full((_dimension, _dimension), Piece.EMPTY, dtype=np.int8)
+        # self.board = np.full((_dimension, _dimension), Piece.EMPTY, dtype=np.int8)
+        self.board = board_state
         self.conflicts = np.zeros((_dimension, _dimension), dtype=np.int8)
 
         self.visited_row = np.zeros(_dimension, dtype=np.int8)
@@ -39,15 +52,20 @@ class NQueen:
     def place_queen(self, pos: Tuple[int, int]):
         # ldiag, rdiag = col - row, col + row
         row, col = pos
-        self.visited_row[row] += 1
-        self.visited_col[col] += 1
-        ldiag, rdiag = col - row, col + row
-        self.left_diag[ldiag] += 1
-        self.right_diag[rdiag] += 1
 
-        self.board[row][col] = Piece.Q_VALUE
+        self.board[row][col].has_queen = True
         self.conflicts[row][col] = Piece.Q_VALUE
 
+        for val in self.board[row]: val.conflicts += 1
+        for val in self.board[:, col]:
+            val.conflicts += 1
+        for val in np.diag(self.board, k=col - row):
+            val.conflicts += 1
+        n_row = len(self.board) - 1 - row
+        for val in np.diag(np.flipud(self.board), k=col - n_row):
+            val.conflicts += 1
+        # for val in np.flipud(self.board).diagonal( row - col):
+        #     val.conflicts += 1
         # # up right diagonal
         # for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
         #     if board[i][j] == Q_VALUE:
@@ -69,14 +87,18 @@ class NQueen:
 
     def remove_queen(self, pos: Tuple[int, int]):
         row, col = pos
-        self.visited_row[row] -= 1
-        self.visited_col[col] -= 1
-        ldiag, rdiag = col - row, col + row
-        self.left_diag[ldiag] -= 1
-        self.right_diag[rdiag] -= 1
 
-        self.board[row][col] = Piece.EMPTY
+        self.board[row][col].has_queen = False
         self.conflicts[row][col] = Piece.EMPTY
+        for val in self.board[row]:
+            val.conflicts -= 1
+        for val in self.board[:, col]:
+            val.conflicts -= 1
+        for val in np.diag(self.board, k=col - row):
+            val.conflicts -= 1
+        n_row = len(self.board) - 1 - row
+        for val in np.diag(np.flipud(self.board), k=col - n_row):
+            val.conflicts -= 1
 
     def _all_solution_helper(self, row: int, solutions: list) -> list:
         """
