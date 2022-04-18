@@ -31,73 +31,58 @@ class NQueen:
 
     def __init__(self, board_state: ndarray, _dimension: int) -> None:
         self.dimension = _dimension
-        # self.board = np.full((_dimension, _dimension), Piece.EMPTY, dtype=np.int8)
-        self.board = board_state
-        self.conflicts = np.zeros((_dimension, _dimension), dtype=np.int8)
+        self.pos_states = board_state
+        self.queens_pos = np.zeros((_dimension, _dimension), dtype=np.int8)
 
-        self.visited_row = np.zeros(_dimension, dtype=np.int8)
-        self.visited_col = np.zeros(_dimension, dtype=np.int8)
-
+        self.visited_row = np.zeros(_dimension, dtype=bool)
+        self.visited_col = np.zeros(_dimension, dtype=bool)
         dimen_len = 2 * _dimension - 1
-        self.left_diag = np.zeros(dimen_len, dtype=np.int8)
-        self.right_diag = np.zeros(dimen_len, dtype=np.int8)
-        print(f"created board : {self.board}")
+        self.left_diag = np.zeros(dimen_len, dtype=bool)
+        self.right_diag = np.zeros(dimen_len, dtype=bool)
+        self.fixed_row = np.zeros(_dimension, dtype=bool)
+        print(f"created board : {self.pos_states}")
 
-    def generate_all_solutions(self) -> Tuple[bool, list]:
-        solutions = self._all_solution_helper(0, [])
-        if solutions:
-            return True, solutions
-        return False, []
+    def generate_all_solutions(self) -> list:
+        # solutions = self._all_solution_helper(0, [])
+        # if solutions:
+        #     return True, solutions
+        # return False, []
+        return self._all_solution_helper(0, [])
 
     def place_queen(self, pos: Tuple[int, int]):
-        # ldiag, rdiag = col - row, col + row
         row, col = pos
 
-        self.board[row][col].has_queen = True
-        self.conflicts[row][col] = Piece.Q_VALUE
+        self.pos_states[row][col].has_queen = True
+        self.queens_pos[row][col] = Piece.Q_VALUE
 
-        for val in self.board[row]: val.conflicts += 1
-        for val in self.board[:, col]:
+        for val in self.pos_states[row]: val.conflicts += 1
+        for val in self.pos_states[:, col]:
             val.conflicts += 1
-        for val in np.diag(self.board, k=col - row):
+        for val in np.diag(self.pos_states, k=col - row):
             val.conflicts += 1
-        n_row = len(self.board) - 1 - row
-        for val in np.diag(np.flipud(self.board), k=col - n_row):
+        n_row = len(self.pos_states) - 1 - row
+        for val in np.diag(np.flipud(self.pos_states), k=col - n_row):
             val.conflicts += 1
-        # for val in np.flipud(self.board).diagonal( row - col):
-        #     val.conflicts += 1
-        # # up right diagonal
-        # for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
-        #     if board[i][j] == Q_VALUE:
-        #         return False
-        #
-        # for i, j in zip(range(row, dimension, 1), range(col, dimension, 1)):
-        #     if board[i][j] == Q_VALUE:
-        #         return False
-        #
-        # # up left digonal
-        # for i, j in zip(range(row, -1, -1), range(col, dimension, 1)):
-        #     if board[i][j] == Q_VALUE:
-        #         return False
-        #
-        # for i, j in zip(range(row, dimension, 1), range(col, -1, -1)):
-        #     if board[i][j] == Q_VALUE:
-        #         return False
-        #
+
+    def is_solved(self) -> bool:
+        for row in self.queens_pos:
+            if np.count_nonzero(row == Piece.Q_VALUE) != 1:
+                return False
+        return True
 
     def remove_queen(self, pos: Tuple[int, int]):
         row, col = pos
 
-        self.board[row][col].has_queen = False
-        self.conflicts[row][col] = Piece.EMPTY
-        for val in self.board[row]:
+        self.pos_states[row][col].has_queen = False
+        self.queens_pos[row][col] = Piece.EMPTY
+        for val in self.pos_states[row]:
             val.conflicts -= 1
-        for val in self.board[:, col]:
+        for val in self.pos_states[:, col]:
             val.conflicts -= 1
-        for val in np.diag(self.board, k=col - row):
+        for val in np.diag(self.pos_states, k=col - row):
             val.conflicts -= 1
-        n_row = len(self.board) - 1 - row
-        for val in np.diag(np.flipud(self.board), k=col - n_row):
+        n_row = len(self.pos_states) - 1 - row
+        for val in np.diag(np.flipud(self.pos_states), k=col - n_row):
             val.conflicts -= 1
 
     def _all_solution_helper(self, row: int, solutions: list) -> list:
@@ -107,7 +92,7 @@ class NQueen:
         :param solutions: the list to put the correct boards in
         :return: the list of correct boards
         """
-        board = self.board
+        board = self.pos_states
         dimension = self.dimension
 
         # if at the end add the solution
@@ -154,3 +139,18 @@ class NQueen:
             return False
 
         return True
+
+    def reset(self):
+        dimension = self.dimension
+        state_flatten = self.pos_states.flatten()
+        for pos in state_flatten:
+            pos.conflicts = 0
+            pos.has_queen = False
+
+        self.queens_pos = np.zeros((dimension, dimension), dtype=bool)
+        self.visited_row = np.zeros(dimension, dtype=bool)
+        self.visited_col = np.zeros(dimension, dtype=bool)
+
+        dimen_len = 2 * dimension - 1
+        self.left_diag = np.zeros(dimen_len, dtype=bool)
+        self.right_diag = np.zeros(dimen_len, dtype=bool)
