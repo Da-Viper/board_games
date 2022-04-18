@@ -51,7 +51,7 @@ class NQueensMenu(QDialog):
 
     def _show_solutions(self):
         self.enable_btns(True)
-        self._controller.generate_solutons()
+        self._controller.generate_solution()
 
 
     @Slot(bool)

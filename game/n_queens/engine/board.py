@@ -16,6 +16,7 @@ class Piece(IntEnum):
     Q_VALUE = 1
     EMPTY = 0
     CONFLICT = -1
+    FIXED_QUEEN = 2
 
 
 @dataclass
@@ -36,17 +37,15 @@ class NQueen:
 
         self.visited_row = np.zeros(_dimension, dtype=bool)
         self.visited_col = np.zeros(_dimension, dtype=bool)
+        self.fixed_row = np.zeros(_dimension, dtype=bool)
+
         dimen_len = 2 * _dimension - 1
         self.left_diag = np.zeros(dimen_len, dtype=bool)
         self.right_diag = np.zeros(dimen_len, dtype=bool)
-        self.fixed_row = np.zeros(_dimension, dtype=bool)
         print(f"created board : {self.pos_states}")
 
     def generate_all_solutions(self) -> list:
-        # solutions = self._all_solution_helper(0, [])
-        # if solutions:
-        #     return True, solutions
-        # return False, []
+        self._set_default_queens()
         return self._all_solution_helper(0, [])
 
     def place_queen(self, pos: Tuple[int, int]):
@@ -92,7 +91,7 @@ class NQueen:
         :param solutions: the list to put the correct boards in
         :return: the list of correct boards
         """
-        board = self.pos_states
+        board = self.queens_pos
         dimension = self.dimension
 
         # if at the end add the solution
@@ -101,14 +100,14 @@ class NQueen:
             return solutions
 
         # if the row contains a fixed queen skip the row
-        # if self.fixed_row[row]:
-        #     self._all_solution_helper(row + 1, solutions)
+        if self.fixed_row[row]:
+            self._all_solution_helper(row + 1, solutions)
 
         for col in range(dimension):
 
             # check if there is a queen in the row, column, left diagonal and right diagonal
             if self._is_safe((row, col)):
-                board[row][col] = Q_VALUE
+                board[row][col] = Piece.Q_VALUE
                 ldiag, rdiag = col - row, col + row
 
                 # set the row, col, left diagonal, right diagonal  as having a queen
@@ -119,13 +118,54 @@ class NQueen:
                 self._all_solution_helper(row + 1, solutions)
 
                 # we backtrack here
-                board[row][col] = EMPTY
+                board[row][col] = Piece.EMPTY
 
                 # set it back to the default
                 self.visited_row[row], self.visited_col[col] = False, False
                 self.left_diag[ldiag], self.right_diag[rdiag] = False, False
 
         return solutions
+    # def _alVjjjl_solution_helper(self, row: int, solutions: list) -> list:
+    #     """
+    #     This program uses backtracking to get all the solutions for the fixed queens on the board
+    #     :param row : the starting row
+    #     :param solutions: the list to put the correct boards in
+    #     :return: the list of correct boards
+    #     """
+    #     board = self.pos_states
+    #     dimension = self.dimension
+    #
+    #     # if at the end add the solution
+    #     if row >= dimension:
+    #         solutions.append(copy.deepcopy(board))
+    #         return solutions
+    #
+    #     # if the row contains a fixed queen skip the row
+    #     if self.fixed_row[row]:
+    #         self._all_solution_helper(row + 1, solutions)
+    #
+    #     for col in range(dimension):
+    #
+    #         # check if there is a queen in the row, column, left diagonal and right diagonal
+    #         if self._is_safe((row, col)):
+    #             board[row][col] = Piece.Q_VALUE
+    #             ldiag, rdiag = col - row, col + row
+    #
+    #             # set the row, col, left diagonal, right diagonal  as having a queen
+    #             self.visited_row[row], self.visited_col[col] = True, True
+    #             self.left_diag[ldiag], self.right_diag[rdiag] = True, True
+    #
+    #             # go to the next row
+    #             self._all_solution_helper(row + 1, solutions)
+    #
+    #             # we backtrack here
+    #             board[row][col] = Piece.EMPTY
+    #
+    #             # set it back to the default
+    #             self.visited_row[row], self.visited_col[col] = False, False
+    #             self.left_diag[ldiag], self.right_diag[rdiag] = False, False
+    #
+    #     return solutions
 
     def _is_safe(self, pos: Tuple[int, int]) -> bool:
         row, col = pos
@@ -154,3 +194,23 @@ class NQueen:
         dimen_len = 2 * dimension - 1
         self.left_diag = np.zeros(dimen_len, dtype=bool)
         self.right_diag = np.zeros(dimen_len, dtype=bool)
+
+    def _set_default_queens(self):
+        """
+        Set the position of the fixed queens on the board
+        :param q_list: list of tuples of the fixed queens position
+        :return:
+        """
+        board = self.queens_pos
+        fixed_row = self.fixed_row
+        left_diag = self.left_diag
+        right_diag = self.right_diag
+
+        for row, r_val in enumerate(board):
+            for col, c_val in enumerate(r_val):
+                if c_val == Piece.Q_VALUE:
+                    self.visited_col[col] = True
+                    self.visited_row[row] = True
+                    fixed_row[row] = True
+                    left_diag[col - row] = True
+                    right_diag[col + row] = True

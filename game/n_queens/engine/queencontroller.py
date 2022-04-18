@@ -18,7 +18,7 @@ class QueenController(QObject):
         self.board = NQueen(board, size)
 
         self.solution_idx = 0
-        self.board_solutons = []
+        self.board_solutions = []
         self._init_connection()
 
     @Slot(Tile)
@@ -54,7 +54,8 @@ class QueenController(QObject):
         pass
 
     def generate_solution(self):
-        self.board_solutons = self.board.generate_all_solutions()
+        self.board_solutions = self.board.generate_all_solutions()
+        print("done ")
 
     def reset_game(self):
 
