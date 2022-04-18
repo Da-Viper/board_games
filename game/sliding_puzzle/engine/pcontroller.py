@@ -19,7 +19,7 @@ class PController:
         self._board_state = self.scene.draw_board(board_size)
         self._board = PBoard(self._board_state, board_size)
         self._init_connections()
-        self.slot_shuffle_clicked()
+        # self.slot_shuffle_clicked()
 
     @Slot(Tile)
     def tile_clicked(self, tile: Tile):

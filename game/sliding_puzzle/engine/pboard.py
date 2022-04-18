@@ -33,7 +33,6 @@ class PBoard:
         view[pos_row][pos_col] = self._blank_val
         self.blank_idx = (pos_row, pos_col)
 
-
     def get_blank_neighbours(self):
         size = self.size
         row, col = self.blank_idx

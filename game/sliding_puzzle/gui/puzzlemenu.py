@@ -33,5 +33,5 @@ class SlidingMenu(QDialog):
 
     def _init_connections(self):
         self._timer.timeout.connect(self.scene.advance)
-        self._timer.start()
+        self._timer.start(50)
         self.ui.btn_shuffle.clicked.connect(self._controller.slot_shuffle_clicked)
