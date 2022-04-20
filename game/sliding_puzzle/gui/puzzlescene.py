@@ -14,7 +14,6 @@ class PuzzleScene(QGraphicsScene):
         self.board_size = -1
         self.tiles: List[Tile] = []
 
-
     def draw_board(self, size):
         self.board_size = size
         item_width = int(self.width() // size)
@@ -31,5 +30,3 @@ class PuzzleScene(QGraphicsScene):
         board.append(0)
         self.tiles.append(None)
         return board
-
-

@@ -19,7 +19,7 @@ class PController:
         self._board_state = self.scene.draw_board(board_size)
         self._board = PBoard(self._board_state, board_size)
         self._init_connections()
-        # self.slot_shuffle_clicked()
+        self.slot_shuffle_clicked()
 
     @Slot(Tile)
     def tile_clicked(self, tile: Tile):
@@ -33,12 +33,11 @@ class PController:
     @Slot()
     def slot_shuffle_clicked(self):
         board = self._board
-        shuffle_time = time.time() + 3  # millis
+        shuffle_time = time.time() + 0.5  # millis
         while time.time() < shuffle_time:
             tiles_list = self.scene.tiles
 
             n_pos = random.choice(list(board.get_blank_neighbours()))
-            print(f"random neighbour {n_pos}")
             new_pos = board.swap_pos(n_pos)
             t_pos = n_pos[0] * board.size + n_pos[1]
             b_pos = new_pos[0] * board.size + new_pos[1]

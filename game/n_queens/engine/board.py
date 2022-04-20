@@ -7,10 +7,6 @@ from dataclasses import dataclass
 
 from numpy import ndarray
 
-Q_VALUE = "Q"
-EMPTY = "_"
-FIXED_QUEEN = "F"
-
 
 class Piece(IntEnum):
     Q_VALUE = 1
@@ -54,7 +50,8 @@ class NQueen:
         self.pos_states[row][col].has_queen = True
         self.queens_pos[row][col] = Piece.Q_VALUE
 
-        for val in self.pos_states[row]: val.conflicts += 1
+        for val in self.pos_states[row]:
+            val.conflicts += 1
         for val in self.pos_states[:, col]:
             val.conflicts += 1
         for val in np.diag(self.pos_states, k=col - row):

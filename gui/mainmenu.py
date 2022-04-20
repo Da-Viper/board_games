@@ -1,8 +1,8 @@
-from PySide2.QtCore import Slot, QTimer, QObject
+from PySide2.QtCore import Slot
 from PySide2.QtWidgets import QWidget
 
 from game.checkers.gui.gamemenu import GameMenu
-from game.n_queens.gui.queenscene import NQueensMenu
+from game.n_queens.gui.queendialog import NQueensMenu
 from game.sliding_puzzle.gui.puzzlemenu import SlidingMenu
 from game.tictactoe.gui.tttmenu import TTTMenu
 from gui.ui_files.ui_mainmenu import Ui_GameMainMenu

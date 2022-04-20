@@ -15,7 +15,6 @@ class Tile(QGraphicsRectItem):
     def __init__(self, pos, rect):
         super(Tile, self).__init__(rect)
         self.pos = pos
-        # self.toggled = False
         self.player: int = Player.EMPTY
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: Optional[QWidget] = ...) -> None:

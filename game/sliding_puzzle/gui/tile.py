@@ -20,7 +20,6 @@ class Tile(QGraphicsRectItem):
         self._font.setPixelSize((_width * _height) ** 0.43)
 
     def set_new_pos(self, new_pos: Tuple[int, int]):
-        print(f"new pos {new_pos}")
         self.idx_pos = new_pos
         self.setPos(new_pos[1] * self._size[0], new_pos[0] * self._size[0])
 

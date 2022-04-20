@@ -38,3 +38,4 @@ class PBoard:
         row, col = self.blank_idx
         moves = ((row + 1, col), (row - 1, col), (row, col - 1), (row, col + 1))
         return filter(lambda rc: 0 <= rc[0] < size and 0 <= rc[1] < size, moves)
+    

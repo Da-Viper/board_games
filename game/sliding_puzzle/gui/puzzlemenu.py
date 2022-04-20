@@ -17,7 +17,7 @@ class SlidingMenu(QDialog):
         self.view.setGeometry(0, 0, 600, 600)
         print(f"view rect {self.view.sceneRect(), self.view.geometry()}")
         self.scene = PuzzleScene(self.view.geometry(), self)
-        self._controller = PController(4, self.scene)
+        self._controller = PController(3, self.scene)
         self.view.setScene(self.scene)
         self.setMinimumSize(600, 600)
         self._timer = QTimer(self)
