@@ -28,7 +28,7 @@ class NQueenScene(QGraphicsScene):
         for i in range(size * size):
             row, col = divmod(i, size)
             item_pos = QRect(col * item_width, row * item_height, item_width, item_height)
-            nqueen_pos = Pos(False, np.int8(0))
+            nqueen_pos = Pos(False, False, np.int8(0))
             curr_tile = Tile(nqueen_pos, (row, col), item_pos)
 
             self.addItem(curr_tile)
@@ -45,10 +45,13 @@ class NQueenScene(QGraphicsScene):
         tiles = self.tiles
         for row, r_val in enumerate(sol_board):
             for col, col_val in enumerate(r_val):
-                current_tile: Tile = tiles[row][col]
-                if col_val == Piece.Q_VALUE:
-                    current_tile.p_pos.has_queen = True
+                current_tile_pos: Pos = tiles[row][col].p_pos
+                if col_val == Piece.FIXED_QUEEN:
+                    current_tile_pos.is_fixed = True
+                    current_tile_pos.has_queen = True
+                elif col_val == Piece.Q_VALUE:
+                    current_tile_pos.has_queen = True
                 else:
-                    current_tile.p_pos.has_queen = False
-                current_tile.p_pos.conflicts = 0
+                    current_tile_pos.has_queen = False
+                    current_tile_pos.conflicts = 1
         self.update()

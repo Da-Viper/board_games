@@ -18,6 +18,7 @@ class Piece(IntEnum):
 @dataclass
 class Pos:
     has_queen: bool
+    is_fixed: bool
     conflicts: np.int8
 
     def __repr__(self):
@@ -142,6 +143,7 @@ class NQueen:
         for pos in state_flatten:
             pos.conflicts = 0
             pos.has_queen = False
+            pos.is_fixed = False
 
         self.queens_pos = np.zeros((dimension, dimension), dtype=bool)
         self.reset_fixed_places()
@@ -171,6 +173,7 @@ class NQueen:
         for row, r_val in enumerate(board):
             for col, c_val in enumerate(r_val):
                 if c_val == Piece.Q_VALUE:
+                    board[row][col] = Piece.FIXED_QUEEN
                     self.visited_col[col] = True
                     self.visited_row[row] = True
                     fixed_row[row] = True
