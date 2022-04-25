@@ -1,10 +1,9 @@
 import copy
+from dataclasses import dataclass
 from enum import IntEnum
 from typing import Tuple
 
 import numpy as np
-from dataclasses import dataclass
-
 from numpy import ndarray
 
 
@@ -125,6 +124,7 @@ class NQueen:
         return solutions
 
     def _is_safe(self, pos: Tuple[int, int]) -> bool:
+        """ Checks if it is safe to place a queen on the position in the board"""
         row, col = pos
         # row and column check
         if self.visited_row[row] or self.visited_col[col]:
@@ -145,10 +145,13 @@ class NQueen:
             pos.has_queen = False
             pos.is_fixed = False
 
-        self.queens_pos = np.zeros((dimension, dimension), dtype=bool)
+        self.queens_pos = np.zeros((dimension, dimension), dtype=np.int8)
         self.reset_fixed_places()
 
     def reset_fixed_places(self):
+        """
+        Reset the positions of all the fixed queens on the board
+        """
         dimension = self.dimension
         self.visited_row = np.zeros(dimension, dtype=bool)
         self.visited_col = np.zeros(dimension, dtype=bool)
