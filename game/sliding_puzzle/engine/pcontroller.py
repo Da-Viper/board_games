@@ -1,10 +1,12 @@
 import random
 import time
+from copy import deepcopy
 from typing import List, Tuple
 
 from PySide2.QtCore import Slot, Signal
-from PySide2.QtWidgets import QGraphicsScene
+from PySide2.QtWidgets import QGraphicsScene, QListWidget
 
+from game.sliding_puzzle.engine.algorithms import ai_play
 from game.sliding_puzzle.engine.pboard import PBoard, Direction
 from game.sliding_puzzle.gui.puzzlescene import PuzzleScene
 from game.sliding_puzzle.gui.tile import Tile
@@ -13,12 +15,13 @@ from game.sliding_puzzle.gui.tile import Tile
 class PController:
     tile_clicked = Signal(Tile)
 
-    def __init__(self, board_size: int, scene: PuzzleScene):
+    def __init__(self, board_size: int, scene: PuzzleScene, result_view: QListWidget):
         # self._board = PBoard(board)
         self.scene = scene
         self._board_state = self.scene.draw_board(board_size)
         self._board = PBoard(self._board_state, board_size)
         self._init_connections()
+        self._result_widget = result_view
         self.slot_shuffle_clicked()
 
     @Slot(Tile)
@@ -47,9 +50,15 @@ class PController:
                 self.tile_clicked(current_tile)
         print(f"current board state: {board.puzzle}")
 
-    def ai_generate(self) -> List[Tuple[Tuple[int,int], Direction]]:
-        
-        pass
+    @Slot()
+    def slot_show_solution(self):
+        moves_view = self._result_widget
+        moves_view.clear()
+
+        print("got to showing item")
+        plays = ai_play(deepcopy(self._board))
+        for move, direction in plays:
+            moves_view.addItem(str(direction))
 
     def _init_connections(self):
         self.scene.tile_clicked[Tile].connect(self.tile_clicked)
