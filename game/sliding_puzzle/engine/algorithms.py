@@ -1,18 +1,41 @@
-import copy
+import time
 from queue import PriorityQueue
 from typing import List, Tuple
+
+import numpy as np
+from numba import njit, vectorize, jit
+from numpy import ndarray
 
 from game.sliding_puzzle.engine.pboard import PBoard, Move, Direction
 from game.sliding_puzzle.engine.pnode import PNode
 
 
-def manhattan(start: List, goal: List, dimen: int) -> int:
+def manhattan(start: Tuple[int], goal: Tuple[int], dimen: int) -> int:
     res = 0
     for idx in range(1, len(start)):
         b_row, b_col = divmod(start.index(idx), dimen)
         g_row, g_col = divmod(goal.index(idx), dimen)
         res += abs(b_row - g_row) + abs(b_col - g_col)
     return res
+
+
+# @njit(inline='always')
+# def manhattan(start: ndarray, goal: ndarray, dimen: int) -> int:
+#     res = 0
+#     for idx in range(1, start.shape[0]):
+#         b_row, b_col = divmod(_index(start, idx), dimen)
+#         g_row, g_col = divmod(_index(goal, idx), dimen)
+#         res += abs(b_row - g_row) + abs(b_col - g_col)
+#     return res
+#
+#
+# @njit(inline='always')
+# # @vectorize()
+# def _index(array: ndarray, item: int):
+#     for i in range(array.shape[0]):
+#         if item == array[i]:
+#             return i
+#     return np.int8(-1)
 
 
 def generate_goal_board(board_dimen: int) -> List[int]:
@@ -25,18 +48,24 @@ def generate_goal_board(board_dimen: int) -> List[int]:
 
 def ai_play(current_board: PBoard) -> Tuple[Move, Direction]:
     goal_board = generate_goal_board(current_board.size)
+
+    start = time.perf_counter()
     res = _solve(current_board, goal_board, manhattan)
+    end = time.perf_counter()
+
+    print(f"total time taken : {end - start}")
     print(f"res: {res}, depth: {res.depth}, history:{res.history}")
     return res.history
 
 
 def generate_pnode(node: PNode, play: Tuple[Move, Direction], goal: List, heuristic):
-    new_node = copy.deepcopy(node)
+    node_board = node.board()
+    new_board = PBoard(node_board.puzzle[:], node_board.size)
+    new_node = PNode(new_board, node.depth + 1, 0, node.history[:])
     move, direction = play
     new_node.play_move(move)
-    new_node.heuristic = heuristic(new_node.puzzle, goal, new_node.size)
-    new_node.depth += 1
     new_node.history += play,
+    new_node.heuristic = heuristic(new_node.puzzle, goal, new_node.size)
     return new_node
 
 
@@ -57,9 +86,10 @@ def _solve(s_board: PBoard, goal: List[int], heuristic):
 
         max_search_depth = max(curr_node.depth, max_search_depth)
 
-        if curr_node in visited:
+        c_node_hash = curr_node.__hash__()
+        if c_node_hash in visited:
             continue
-        visited.add(curr_node)
+        visited.add(c_node_hash)
 
         if curr_node.is_goal(goal):
             return curr_node
@@ -75,6 +105,8 @@ def _solve(s_board: PBoard, goal: List[int], heuristic):
 
 
 if __name__ == "__main__":
-    cboard = PBoard([1, 0, 3, 4, 2, 5, 7, 8, 6], 3)
+    s_puzzle = [8, 1, 5, 6, 3, 2, 4, 7, 0]
+    print(f"start board : {s_puzzle}")
+    cboard = PBoard(s_puzzle, 3)
 
     ai_play(cboard)

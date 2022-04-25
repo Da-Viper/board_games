@@ -24,6 +24,9 @@ class PNode:
     def size(self):
         return self._board.size
 
+    def board(self):
+        return self._board
+
     def play_move(self, move: Move):
         self._board.move_piece(move)
 
