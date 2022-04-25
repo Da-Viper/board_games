@@ -1,11 +1,11 @@
 import random
 import time
-from typing import List
+from typing import List, Tuple
 
 from PySide2.QtCore import Slot, Signal
 from PySide2.QtWidgets import QGraphicsScene
 
-from game.sliding_puzzle.engine.pboard import PBoard
+from game.sliding_puzzle.engine.pboard import PBoard, Direction
 from game.sliding_puzzle.gui.puzzlescene import PuzzleScene
 from game.sliding_puzzle.gui.tile import Tile
 
@@ -45,7 +45,11 @@ class PController:
             tiles[n_pos], tiles[blank_pos] = tiles[blank_pos], tiles[n_pos]
             if current_tile:
                 self.tile_clicked(current_tile)
-        print(f"current board state: {board._cells}")
+        print(f"current board state: {board.puzzle}")
+
+    def ai_generate(self) -> List[Tuple[Tuple[int,int], Direction]]:
+        
+        pass
 
     def _init_connections(self):
         self.scene.tile_clicked[Tile].connect(self.tile_clicked)

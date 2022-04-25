@@ -1,16 +1,25 @@
-from typing import Tuple, List
+from enum import IntEnum
+from typing import Tuple, List, Sequence, NamedTuple
 
-import numpy as np
+Move = NamedTuple("Move", [("row", int), ("col", int)])
+
+
+class Direction(IntEnum):
+    UP = 0
+    DOWN = 1
+    LEFT = 2
+    RIGHT = 3
 
 
 class PBoard:
 
     def __init__(self, board: List, size: int):
-        self._cells = np.array(board, dtype=np.int8)
-        self.goal_hash = hash(tuple(self._cells))
-        self._view = self._cells.view().reshape(size, size)
+        # self.puzzle = np.array(board, dtype=np.int8)
+        self.puzzle = board
+        self.goal_hash = hash(tuple(self.puzzle))
+        # self._view = self.puzzle.view().reshape(size, size)
         self._blank_val = 0
-        self.blank_idx = divmod(size * size - 1, size)
+        self.blank_idx = divmod(board.index(0), size)
         self.size = size
 
     def move_piece(self, pos: Tuple[int, int]) -> Tuple[int, int]:
@@ -24,13 +33,17 @@ class PBoard:
 
         return -1, -1
 
-    def swap_with_blank(self, pos_row: int, pos_col: int):
-        view = self._view
-        new_row, new_col = self.blank_idx
+    def undo_move(self):
+        pass
 
-        pos_val = view[pos_row][pos_col]
-        view[new_row][new_col] = pos_val
-        view[pos_row][pos_col] = self._blank_val
+    def swap_with_blank(self, pos_row: int, pos_col: int):
+        puzzle = self.puzzle
+        new_row, new_col = self.blank_idx
+        blank_pos = new_row * self.size + new_col
+        piece_pos = pos_row * self.size + pos_col
+
+        puzzle[blank_pos], puzzle[piece_pos] = puzzle[piece_pos], puzzle[blank_pos]
+
         self.blank_idx = (pos_row, pos_col)
 
     def get_blank_neighbours(self):
@@ -38,4 +51,6 @@ class PBoard:
         row, col = self.blank_idx
         moves = ((row + 1, col), (row - 1, col), (row, col - 1), (row, col + 1))
         return filter(lambda rc: 0 <= rc[0] < size and 0 <= rc[1] < size, moves)
-    
+
+    def is_goal(self, goal: Sequence):
+        return self.puzzle == goal
