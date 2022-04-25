@@ -13,7 +13,7 @@ class PBoard:
         self.blank_idx = divmod(size * size - 1, size)
         self.size = size
 
-    def swap_pos(self, pos: Tuple[int, int]) -> Tuple[int, int]:
+    def move_piece(self, pos: Tuple[int, int]) -> Tuple[int, int]:
         if pos in self.get_blank_neighbours():
             new_row, new_col = self.blank_idx
             pos_row, pos_col = pos
