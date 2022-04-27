@@ -40,21 +40,35 @@ def ai_play(current_board: PBoard) -> Tuple[Move, Direction]:
 
 def draw_node(c_node: PNode):
     p_node = c_node
+    p_node.color = "green"
+    print(f"the childrens {p_node.children}")
     while p_node.parent:
+        p_node.parent.color = "lightgreen"
         p_node = p_node.parent
 
-    DotExporter(p_node, nodeattrfunc=lambda node: "width=1, height=1, shape=box",
+    def set_colour(node: PNode):
+        attrs = ["style=filled"]
+        if not node.children:
+            attrs += [f"fillcolor=lightblue2"]
+        if hasattr(node, "color"):
+            attrs += [f"fillcolor={node.color}"]
+        if node.parent is None:
+            attrs += [f"fillcolor=yellow"]
+        return ", ".join(attrs)
+
+    DotExporter(p_node, options=["label=Search_Tree", "labelloc=t", "fontsize=60"], nodeattrfunc=set_colour,
                 edgeattrfunc=lambda parent, child: "style=bold").to_picture("udo.svg")
 
 
 def generate_pnode(node: PNode, play: Tuple[Move, Direction], goal: List, heuristic):
     node_board = node.board()
     new_board = PBoard(node_board.puzzle[:], node_board.size)
-    new_node = PNode(new_board, node.n_depth + 1, 0, node.history[:], parent=node)
+    new_node = PNode(new_board, node.n_depth + 1, 0, node.history[:])
     move, direction = play
     new_node.play_move(move)
     new_node.history += play,
     new_node.heuristic = heuristic(new_node.puzzle, goal, new_node.size)
+
     return new_node
 
 
@@ -87,7 +101,8 @@ def _solve(s_board: PBoard, goal: List[int], heuristic) -> PNode:
         for play in curr_node.generate_moves():
             child_node = generate_pnode(curr_node, play, goal, heuristic)
 
-            if child_node not in visited:
+            if child_node.__hash__() not in visited:
+                child_node.parent = curr_node
                 node_queue.put(child_node)
 
     return start_node
@@ -97,6 +112,7 @@ if __name__ == "__main__":
     s_puzzle = [8, 1, 5, 6, 3, 2, 4, 7, 0]
     # s_puzzle = [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1]
     # s_puzzle = [5, 12, 10, 7, 15, 11, 14, 0, 8, 2, 1, 13, 3, 4, 9, 6]
+    # s_puzzle = [1, 2, 3, 4, 0, 5, 7, 8, 6]
     print(f"start board : {s_puzzle}")
     cboard = PBoard(s_puzzle, 3)
 

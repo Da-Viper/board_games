@@ -15,6 +15,7 @@ class PNode(NodeMixin):
         self._board = board
         self.history = action
         self.parent = parent
+        # self.children = children if children else ()
 
     @property
     def name(self):
