@@ -81,8 +81,11 @@ class SNode:
         """
         Method used to pick heuristic function
         default is heuristic 1
-        :param player:
-        :return:
+        Args:
+            player:
+
+        Returns:
+
         """
         if Settings.HEURISTIC == 1:
             return self.heuristic1(player)

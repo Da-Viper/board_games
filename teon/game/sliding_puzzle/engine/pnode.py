@@ -1,20 +1,28 @@
 from typing import Sequence, Tuple
 
+from anytree import NodeMixin
+
 from teon.game.sliding_puzzle.engine.pboard import PBoard, Move, Direction
 
 
-class PNode:
+class PNode(NodeMixin):
 
     def __init__(self, board: PBoard, depth: int = 0,
-                 heuristic: int = 0, action: Tuple[Move, Direction] = ()):
+                 heuristic: int = 0, action: Tuple[Move, Direction] = (), parent=None):
+        super(PNode, self).__init__()
         self.heuristic = heuristic
-        self.depth = depth
+        self.n_depth = depth
         self._board = board
         self.history = action
+        self.parent = parent
+
+    @property
+    def name(self):
+        return self._board.__str__()
 
     @property
     def f_value(self):
-        return self.depth + self.heuristic
+        return self.n_depth + self.heuristic
 
     @property
     def puzzle(self):

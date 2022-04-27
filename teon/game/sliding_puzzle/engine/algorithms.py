@@ -2,6 +2,8 @@ import time
 from queue import PriorityQueue
 from typing import List, Tuple
 
+from anytree.exporter import DotExporter
+
 from teon.game.sliding_puzzle.engine.pboard import PBoard, Move, Direction
 from teon.game.sliding_puzzle.engine.pnode import PNode
 
@@ -13,25 +15,6 @@ def manhattan(start: Tuple[int], goal: Tuple[int], dimen: int) -> int:
         g_row, g_col = divmod(goal.index(idx), dimen)
         res += abs(b_row - g_row) + abs(b_col - g_col)
     return res
-
-
-# @njit(inline='always')
-# def manhattan(start: ndarray, goal: ndarray, dimen: int) -> int:
-#     res = 0
-#     for idx in range(1, start.shape[0]):
-#         b_row, b_col = divmod(_index(start, idx), dimen)
-#         g_row, g_col = divmod(_index(goal, idx), dimen)
-#         res += abs(b_row - g_row) + abs(b_col - g_col)
-#     return res
-#
-#
-# @njit(inline='always')
-# # @vectorize()
-# def _index(array: ndarray, item: int):
-#     for i in range(array.shape[0]):
-#         if item == array[i]:
-#             return i
-#     return np.int8(-1)
 
 
 def generate_goal_board(board_dimen: int) -> List[int]:
@@ -50,14 +33,24 @@ def ai_play(current_board: PBoard) -> Tuple[Move, Direction]:
     end = time.perf_counter()
 
     print(f"total time taken : {end - start}")
-    print(f"res: {res}, depth: {res.depth}, history:{res.history}")
+    print(f"res: {res}, depth: {res.n_depth}, history:{res.history}")
+    draw_node(res)
     return res.history
+
+
+def draw_node(c_node: PNode):
+    p_node = c_node
+    while p_node.parent:
+        p_node = p_node.parent
+
+    DotExporter(p_node, nodeattrfunc=lambda node: "width=1, height=1, shape=box",
+                edgeattrfunc=lambda parent, child: "style=bold").to_picture("udo.svg")
 
 
 def generate_pnode(node: PNode, play: Tuple[Move, Direction], goal: List, heuristic):
     node_board = node.board()
     new_board = PBoard(node_board.puzzle[:], node_board.size)
-    new_node = PNode(new_board, node.depth + 1, 0, node.history[:])
+    new_node = PNode(new_board, node.n_depth + 1, 0, node.history[:], parent=node)
     move, direction = play
     new_node.play_move(move)
     new_node.history += play,
@@ -65,7 +58,7 @@ def generate_pnode(node: PNode, play: Tuple[Move, Direction], goal: List, heuris
     return new_node
 
 
-def _solve(s_board: PBoard, goal: List[int], heuristic):
+def _solve(s_board: PBoard, goal: List[int], heuristic) -> PNode:
     start_depth = 0
     dimension = s_board.size
     f_val = heuristic(s_board.puzzle, goal, dimension)
@@ -80,7 +73,7 @@ def _solve(s_board: PBoard, goal: List[int], heuristic):
     while len(node_queue.queue):
         curr_node: PNode = node_queue.get()
 
-        max_search_depth = max(curr_node.depth, max_search_depth)
+        max_search_depth = max(curr_node.n_depth, max_search_depth)
 
         c_node_hash = curr_node.__hash__()
         if c_node_hash in visited:

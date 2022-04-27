@@ -1,6 +1,8 @@
 from enum import IntEnum
 from typing import Tuple, List, Sequence, NamedTuple
 
+import numpy as np
+
 Move = NamedTuple("Move", [("row", int), ("col", int)])
 
 
@@ -54,3 +56,6 @@ class PBoard:
 
     def is_goal(self, goal: Sequence):
         return self.puzzle == goal
+
+    def __str__(self) -> str:
+        return str(np.reshape(self.puzzle, (-1, self.size)))
