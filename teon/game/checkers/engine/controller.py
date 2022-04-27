@@ -3,9 +3,9 @@ from typing import List
 
 from teon.game.checkers.engine.snode import SNode
 from teon.game.checkers.engine import AI
-from teon.game.settings import Settings
+from teon.game.checkers.engine.settings import Settings
 from teon.game.checkers.engine.player import Player
-from teon.game.gameresponse import GameResponse
+from teon.game.checkers.engine.gameresponse import GameResponse
 
 
 class Controller:

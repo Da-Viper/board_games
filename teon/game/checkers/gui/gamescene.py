@@ -6,9 +6,9 @@ from PySide2.QtWidgets import QGraphicsScene, QGraphicsItem, QGraphicsSceneMouse
 
 from teon.game.checkers.engine.snode import SNode
 from teon.game.checkers.engine.controller import Controller
-from teon.game.gameresponse import GameResponse
+from teon.game.checkers.engine.gameresponse import GameResponse
 from teon.game.checkers.engine.player import Player
-from teon.game.settings import Settings
+from teon.game.checkers.engine.settings import Settings
 from teon.game.checkers.gui.models import BTile, GPiece
 
 

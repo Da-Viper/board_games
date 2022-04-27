@@ -2,7 +2,7 @@ from PySide2.QtCore import Slot
 from PySide2.QtWidgets import QDialog
 
 from teon.game.checkers.engine.player import Player
-from teon.game.settings import Settings
+from teon.game.checkers.engine.settings import Settings
 from teon.game.checkers.gui.ui_files.ui_preference import Ui_Dialog as UIPreferenceDialog
 
 

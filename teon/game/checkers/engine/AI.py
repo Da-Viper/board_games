@@ -8,7 +8,7 @@ from math import inf
 
 from teon.game.checkers.engine.snode import SNode
 from teon.game.checkers.engine.player import Player
-from teon.game.settings import Settings
+from teon.game.checkers.engine.settings import Settings
 
 
 def move(state: SNode, player: Player):

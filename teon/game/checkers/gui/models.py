@@ -7,7 +7,7 @@ from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidg
 
 from teon.game.checkers.engine.piece import Piece
 from teon.game.checkers.engine.player import Player
-from teon.game.settings import Settings
+from teon.game.checkers.engine.settings import Settings
 
 
 class BTile(QGraphicsRectItem):
