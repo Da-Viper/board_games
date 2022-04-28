@@ -1,7 +1,11 @@
+import sys
 import time
 from queue import PriorityQueue
 from typing import List, Tuple
 
+from PySide2 import QtSvg
+from PySide2.QtGui import Qt
+from PySide2.QtWidgets import QApplication, QScrollArea, QVBoxLayout
 from anytree.exporter import DotExporter
 
 from teon.game.sliding_puzzle.engine.pboard import PBoard, Move, Direction
@@ -113,7 +117,17 @@ if __name__ == "__main__":
     # s_puzzle = [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1]
     # s_puzzle = [5, 12, 10, 7, 15, 11, 14, 0, 8, 2, 1, 13, 3, 4, 9, 6]
     # s_puzzle = [1, 2, 3, 4, 0, 5, 7, 8, 6]
-    print(f"start board : {s_puzzle}")
-    cboard = PBoard(s_puzzle, 3)
+    app = QApplication(sys.argv)
+    scroll = QScrollArea()
+    scroll.setLayout(QVBoxLayout())
+    svgWidget = QtSvg.QSvgWidget('udo.svg')
+    scroll.addScrollBarWidget(svgWidget, Qt.AlignCenter)
+    svgWidget.setGeometry(50, 50, 759, 668)
+    svgWidget.show()
+    scroll.show()
+    sys.exit(app.exec_())
+    # print(f"start board : {s_puzzle}")
+    # cboard = PBoard(s_puzzle, 3)
 
-    ai_play(cboard)
+    # sys.exit(app.exec_())
+    # ai_play(cboard)

@@ -8,6 +8,7 @@ from PySide2.QtWidgets import QListWidget
 from teon.game.sliding_puzzle.engine.algorithms import ai_play
 from teon.game.sliding_puzzle.engine.pboard import PBoard
 from teon.game.sliding_puzzle.gui.puzzlescene import PuzzleScene
+from teon.game.sliding_puzzle.gui.svgview import SvgDialog
 from teon.game.sliding_puzzle.gui.tile import Tile
 
 
@@ -58,6 +59,12 @@ class PController:
         plays = ai_play(deepcopy(self._board))
         for move, direction in plays:
             moves_view.addItem(str(direction))
+
+    @Slot()
+    def slot_show_svg(self):
+        print("got here")
+        search_diag = SvgDialog("udo.svg")
+        search_diag.exec_()
 
     def _init_connections(self):
         self.scene.tile_clicked[Tile].connect(self.tile_clicked)

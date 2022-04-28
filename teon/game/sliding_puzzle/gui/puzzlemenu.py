@@ -31,8 +31,14 @@ class SlidingMenu(QDialog):
         self.ui.horizontalLayout.addWidget(self.ui.btn_shuffle)
         self.ui.horizontalLayout.addItem(hspacer)
 
+        self.ui.btn_show_svg = self.ui.btn_undo
+        self.ui.btn_show_svg.setDisabled(True)
+        self.ui.btn_undo.setText("Search Tree")
+
     def _init_connections(self):
         self._timer.timeout.connect(self.scene.advance)
         self._timer.start(50)
         self.ui.btn_shuffle.clicked.connect(self._controller.slot_shuffle_clicked)
         self.ui.btn_show_solution.clicked.connect(self._controller.slot_show_solution)
+        self.ui.btn_show_solution.clicked.connect(lambda: self.ui.btn_show_svg.setDisabled(False))
+        self.ui.btn_show_svg.clicked.connect(self._controller.slot_show_svg)
