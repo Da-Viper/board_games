@@ -3,14 +3,14 @@ from PySide2.QtWidgets import QDialog, QPushButton, QSpacerItem, QSizePolicy
 
 from teon.game.n_queens.engine.queencontroller import QueenController
 from teon.game.n_queens.gui.queenscene import NQueenScene
-from teon.game.tictactoe.gui.ui_files.ui_tictactoemenu import Ui_TictactoeMenu
+from teon.game.n_queens.gui.ui_nqueens_dialog import UI_NQueensMenu
 
 
 class NQueensMenu(QDialog):
 
     def __init__(self, parent=None):
         super(NQueensMenu, self).__init__(parent)
-        self.ui = Ui_TictactoeMenu()
+        self.ui = UI_NQueensMenu()
         self.ui.setupUi(self)
         self.__init_ui()
         self.__init_connection()

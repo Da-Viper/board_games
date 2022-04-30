@@ -29,7 +29,6 @@ class Ui_GameMainMenu(object):
         self.label = QLabel(GameMainMenu)
         self.label.setObjectName(u"label")
         font = QFont()
-        font.setFamily(u"Fira Sans")
         font.setPointSize(30)
         font.setBold(True)
         font.setItalic(False)
@@ -166,8 +165,8 @@ class Ui_GameMainMenu(object):
         self.label.setText(QCoreApplication.translate("GameMainMenu", u"Learn Backtracking", None))
         self.label_2.setText(QCoreApplication.translate("GameMainMenu", u"Play", None))
         self.btn_checkers.setText(QCoreApplication.translate("GameMainMenu", u"Checkers", None))
-        self.btn_ttt.setText(QCoreApplication.translate("GameMainMenu", u"Tic Tac Toe", None))
+        self.btn_ttt.setText(QCoreApplication.translate("GameMainMenu", u"Connect 4", None))
         self.btn_15_puzzle.setText(QCoreApplication.translate("GameMainMenu", u"15 Puzzle", None))
-        self.btn_nqueens.setText(QCoreApplication.translate("GameMainMenu", u"N- Queens", None))
+        self.btn_nqueens.setText(QCoreApplication.translate("GameMainMenu", u"N-Queens", None))
     # retranslateUi
 

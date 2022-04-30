@@ -15,7 +15,6 @@ class NQueenScene(QGraphicsScene):
         self.tiles: ndarray = None
         self.setItemIndexMethod(QGraphicsScene.NoIndex)
         self.enable_mouse_press = True
-        # self._tiles = np.zeros()k
 
     def init_grid(self, size: int):
         self.tiles = np.empty((size, size), dtype=Tile)

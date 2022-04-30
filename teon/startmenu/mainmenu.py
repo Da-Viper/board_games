@@ -4,7 +4,7 @@ from PySide2.QtWidgets import QWidget
 from teon.game.checkers.gui.gamemenu import GameMenu
 from teon.game.n_queens.gui.queendialog import NQueensMenu
 from teon.game.sliding_puzzle.gui.puzzlemenu import SlidingMenu
-from teon.game.tictactoe.gui.tttmenu import TTTMenu
+from teon.game.connect4.gui.connect4menu import Connect4Menu
 from teon.startmenu.ui_files.ui_mainmenu import Ui_GameMainMenu
 
 
@@ -27,7 +27,7 @@ class MainMenu(QWidget):
 
     @Slot()
     def show_tic_tac_toe(self):
-        ttt_menu = TTTMenu(self)
+        ttt_menu = Connect4Menu(self)
         ttt_menu.show()
 
     @Slot()

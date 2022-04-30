@@ -14,6 +14,7 @@ class Tile(QGraphicsRectItem):
     QUEEN = join(asset_path, "queen.svg")
     INVALID = join(asset_path, "x-mark-red.svg")
     FIXED = join(asset_path, "f-queen.svg")
+    COLOUR = QColor("#f0d9b5")
 
     def __init__(self, piece: Pos, pos, rect):
         super(Tile, self).__init__(rect)
