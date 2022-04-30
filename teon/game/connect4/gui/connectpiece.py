@@ -10,7 +10,7 @@ from teon.game.connect4.engine.board import Player
 
 class ConnectPiece(QGraphicsRectItem):
     DARK = QColor("#ba5546")
-    LIGHT = QColor("#f0d8bf")
+    LIGHT = QColor("#f8ec5a")
 
     def __init__(self, rect: QRect, player: Player = Player.EMPTY):
         super(ConnectPiece, self).__init__(rect)

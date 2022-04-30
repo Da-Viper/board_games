@@ -2,6 +2,7 @@ from typing import Tuple
 
 import numpy as np
 from PySide2.QtCore import Signal, QRect, Slot
+from PySide2.QtGui import QColor
 from PySide2.QtWidgets import QGraphicsScene
 from numpy import ndarray
 
@@ -10,6 +11,7 @@ from teon.game.connect4.gui.connectpiece import ConnectPiece
 
 
 class TScene(QGraphicsScene):
+    BG_COLOR = QColor("#f0d9b5")
     tile_clicked = Signal(ConnectPiece)
 
     def __init__(self, width: int, height: int, rect: QRect, parent=None):
@@ -17,6 +19,7 @@ class TScene(QGraphicsScene):
         self._tiles: ndarray = None
         self.b_rows = width
         self.b_cols = height
+        self.setBackgroundBrush(TScene.BG_COLOR)
         self.setItemIndexMethod(QGraphicsScene.NoIndex)
 
     def init_grid(self, b_row: int, b_col: int) -> ndarray:

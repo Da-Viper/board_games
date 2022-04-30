@@ -12,7 +12,7 @@ from teon.game.checkers.engine.settings import Settings
 class BTile(QGraphicsRectItem):
     LIGHT = QColor("#f0d9b5")
     DARK = QColor("#b58863")
-    HIGHLIGHT = QColor("#bbcb2b")
+    HIGHLIGHT = QColor("#f8ec5a")
 
     def __init__(self, pos_x, pos_y, parent=None):
         scale = Settings.G_WIDTH
