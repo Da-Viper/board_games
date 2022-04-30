@@ -1,3 +1,4 @@
+from os.path import join
 from typing import Optional
 
 from PySide2.QtCore import QSize, QRectF
@@ -5,13 +6,14 @@ from PySide2.QtGui import QPainter, Qt
 from PySide2.QtSvg import QSvgRenderer
 from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidget, QGraphicsSceneMouseEvent
 
+from assets import asset_path
 from teon.game.n_queens.engine.board import Pos
 
 
 class Tile(QGraphicsRectItem):
-    QUEEN = "assets/queen.svg"
-    INVALID = "assets/x-mark-red.svg"
-    FIXED = "assets/f-queen.svg"
+    QUEEN = join(asset_path, "queen.svg")
+    INVALID = join(asset_path, "x-mark-red.svg")
+    FIXED = join(asset_path, "f-queen.svg")
 
     def __init__(self, piece: Pos, pos, rect):
         super(Tile, self).__init__(rect)
