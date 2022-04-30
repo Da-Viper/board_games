@@ -2,7 +2,7 @@ from os.path import join
 from typing import Optional
 
 from PySide2.QtCore import QSize, QRectF
-from PySide2.QtGui import QPainter, Qt
+from PySide2.QtGui import QPainter, QColor
 from PySide2.QtSvg import QSvgRenderer
 from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidget, QGraphicsSceneMouseEvent
 
@@ -21,6 +21,7 @@ class Tile(QGraphicsRectItem):
         self.p_pos = piece
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: Optional[QWidget] = ...) -> None:
+        painter.fillRect(self.rect(), Tile.COLOUR)
         super().paint(painter, option, widget)
         self_rect = self.rect()
         piece_pos = self.p_pos
@@ -30,7 +31,7 @@ class Tile(QGraphicsRectItem):
             return
         if has_queen:
             if is_fixed:
-                painter.fillRect(self_rect, Qt.green)
+                painter.fillRect(self_rect, QColor("#7fa650"))
             svg = Tile.QUEEN
         elif conflict:
             svg = Tile.INVALID

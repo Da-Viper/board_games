@@ -1,11 +1,13 @@
 from typing import Optional, Tuple
 
 from PySide2.QtCore import QRectF, QRect
-from PySide2.QtGui import QPainter, Qt, QFont
+from PySide2.QtGui import QPainter, Qt, QFont, QPen, QColor
 from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidget, QGraphicsSceneMouseEvent
 
 
 class Tile(QGraphicsRectItem):
+    COLOUR = QColor("#f0d9b5")
+    OUTLINE = QColor("#292828")
 
     def __init__(self, text: int, rect: QRect):
         _width = rect.width()
@@ -33,7 +35,10 @@ class Tile(QGraphicsRectItem):
 
     def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: Optional[QWidget] = ...) -> None:
         painter.setRenderHint(QPainter.Antialiasing)
-        painter.setBrush(Qt.gray)
+        painter.setBrush(Tile.COLOUR)
+        pen = QPen(Qt.SolidPattern, 3)
+        pen.setColor(Tile.OUTLINE)
+        painter.setPen(pen)
         painter.setFont(self._font)
         painter.drawRoundRect(self.boundingRect(), 20, 20)
         painter.drawText(self.boundingRect(), Qt.AlignCenter, self._text)

@@ -1,6 +1,7 @@
 from typing import List
 
 from PySide2.QtCore import QRect, Signal
+from PySide2.QtGui import QColor
 from PySide2.QtWidgets import QGraphicsScene
 
 from teon.game.sliding_puzzle.gui.tile import Tile
@@ -12,6 +13,7 @@ class PuzzleScene(QGraphicsScene):
     def __init__(self, geometry: QRect, parent=None):
         super(PuzzleScene, self).__init__(geometry, parent)
         self.board_size = -1
+        self.setBackgroundBrush(QColor("#b58863"))
         self.tiles: List[Tile] = []
 
     def draw_board(self, size):

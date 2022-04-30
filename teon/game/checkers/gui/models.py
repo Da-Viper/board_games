@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-import typing
-
-from PySide2.QtGui import QPainter, Qt, QPen
+from typing import Optional
+from PySide2.QtGui import QPainter, Qt, QPen, QColor
 from PySide2.QtWidgets import QGraphicsRectItem, QStyleOptionGraphicsItem, QWidget, QGraphicsItem
 
 from teon.game.checkers.engine.piece import Piece
@@ -11,6 +10,9 @@ from teon.game.checkers.engine.settings import Settings
 
 
 class BTile(QGraphicsRectItem):
+    LIGHT = QColor("#f0d9b5")
+    DARK = QColor("#b58863")
+    HIGHLIGHT = QColor("#bbcb2b")
 
     def __init__(self, pos_x, pos_y, parent=None):
         scale = Settings.G_WIDTH
@@ -18,21 +20,21 @@ class BTile(QGraphicsRectItem):
         self.setPos(pos_x * scale, pos_y * scale)
 
         if ((pos_x % 2) + (pos_y % 2)) % 2 == 0:
-            self.color = Qt.black
+            self.color = BTile.DARK
         else:
-            self.color = Qt.white
+            self.color = BTile.LIGHT
         self.is_highlighted = False
         self.__state = None
 
-    def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: QWidget):
+    def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: Optional[QWidget] = ...):
         painter.fillRect(self.rect(), self.color)
 
     def toggle_highlight(self):
         if self.is_highlighted:
-            self.color = Qt.white
+            self.color = BTile.LIGHT
         else:
             self.is_highlighted = True
-            self.color = Qt.gray
+            self.color = BTile.HIGHLIGHT
 
         self.update()
 
@@ -44,6 +46,8 @@ class BTile(QGraphicsRectItem):
 
 
 class GPiece(QGraphicsRectItem):
+    DARK = QColor("#575453")
+    LIGHT = QColor("#f8f8f8")
 
     def __init__(self, x: int, y: int, piece: Piece, pos: int = 0, parent=None):
         self.g_scale = Settings.G_WIDTH
@@ -52,17 +56,17 @@ class GPiece(QGraphicsRectItem):
         self.board_pos = pos
         self.setPos(x * scale, y * scale)
         self.piece: Piece = piece
-        self.color = Qt.black
+        self.color = GPiece.DARK
         self.last_pos = self.pos()
 
         if piece.player is Player.HUMAN:
             self.setFlags(QGraphicsItem.ItemIsSelectable
                           | QGraphicsItem.ItemIsMovable)
 
-            self.color = Qt.red
+            self.color = GPiece.LIGHT
             self.setCursor(Qt.ClosedHandCursor)
 
-    def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: typing.Optional[QWidget]) -> None:
+    def paint(self, painter: QPainter, option: QStyleOptionGraphicsItem, widget: Optional[QWidget] = ...) -> None:
         center = self.boundingRect().center()
         painter.setRenderHint(QPainter.HighQualityAntialiasing)
         painter.setBrush(self.color)
