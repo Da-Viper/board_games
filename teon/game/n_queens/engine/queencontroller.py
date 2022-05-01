@@ -1,6 +1,7 @@
 from PySide2.QtCore import Slot, Signal, QObject
 from PySide2.QtWidgets import QMessageBox
 
+from teon.game.n_queens.engine import algorithm
 from teon.game.n_queens.engine.board import NQueen
 from teon.game.n_queens.gui.queenscene import NQueenScene
 from teon.game.n_queens.gui.tile import Tile
@@ -62,7 +63,8 @@ class QueenController(QObject):
 
     def generate_solution(self):
         self.scene.enable_mouse_press = False
-        self.board_solutions = self.board.generate_all_solutions()
+        self.board.set_default_queens()
+        self.board_solutions = algorithm.get_sol(self.board, True)
         self.solution_idx = 0
         print(f"board solution {self.board_solutions}")
         if len(self.board_solutions) < 1:
