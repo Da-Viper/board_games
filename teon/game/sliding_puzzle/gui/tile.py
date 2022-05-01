@@ -16,14 +16,18 @@ class Tile(QGraphicsRectItem):
         self.idx_pos: Tuple[int, int] = (rect.y(), rect.x())
         self.setPos(rect.x() * _width, rect.y() * _height)
         self._size = (_width, _height)
+        self.scale_pos = rect.x() * _width, rect.y() * _height
 
         self._text: str = str(text + 1)
         self._font = QFont()
         self._font.setPixelSize((_width * _height) ** 0.43)
+        self._update_speed = 3
+        self._next_pos = (-1, -1)
 
     def set_new_pos(self, new_pos: Tuple[int, int]):
         self.idx_pos = new_pos
-        self.setPos(new_pos[1] * self._size[0], new_pos[0] * self._size[0])
+        self._next_pos = (new_pos[0] * self._size[0], new_pos[1] * self._size[0])
+        self.update()
 
     """ ----------------- MoveMent ----------------- """
 
@@ -53,4 +57,29 @@ class Tile(QGraphicsRectItem):
     def advance(self, phase: int) -> None:
         if not phase:
             return
-        super().advance(phase)
+        pos_x, pos_y = self.pos().x(), self.pos().y()
+
+        next_pos = self._next_pos
+        if next_pos[0] != -1 or next_pos[1] != -1:
+
+            x_dist = next_pos[0] - pos_x
+            y_dist = next_pos[1] - pos_y
+
+            if pos_x != next_pos[0] and x_dist > 1:
+                pos_x += self._update_speed
+            elif x_dist < -self._update_speed:
+                pos_x -= self._update_speed
+            else:
+                pos_x = next_pos[0]
+
+            if pos_y != next_pos[1] and y_dist > 1:
+                pos_y += self._update_speed
+            elif y_dist < -self._update_speed:
+                pos_y -= self._update_speed
+            else:
+                pos_y = next_pos[1]
+
+            self.setPos(pos_x, pos_y)
+            if pos_x == next_pos[0] and pos_y == next_pos[1]:
+                self._next_pos = (-1, -1)
+        self.setPos(pos_x,pos_y)
