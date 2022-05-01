@@ -12,13 +12,17 @@ from teon.game.sliding_puzzle.engine.pboard import PBoard, Move, Direction
 from teon.game.sliding_puzzle.engine.pnode import PNode
 
 
-def manhattan(start: Tuple[int], goal: Tuple[int], dimen: int) -> int:
+def manhattan(start: List[int], goal: List[int], dimen: int) -> int:
     res = 0
     for idx in range(1, len(start)):
         b_row, b_col = divmod(start.index(idx), dimen)
         g_row, g_col = divmod(goal.index(idx), dimen)
         res += abs(b_row - g_row) + abs(b_col - g_col)
     return res
+
+
+def misplaced(start: List[int], goal: List[int], dimen: int = 3) -> int:
+    return sum(b != g for b, g in zip(start, goal))
 
 
 def generate_goal_board(board_dimen: int) -> List[int]:
@@ -113,21 +117,16 @@ def _solve(s_board: PBoard, goal: List[int], heuristic) -> PNode:
 
 
 if __name__ == "__main__":
-    s_puzzle = [8, 1, 5, 6, 3, 2, 4, 7, 0]
+    # s_puzzle = [8, 1, 5, 6, 3, 2, 4, 7, 0]
+    s_puzzle = [1, 2, 3, 4, 0, 5, 7, 8, 6]
     # s_puzzle = [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1]
     # s_puzzle = [5, 12, 10, 7, 15, 11, 14, 0, 8, 2, 1, 13, 3, 4, 9, 6]
     # s_puzzle = [1, 2, 3, 4, 0, 5, 7, 8, 6]
-    app = QApplication(sys.argv)
-    scroll = QScrollArea()
-    scroll.setLayout(QVBoxLayout())
-    svgWidget = QtSvg.QSvgWidget('udo.svg')
-    scroll.addScrollBarWidget(svgWidget, Qt.AlignCenter)
-    svgWidget.setGeometry(50, 50, 759, 668)
-    svgWidget.show()
-    scroll.show()
-    sys.exit(app.exec_())
     # print(f"start board : {s_puzzle}")
-    # cboard = PBoard(s_puzzle, 3)
+    cboard = PBoard(s_puzzle, 3)
 
     # sys.exit(app.exec_())
-    # ai_play(cboard)
+    res = ai_play(cboard)
+    print(f"length:{len(res)}")
+    for _, direction in res:
+        print(direction)
