@@ -27,10 +27,54 @@ class Ui_SlidingPuzzleMenu(object):
 
         self.horizontalLayout_2.addWidget(self.g_view)
 
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.listWidget = QListWidget(SlidingPuzzleMenu)
         self.listWidget.setObjectName(u"listWidget")
 
-        self.horizontalLayout_2.addWidget(self.listWidget)
+        self.verticalLayout.addWidget(self.listWidget)
+
+        self.groupBox = QGroupBox(SlidingPuzzleMenu)
+        self.groupBox.setObjectName(u"groupBox")
+        self.verticalLayout_3 = QVBoxLayout(self.groupBox)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.radioButton_2 = QRadioButton(self.groupBox)
+        self.radioButton_2.setObjectName(u"radioButton_2")
+
+        self.verticalLayout_3.addWidget(self.radioButton_2)
+
+        self.radioButton = QRadioButton(self.groupBox)
+        self.radioButton.setObjectName(u"radioButton")
+
+        self.verticalLayout_3.addWidget(self.radioButton)
+
+
+        self.verticalLayout.addWidget(self.groupBox)
+
+        self.groupBox_2 = QGroupBox(SlidingPuzzleMenu)
+        self.groupBox_2.setObjectName(u"groupBox_2")
+        self.verticalLayout_4 = QVBoxLayout(self.groupBox_2)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.radioButton_5 = QRadioButton(self.groupBox_2)
+        self.radioButton_5.setObjectName(u"radioButton_5")
+
+        self.verticalLayout_4.addWidget(self.radioButton_5)
+
+        self.radioButton_3 = QRadioButton(self.groupBox_2)
+        self.radioButton_3.setObjectName(u"radioButton_3")
+
+        self.verticalLayout_4.addWidget(self.radioButton_3)
+
+        self.radioButton_4 = QRadioButton(self.groupBox_2)
+        self.radioButton_4.setObjectName(u"radioButton_4")
+
+        self.verticalLayout_4.addWidget(self.radioButton_4)
+
+
+        self.verticalLayout.addWidget(self.groupBox_2)
+
+
+        self.horizontalLayout_2.addLayout(self.verticalLayout)
 
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
@@ -50,10 +94,10 @@ class Ui_SlidingPuzzleMenu(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.btn_new_game = QPushButton(SlidingPuzzleMenu)
-        self.btn_new_game.setObjectName(u"btn_new_game")
+        self.btn_solve = QPushButton(SlidingPuzzleMenu)
+        self.btn_solve.setObjectName(u"btn_solve")
 
-        self.horizontalLayout.addWidget(self.btn_new_game)
+        self.horizontalLayout.addWidget(self.btn_solve)
 
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -79,8 +123,15 @@ class Ui_SlidingPuzzleMenu(object):
 
     def retranslateUi(self, SlidingPuzzleMenu):
         SlidingPuzzleMenu.setWindowTitle(QCoreApplication.translate("SlidingPuzzleMenu", u"Dialog", None))
+        self.groupBox.setTitle(QCoreApplication.translate("SlidingPuzzleMenu", u"Heuristic", None))
+        self.radioButton_2.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Man Hattan", None))
+        self.radioButton.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Misplaced Tiles", None))
+        self.groupBox_2.setTitle(QCoreApplication.translate("SlidingPuzzleMenu", u"Search Type", None))
+        self.radioButton_5.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Depth First Search", None))
+        self.radioButton_3.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"A Star", None))
+        self.radioButton_4.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"IDA Star", None))
         self.btn_undo.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Undo", None))
-        self.btn_new_game.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"New Game", None))
+        self.btn_solve.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Solve", None))
         self.btn_show_solution.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Show Solution", None))
     # retranslateUi
 

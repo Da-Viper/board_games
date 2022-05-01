@@ -21,7 +21,7 @@ class Tile(QGraphicsRectItem):
         self._text: str = str(text + 1)
         self._font = QFont()
         self._font.setPixelSize((_width * _height) ** 0.43)
-        self._update_speed = 3
+        self._update_speed = 20
         self._next_pos = (-1, -1)
 
     def set_new_pos(self, new_pos: Tuple[int, int]):
