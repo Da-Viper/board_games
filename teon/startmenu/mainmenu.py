@@ -16,26 +16,26 @@ class MainMenu(QWidget):
         self.ui.setupUi(self)
 
         self.ui.btn_checkers.clicked.connect(self.show_checkers)
-        self.ui.btn_ttt.clicked.connect(self.show_tic_tac_toe)
+        self.ui.btn_ttt.clicked.connect(self.show_connect_4)
         self.ui.btn_15_puzzle.clicked.connect(self.show_15_puzzle)
         self.ui.btn_nqueens.clicked.connect(self.show_n_queens)
 
     @Slot()
     def show_checkers(self):
         checker_menu = GameMenu(self)
-        checker_menu.show()
+        checker_menu.exec_()
 
     @Slot()
-    def show_tic_tac_toe(self):
+    def show_connect_4(self):
         ttt_menu = Connect4Menu(self)
-        ttt_menu.show()
+        ttt_menu.exec_()
 
     @Slot()
     def show_15_puzzle(self):
-        puzzle_15 = SlidingMenu()
+        puzzle_15 = SlidingMenu(self)
         puzzle_15.exec_()
 
     @Slot()
     def show_n_queens(self):
         dialog = NQueensMenu(self)
-        dialog.show()
+        dialog.exec_()

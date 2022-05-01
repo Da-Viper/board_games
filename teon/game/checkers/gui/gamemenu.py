@@ -38,7 +38,7 @@ class GameMenu(QDialog):
     @Slot()
     def start_checkers(self):
         checker_dialog = CheckersWindow(self)
-        checker_dialog.show()
+        checker_dialog.exec_()
 
 
 class CheckersWindow(QDialog):
