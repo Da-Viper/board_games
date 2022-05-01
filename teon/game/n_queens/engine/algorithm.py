@@ -3,6 +3,7 @@ import time
 from typing import List, Tuple
 
 import numpy as np
+from numba import njit, vectorize
 
 from teon.game.n_queens.engine.board import NQueen, Piece
 
@@ -13,13 +14,24 @@ def get_sol(board: NQueen, all_sol: bool = True):
     pass
 
 
-def _is_safe(pos: Tuple[int, int], v_row: List, v_col: List, v_ldiag: List, v_rdiag: List):
-    row, col = pos
-    ldiag, rdiag = col - row, col + row
-    if v_row[row] or v_col[col] or v_ldiag[ldiag] or v_rdiag[rdiag]:
-        return False
+# def _is_safe(pos: Tuple[int, int], v_row: List, v_col: List, v_ldiag: List, v_rdiag: List):
+#     row, col = pos
+#     ldiag, rdiag = col - row, col + row
+#     if v_row[row] or v_col[col] or v_ldiag[ldiag] or v_rdiag[rdiag]:
+#         return False
+#
+#     return True
 
-    return True
+def _is_safe(row: int, col: int, v_row: int, v_col: int, v_ldiag: int, v_rdiag: int, offset: int) -> int:
+    # row, col = pos
+    # ldiag, rdiag = offset + col - row, col + row
+    ldiag: int = offset + col - row
+    rdiag: int = col + row
+    # print(f" index , {row, col, ldiag, rdiag}")
+    # print(f"values , {bin(v_row), bin(v_col), bin(v_ldiag), bin(v_rdiag)}")
+    if ((v_row >> row) & 1) or ((v_col >> col) & 1) or ((v_ldiag >> ldiag) & 1) or ((v_rdiag >> rdiag) & 1):
+        return 0
+    return 1
 
 
 def _all_solution(nqueen: NQueen, row: int, solutions: List) -> List:
@@ -31,11 +43,13 @@ def _all_solution(nqueen: NQueen, row: int, solutions: List) -> List:
     """
     board = nqueen.queens_pos
     dimension = nqueen.dimension
+    offset = dimension - 1
     visited_row = nqueen.visited_row
     visited_col = nqueen.visited_col
     left_diag = nqueen.left_diag
     right_diag = nqueen.right_diag
 
+    # print(f"ldiag, {left_diag}")
     # if at the end add the solution
     if row >= dimension:
         solutions.append(copy.deepcopy(board))
@@ -49,29 +63,39 @@ def _all_solution(nqueen: NQueen, row: int, solutions: List) -> List:
 
         # check if there is a queen in the row, column, left diagonal and right diagonal
         # if nqueen._is_safe((row, col)):
-        if _is_safe((row, col), visited_row, visited_col, left_diag, right_diag):
-            board[row][col] = Piece.Q_VALUE
-            ldiag, rdiag = col - row, col + row
+        # print(f"inner : {row, col, left_diag, right_diag}")
+        if _is_safe(row, col, visited_row, visited_col, left_diag, right_diag, offset):
+            # board[row][col] = Piece.Q_VALUE
+            pos = row * dimension + col
+            nqueen.queens_pos |= 1 << pos
+            ldiag, rdiag = offset + col - row, col + row
 
             # set the row, col, left diagonal, right diagonal  as having a queen
-            visited_row[row], visited_col[col] = True, True
-            left_diag[ldiag], right_diag[rdiag] = True, True
+            nqueen.visited_row |= 1 << row
+            nqueen.visited_col |= 1 << col
+            nqueen.left_diag |= 1 << ldiag
+            nqueen.right_diag |= 1 << rdiag
+            # visited_row[row], visited_col[col] = 1, 1
+            # left_diag[ldiag], right_diag[rdiag] = 1, 1
 
             # go to the next row
             _all_solution(nqueen, row + 1, solutions)
 
             # we backtrack here
-            board[row][col] = Piece.EMPTY
+            # board[row][col] = Piece.EMPTY
 
             # set it back to the default
-            visited_row[row], visited_col[col] = False, False
-            left_diag[ldiag], right_diag[rdiag] = False, False
+            nqueen.queens_pos &= ~(1 << pos)
+            nqueen.visited_row &= ~(1 << row)
+            nqueen.visited_col &= ~(1 << col)
+            nqueen.left_diag &= ~(1 << ldiag)
+            nqueen.right_diag &= ~(1 << rdiag)
 
     return solutions
 
 
 if __name__ == '__main__':
-    board_size = 12
+    board_size = 8
     nqueen_pos = np.empty((board_size, board_size), dtype=np.int8)
     # nqueen_pos = []
     print(nqueen_pos)
@@ -90,3 +114,11 @@ if __name__ == '__main__':
 # 12 -> 4848
 # 13 ->  27946
 # 14 -> 173408
+
+# bits
+# 8 -> 12
+# 9 -> 51
+# 10 -> 724
+# 11 -> 2680
+# 12 -> 4848
+# 13 -> 35418
