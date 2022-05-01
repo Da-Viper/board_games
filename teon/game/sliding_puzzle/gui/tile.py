@@ -26,7 +26,7 @@ class Tile(QGraphicsRectItem):
 
     def set_new_pos(self, new_pos: Tuple[int, int]):
         self.idx_pos = new_pos
-        self._next_pos = (new_pos[0] * self._size[0], new_pos[1] * self._size[0])
+        self._next_pos = (new_pos[1] * self._size[0], new_pos[0] * self._size[0])
         self.update()
 
     """ ----------------- MoveMent ----------------- """
@@ -55,31 +55,36 @@ class Tile(QGraphicsRectItem):
         super().mouseReleaseEvent(event)
 
     def advance(self, phase: int) -> None:
+        # print(f"phase {phase}")
         if not phase:
             return
         pos_x, pos_y = self.pos().x(), self.pos().y()
 
-        next_pos = self._next_pos
-        if next_pos[0] != -1 or next_pos[1] != -1:
+        npos_x, npos_y = self._next_pos
+        u_speed = self._update_speed
+        if npos_x != -1 or npos_y != -1:
 
-            x_dist = next_pos[0] - pos_x
-            y_dist = next_pos[1] - pos_y
+            x_dist = npos_x - pos_x
+            y_dist = npos_y - pos_y
 
-            if pos_x != next_pos[0] and x_dist > 1:
-                pos_x += self._update_speed
-            elif x_dist < -self._update_speed:
-                pos_x -= self._update_speed
+            if pos_x != npos_x and x_dist > 1:
+                pos_x += u_speed
+            elif x_dist < -u_speed:
+                pos_x -= u_speed
             else:
-                pos_x = next_pos[0]
+                pos_x = npos_x
 
-            if pos_y != next_pos[1] and y_dist > 1:
-                pos_y += self._update_speed
-            elif y_dist < -self._update_speed:
-                pos_y -= self._update_speed
+            if pos_y != npos_y and y_dist > 1:
+                pos_y += u_speed
+            elif y_dist < -u_speed:
+                pos_y -= u_speed
             else:
-                pos_y = next_pos[1]
+                pos_y = npos_y
 
             self.setPos(pos_x, pos_y)
-            if pos_x == next_pos[0] and pos_y == next_pos[1]:
+            if pos_x == npos_x and pos_y == npos_y:
                 self._next_pos = (-1, -1)
-        self.setPos(pos_x,pos_y)
+        self.setPos(pos_x, pos_y)
+
+    def __repr__(self) -> str:
+        return self._text

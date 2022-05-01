@@ -23,8 +23,8 @@ class PuzzleScene(QGraphicsScene):
 
         board = []
         for i in range(size * size - 1):
-            col, row = divmod(i, size)
-            item_pos = QRect(row, col, item_width, item_height)
+            row, col = divmod(i, size)
+            item_pos = QRect(col, row, item_width, item_height)
             curr_tile = Tile(i, item_pos)
             self.tiles.append(curr_tile)
             board.append(i + 1)

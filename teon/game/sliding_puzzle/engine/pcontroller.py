@@ -1,6 +1,7 @@
 import random
 import time
 from copy import deepcopy
+from typing import Tuple
 
 from PySide2.QtCore import Slot, Signal
 from PySide2.QtWidgets import QListWidget
@@ -27,10 +28,26 @@ class PController:
     @Slot(Tile)
     def tile_clicked(self, tile: Tile):
         current_pos = tile.idx_pos
+        tiles = self.scene.tiles
+        cpos = current_pos[0] * self._board.size + current_pos[1]
         new_pos = self._board.move_piece(current_pos)
+        npos = new_pos[0] * self._board.size + new_pos[1]
 
         if new_pos != (-1, -1):
+            tiles[cpos], tiles[npos] = tiles[npos], tiles[cpos]
             tile.set_new_pos(new_pos)
+
+    def move_tile_piece(self, pos: Tuple[int, int]):
+        new_pos = self._board.move_piece(pos)
+        tiles = self.scene.tiles
+        pos_1 = pos[0] * self._board.size + pos[1]
+        new_pos_1 = new_pos[0] * self._board.size + new_pos[1]
+        tile_at_pos = tiles[pos_1]
+        tiles[new_pos_1], tiles[pos_1] = tiles[pos_1], tiles[new_pos_1]
+
+        if new_pos != (-1, -1):
+            print("setting new pos")
+            tile_at_pos.set_new_pos(new_pos)
 
     @Slot()
     def slot_shuffle_clicked(self):
@@ -41,11 +58,8 @@ class PController:
 
         while time.time() < shuffle_time:
             n_row, n_col = random.choice(list(board.get_blank_neighbours()))
-            blank_row, blank_col = board.blank_idx
             n_pos = n_row * board_size + n_col
-            blank_pos = blank_row * board_size + blank_col
             current_tile = tiles[n_pos]
-            tiles[n_pos], tiles[blank_pos] = tiles[blank_pos], tiles[n_pos]
             if current_tile:
                 self.tile_clicked(current_tile)
         print(f"current board state: {board.puzzle}")
@@ -59,6 +73,20 @@ class PController:
         plays = ai_play(deepcopy(self._board))
         for move, direction in plays:
             moves_view.addItem(str(direction))
+
+    @Slot()
+    def slot_solve_board(self):
+        print("go here")
+        plays = ai_play(deepcopy(self._board))
+        tiles= self.scene.tiles
+        # start = time.time()
+        for i, (move, _) in enumerate(plays):
+
+            print(tiles)
+            print(f"move {move}")
+            self.move_tile_piece(move)
+            print(tiles)
+            # time.sleep(3)
 
     @Slot()
     def slot_show_svg(self):

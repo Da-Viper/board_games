@@ -20,7 +20,7 @@ class SlidingMenu(QDialog):
         self._controller = PController(3, self.scene, self.ui.listWidget)
         self.view.setScene(self.scene)
         self.setMinimumSize(600, 600)
-        self._timer = QTimer(self)
+        self._timer = QTimer(self.scene)
 
         self.adjustSize()
         self._init_connections()
@@ -37,7 +37,10 @@ class SlidingMenu(QDialog):
 
     def _init_connections(self):
         self._timer.timeout.connect(self.scene.advance)
-        self._timer.start(50)
+        self._timer.start(5)
+        self.finished.connect(lambda: self._timer.stop())
+
+        self.ui.btn_solve.clicked.connect(self._controller.slot_solve_board)
         self.ui.btn_shuffle.clicked.connect(self._controller.slot_shuffle_clicked)
         self.ui.btn_show_solution.clicked.connect(self._controller.slot_show_solution)
         self.ui.btn_show_solution.clicked.connect(lambda: self.ui.btn_show_svg.setDisabled(False))
