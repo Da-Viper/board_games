@@ -1,15 +1,15 @@
 import sys
 import time
+from math import inf
 from queue import PriorityQueue
 from typing import List, Tuple
 
-from PySide2 import QtSvg
-from PySide2.QtGui import Qt
-from PySide2.QtWidgets import QApplication, QScrollArea, QVBoxLayout
 from anytree.exporter import DotExporter
 
 from teon.game.sliding_puzzle.engine.pboard import PBoard, Move, Direction
 from teon.game.sliding_puzzle.engine.pnode import PNode
+
+sys.setrecursionlimit(100000)
 
 
 def manhattan(start: List[int], goal: List[int], dimen: int) -> int:
@@ -33,11 +33,14 @@ def generate_goal_board(board_dimen: int) -> List[int]:
     return goal_board
 
 
-def ai_play(current_board: PBoard) -> Tuple[Move, Direction]:
+def ai_play(current_board: PBoard, is_astar=True) -> Tuple[Move, Direction]:
     goal_board = generate_goal_board(current_board.size)
 
     start = time.perf_counter()
-    res = _solve(current_board, goal_board, manhattan)
+    if is_astar:
+        res = _solve_astar(current_board, goal_board, manhattan)
+    else:
+        res = solve_ida_star(current_board, goal_board, manhattan)
     end = time.perf_counter()
 
     print(f"total time taken : {end - start}")
@@ -80,7 +83,7 @@ def generate_pnode(node: PNode, play: Tuple[Move, Direction], goal: List, heuris
     return new_node
 
 
-def _solve(s_board: PBoard, goal: List[int], heuristic) -> PNode:
+def _solve_astar(s_board: PBoard, goal: List[int], heuristic) -> PNode:
     start_depth = 0
     dimension = s_board.size
     f_val = heuristic(s_board.puzzle, goal, dimension)
@@ -116,17 +119,117 @@ def _solve(s_board: PBoard, goal: List[int], heuristic) -> PNode:
     return start_node
 
 
+def solve_ida_star(s_board: PBoard, goal: List[int], heuristic):
+    dimension = s_board.size
+    s_bound = heuristic(s_board.puzzle, goal, dimension)
+    # start_
+    root = PNode(s_board, 0, s_bound)
+    s_path = [root]
+    visited = set()
+    visited.add(root.__hash__())
+    node_explored = 0
+
+    def _search(path: List[PNode], g: int, bound: int):
+        node = path[-1]
+        f = heuristic(node.puzzle, goal, dimension) + g
+
+        # global node_explored
+
+        # print(node_explored)
+        # if node_explored % 100000 == 0:
+        #     print(f"node explored {node_explored}")
+        if f > bound:
+            return f
+
+        if node.is_goal(goal):
+            return True
+
+        b_min = inf
+        for play in node.generate_moves():
+            child_node: PNode = generate_pnode(node, play, goal, heuristic)
+            child_node_hash = child_node.__hash__()
+
+            if child_node_hash not in visited:
+                path.append(child_node)
+                visited.add(child_node_hash)
+                t = _search(path, g + 1, bound)
+
+                if t == True:
+                    return t
+                if t < b_min:
+                    b_min = t
+                path.pop()
+                visited.remove(child_node_hash)
+
+        return b_min
+
+    while True:
+        t = _search(s_path, 0, s_bound)
+        if t == True:
+            return s_path[-1]
+        if t == inf:
+            return False
+        s_bound = t
+
+
+# def solve_ida_star(s_board: PBoard, goal: List[int], heuristic) -> PNode:
+#     node_explored = 0
+#     dimension = s_board.size
+#     cutoff = heuristic(s_board.puzzle, goal, dimension)
+#     start_node = PNode(s_board, 0, cutoff)
+#
+#     while True:
+#         node_queue = PriorityQueue()
+#         node_queue.put(start_node)
+#
+#         visited = set()
+#         min_above = inf
+#         snode_hash = start_node.__hash__()
+#         visited.add(snode_hash)
+#
+#         while len(node_queue.queue):
+#             current_node: PNode = node_queue.get()
+#             node_explored += 1
+#
+#             if node_explored % 100000 == 0:
+#                 print(f"node explored :{node_explored}")
+#
+#             if current_node.is_goal(goal):
+#                 return current_node
+#
+#             for play in current_node.generate_moves():
+#                 child_node = generate_pnode(current_node, play, goal, heuristic)
+#
+#                 child_node_hash = child_node.__hash__()
+#                 if child_node_hash in visited:
+#                     continue
+#
+#                 c_node_fval = child_node.f_value
+#                 if cutoff < c_node_fval:
+#                     if c_node_fval < min_above:
+#                         min_above = c_node_fval
+#                     continue
+#
+#                 node_queue.put(child_node)
+#                 visited.add(child_node_hash)
+#         cutoff = min_above
+#
+
 if __name__ == "__main__":
-    # s_puzzle = [8, 1, 5, 6, 3, 2, 4, 7, 0]
-    s_puzzle = [1, 2, 3, 4, 0, 5, 7, 8, 6]
+    s_puzzle = [8, 1, 5, 6, 3, 2, 4, 7, 0]
+    # s_puzzle = [1, 2, 3, 4, 0, 5, 7, 8, 6]
     # s_puzzle = [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1]
     # s_puzzle = [5, 12, 10, 7, 15, 11, 14, 0, 8, 2, 1, 13, 3, 4, 9, 6]
+    # s_puzzle = [14, 13, 15, 7, 11, 12, 9, 5, 6, 0, 2, 1, 4, 8, 10, 3]
     # s_puzzle = [1, 2, 3, 4, 0, 5, 7, 8, 6]
     # print(f"start board : {s_puzzle}")
+    # cboard = PBoard(s_puzzle, 4)
     cboard = PBoard(s_puzzle, 3)
-
     # sys.exit(app.exec_())
-    res = ai_play(cboard)
-    print(f"length:{len(res)}")
-    for _, direction in res:
-        print(direction)
+
+    # result = ai_play(cboard, True)
+    print(f"\n Ida search ")
+    result = ai_play(cboard, False)
+    print(f"length:{len(result)}")
+    # for _, direction in result:
+    #     print(direction)

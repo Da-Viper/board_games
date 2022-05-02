@@ -3,7 +3,7 @@ import time
 from copy import deepcopy
 from typing import Tuple
 
-from PySide2.QtCore import Slot, Signal
+from PySide2.QtCore import Slot, Signal, QCoreApplication
 from PySide2.QtWidgets import QListWidget
 
 from teon.game.sliding_puzzle.engine.algorithms import ai_play
@@ -63,7 +63,7 @@ class PController:
             current_tile = tiles[n_pos]
             if current_tile:
                 self.tile_clicked(current_tile)
-        print(f"current board state: {board.puzzle}")
+            QCoreApplication.processEvents()
 
     @Slot()
     def slot_show_solution(self):
@@ -71,7 +71,7 @@ class PController:
         moves_view.clear()
 
         print("got to showing item")
-        plays = ai_play(deepcopy(self._board))
+        plays = ai_play(deepcopy(self._board), False)
         for move, direction in plays:
             moves_view.addItem(str(direction))
 
