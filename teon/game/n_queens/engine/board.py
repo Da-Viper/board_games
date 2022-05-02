@@ -28,8 +28,8 @@ class NQueen:
     def __init__(self, board_state: ndarray, _dimension: int) -> None:
         self.dimension = _dimension
         self.pos_states = board_state
-        # self.queens_pos = np.zeros((_dimension, _dimension), dtype=np.int8)
-        self.queens_pos = 0
+        self.queens_pos = np.zeros((_dimension, _dimension), dtype=np.int8)
+        # self.queens_pos = 0
 
         # self.visited_row = np.zeros(_dimension, dtype=np.int8)
         # self.visited_col = np.zeros(_dimension, dtype=np.int8)
@@ -112,6 +112,7 @@ class NQueen:
         """
         self.reset_fixed_places()
         board = self.queens_pos
+        self.queens_pos[0][1] = Piece.Q_VALUE
         fixed_row = self.fixed_row
         dimension = self.dimension
         offset = dimension - 1
@@ -119,9 +120,9 @@ class NQueen:
         for row, r_val in enumerate(board):
             for col, c_val in enumerate(r_val):
                 if c_val == Piece.Q_VALUE:
-                    pos = row * dimension + 1
-                    # board[row][col] = Piece.FIXED_QUEEN
-                    board |= 1 << pos
+                    # pos = row * dimension + 1
+                    board[row][col] = Piece.FIXED_QUEEN
+                    # board |= 1 << pos
 
                     self.visited_col |= 1 << col
                     self.visited_row |= 1 << row
