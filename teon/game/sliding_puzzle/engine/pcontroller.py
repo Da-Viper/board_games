@@ -11,6 +11,7 @@ from teon.game.sliding_puzzle.engine.pboard import PBoard
 from teon.game.sliding_puzzle.gui.puzzlescene import PuzzleScene
 from teon.game.sliding_puzzle.gui.svgview import SvgDialog
 from teon.game.sliding_puzzle.gui.tile import Tile
+from teon.utils import utils
 
 
 class PController:
@@ -78,15 +79,12 @@ class PController:
     def slot_solve_board(self):
         print("go here")
         plays = ai_play(deepcopy(self._board))
-        tiles= self.scene.tiles
+        tiles = self.scene.tiles
         # start = time.time()
         for i, (move, _) in enumerate(plays):
-
             print(tiles)
-            print(f"move {move}")
             self.move_tile_piece(move)
-            print(tiles)
-            # time.sleep(3)
+            utils.qt_sleep(400)
 
     @Slot()
     def slot_show_svg(self):
