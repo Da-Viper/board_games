@@ -43,6 +43,11 @@ class Tile(QGraphicsRectItem):
         renderer.render(painter, rect)
         painter.drawRect(self_rect)
 
+    def advance(self, phase: int) -> None:
+        if not phase:
+            return
+        self.update()
+
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         pass
 

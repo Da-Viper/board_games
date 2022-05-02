@@ -31,17 +31,13 @@ class NQueen:
         self.queens_pos = np.zeros((_dimension, _dimension), dtype=np.int8)
         # self.queens_pos = 0
 
-        # self.visited_row = np.zeros(_dimension, dtype=np.int8)
-        # self.visited_col = np.zeros(_dimension, dtype=np.int8)
+        self.visited_row = np.zeros(_dimension, dtype=bool)
+        self.visited_col = np.zeros(_dimension, dtype=bool)
         self.fixed_row = np.zeros(_dimension, dtype=bool)
-        #
-        # dimen_len = 2 * _dimension - 1
-        # self.left_diag = np.zeros(dimen_len, dtype=np.int8)
-        # self.right_diag = np.zeros(dimen_len, dtype=np.int8)
-        self.visited_row = 0
-        self.visited_col = 0
-        self.left_diag = 0
-        self.right_diag = 0
+
+        dimen_len = 2 * _dimension - 1
+        self.left_diag = np.zeros(dimen_len, dtype=bool)
+        self.right_diag = np.zeros(dimen_len, dtype=bool)
         print(f"created board : {self.pos_states}")
 
     def place_queen(self, pos: Tuple[int, int]):
@@ -97,13 +93,13 @@ class NQueen:
         Reset the positions of all the fixed queens on the board
         """
         dimension = self.dimension
-        self.visited_row = 1 << dimension
-        self.visited_col = 1 << dimension
+        self.visited_row = np.zeros(dimension, dtype=bool)
+        self.visited_col = np.zeros(dimension, dtype=bool)
         self.fixed_row = np.zeros(dimension, dtype=bool)
 
         dimen_len = 2 * dimension - 1
-        self.left_diag = 1 << dimen_len
-        self.right_diag = 1 << dimen_len
+        self.left_diag = np.zeros(dimen_len, dtype=bool)
+        self.right_diag = np.zeros(dimen_len, dtype=bool)
 
     def set_default_queens(self):
         """
@@ -112,20 +108,17 @@ class NQueen:
         """
         self.reset_fixed_places()
         board = self.queens_pos
-        self.queens_pos[0][1] = Piece.Q_VALUE
         fixed_row = self.fixed_row
-        dimension = self.dimension
-        offset = dimension - 1
+        left_diag = self.left_diag
+        right_diag = self.right_diag
 
         for row, r_val in enumerate(board):
             for col, c_val in enumerate(r_val):
                 if c_val == Piece.Q_VALUE:
                     # pos = row * dimension + 1
                     board[row][col] = Piece.FIXED_QUEEN
-                    # board |= 1 << pos
-
-                    self.visited_col |= 1 << col
-                    self.visited_row |= 1 << row
-                    fixed_row[row] = 1
-                    self.left_diag |= 1 << (offset + col - row)
-                    self.right_diag |= 1 << (col + row)
+                    self.visited_col[col] = True
+                    self.visited_row[row] = True
+                    fixed_row[row] = True
+                    left_diag[col - row] = True
+                    right_diag[col + row] = True

@@ -1,4 +1,4 @@
-from PySide2.QtCore import Slot
+from PySide2.QtCore import Slot, QTimer
 from PySide2.QtWidgets import QDialog, QPushButton, QSpacerItem, QSizePolicy
 
 from teon.game.n_queens.engine.queencontroller import QueenController
@@ -13,7 +13,6 @@ class NQueensMenu(QDialog):
         self.ui = UI_NQueensMenu()
         self.ui.setupUi(self)
         self.__init_ui()
-        self.__init_connection()
         self.view = self.ui.g_view
         self.view.setGeometry(0, 0, 600, 600)
         print(f"view rect {self.view.sceneRect(), self.view.geometry()}")
@@ -21,6 +20,8 @@ class NQueensMenu(QDialog):
         self._controller = QueenController(self.scene, 8)
         self.view.setScene(self.scene)
         self.setMinimumSize(600, 600)
+        self._timer = QTimer(self)
+        self.__init_connection()
         self.adjustSize()
 
     def __init_ui(self):
@@ -30,12 +31,16 @@ class NQueensMenu(QDialog):
         btn_show_moves.setText("Current state solutions")
         self.ui.btn_prev_sol = QPushButton("Prev")
         self.ui.btn_next_sol = QPushButton("Next")
+        self.ui.btn_simulate = QPushButton("Simulate")
         spacer1 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         spacer2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        spacer3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.ui.horizontalLayout.addWidget(self.ui.btn_prev_sol)
         self.ui.horizontalLayout.addItem(spacer1)
         self.ui.horizontalLayout.addWidget(self.ui.btn_next_sol)
         self.ui.horizontalLayout.addItem(spacer2)
+        self.ui.horizontalLayout.addWidget(self.ui.btn_simulate)
+        self.ui.horizontalLayout.addItem(spacer3)
         self.ui.btn_prev_sol.setVisible(False)
         self.ui.btn_next_sol.setVisible(False)
 
@@ -44,6 +49,10 @@ class NQueensMenu(QDialog):
         self.ui.btn_undo.clicked.connect(self._reset_game)
         self.ui.btn_prev_sol.clicked.connect(lambda: self._controller.show_solution(False))
         self.ui.btn_next_sol.clicked.connect(lambda: self._controller.show_solution(True))
+        self.ui.btn_simulate.clicked.connect(lambda: self._controller.slot_simulate())
+        self._timer.start(20)
+        self._timer.timeout.connect(self.scene.advance)
+        self.finished.connect(lambda: self._timer.stop())
 
     def _reset_game(self):
         self.enable_btns(False)

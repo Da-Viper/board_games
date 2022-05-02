@@ -71,6 +71,13 @@ class QueenController(QObject):
             return
         self.scene.draw_board_solution(self.board_solutions[self.solution_idx])
 
+    def slot_simulate(self):
+        self.scene.enable_mouse_press = False
+        print("got to simulate")
+        self.board.set_default_queens()
+        a_board_sol = algorithm.get_sol(self.board, False)
+        self.update_gui.emit((0, 0))
+
     def reset_game(self):
         self.board_solutions = []
         self.solution_idx = 0
