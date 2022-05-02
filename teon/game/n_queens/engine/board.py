@@ -40,10 +40,11 @@ class NQueen:
         self.right_diag = np.zeros(dimen_len, dtype=bool)
         print(f"created board : {self.pos_states}")
 
-    def place_queen(self, pos: Tuple[int, int]):
+    def place_queen(self, pos: Tuple[int, int], fixed: bool = False):
         row, col = pos
 
         self.pos_states[row][col].has_queen = True
+        self.pos_states[row][col].is_fixed = fixed
         self.queens_pos[row][col] = Piece.Q_VALUE
 
         for val in self.pos_states[row]:
@@ -62,10 +63,11 @@ class NQueen:
                 return False
         return True
 
-    def remove_queen(self, pos: Tuple[int, int]):
+    def remove_queen(self, pos: Tuple[int, int], fixed: bool = False):
         row, col = pos
 
         self.pos_states[row][col].has_queen = False
+        self.pos_states[row][col].is_fixed = fixed
         self.queens_pos[row][col] = Piece.EMPTY
         for val in self.pos_states[row]:
             val.conflicts -= 1
@@ -116,7 +118,8 @@ class NQueen:
             for col, c_val in enumerate(r_val):
                 if c_val == Piece.Q_VALUE:
                     # pos = row * dimension + 1
-                    board[row][col] = Piece.FIXED_QUEEN
+                    # board[row][col] = Piece.FIXED_QUEEN
+                    self.place_queen((row, col), True)
                     self.visited_col[col] = True
                     self.visited_row[row] = True
                     fixed_row[row] = True

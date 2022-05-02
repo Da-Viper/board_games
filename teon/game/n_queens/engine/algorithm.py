@@ -104,12 +104,11 @@ def _one_solution(nqueen: NQueen, row: int) -> bool:
 
     # if at the end add the solution
     if row >= dimension:
-        # solutions.append(copy.deepcopy(board))
         return True
 
     # if the row contains a fixed queen skip the row
     if nqueen.fixed_row[row]:
-        _all_solution(nqueen, row + 1)
+        return _one_solution(nqueen, row + 1)
 
     for col in range(dimension):
 
@@ -117,7 +116,7 @@ def _one_solution(nqueen: NQueen, row: int) -> bool:
             board[row][col] = Piece.Q_VALUE
             # nqueen.pos_states[row][col].has_queen = False
             nqueen.place_queen((row, col))
-            print("board state", nqueen.queens_pos)
+            # print("board state", nqueen.queens_pos)
 
             ldiag, rdiag = col - row, col + row
             # set the row, col, left diagonal, right diagonal  as having a queen

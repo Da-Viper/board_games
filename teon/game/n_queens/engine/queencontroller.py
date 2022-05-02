@@ -34,7 +34,6 @@ class QueenController(QObject):
             return
         else:
             game_board.place_queen(pos)
-        self.update_gui.emit(pos)
         if game_board.is_solved():
             self.signal_is_solved.emit()
 
@@ -75,8 +74,7 @@ class QueenController(QObject):
         self.scene.enable_mouse_press = False
         print("got to simulate")
         self.board.set_default_queens()
-        a_board_sol = algorithm.get_sol(self.board, False)
-        self.update_gui.emit((0, 0))
+        algorithm.get_sol(self.board, False)
 
     def reset_game(self):
         self.board_solutions = []
