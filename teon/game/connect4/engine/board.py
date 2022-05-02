@@ -38,33 +38,34 @@ class CBoard:
 
         return is_placed, p_row
 
-    def has_won(self, pos:Tuple[int, int]) -> bool:
-        pass
-    # def get_game_state(self, last_move: int) -> GameState:
-    #     player = self._cells[last_move]
-    #     size = self._size
-    #     if self._cell_count <= 0:
-    #         return GameState.TIE
-    #
-    #     cell_view = self._view
-    #     row, col = divmod(last_move, size)
-    #
-    #     row_check = all(x == player for x in cell_view[row])
-    #     if row_check:
-    #         return GameState(player)
-    #
-    #     col_check = all(x == player for x in cell_view[:, col])
-    #     if col_check:
-    #         return GameState(player)
-    #
-    #     if row != col and (size - 1) - row != col:  # if the pos is on the diagonal
-    #         return GameState.NO_WINS
-    #     diag_check = all(x == player for x in np.diag(cell_view))
-    #     if diag_check:
-    #         return GameState(player)
-    #
-    #     inv_diag = all(x == player for x in np.fliplr(cell_view).diagonal())
-    #     if inv_diag:
-    #         return GameState(player)
-    #
-    #     return GameState.NO_WINS
+    def has_won(self, pos: Tuple[int, int]) -> bool:
+        k = 4 - 1
+        prow, pcol = pos
+        board = self._view
+        row_len, col_len = self._size
+        piece = board[prow][pcol]
+
+        beg, end = max(0, pcol - k), min(col_len, pcol + 1 + k) - k
+        for c in range(beg, end):
+            if board[prow][c] == piece and board[prow][c + 1] == piece and board[prow][c + 2] == piece and board[prow][ \
+                    c + 3] == piece:
+                return True
+
+        beg, end = max(0, prow - k), min(row_len, prow + 1 + k) - k
+        for r in range(beg, end):
+            if board[r][pcol] == piece and board[r + 1][pcol] == piece and board[r + 2][pcol] == piece and board[r + 3][ \
+                    pcol] == piece:
+                return True
+
+        for c in range(col_len - 3):
+            for r in range(row_len - 3):
+                if board[r][c] == piece and board[r + 1][c + 1] == piece and board[r + 2][c + 2] == piece and \
+                        board[r + 3][c + 3] == piece:
+                    return True
+
+        for c in range(col_len - 3):
+            for r in range(3, row_len):
+                if board[r][c] == piece and board[r - 1][c + 1] == piece and board[r - 2][c + 2] == piece and \
+                        board[r - 3][c + 3] == piece:
+                    return True
+        return False

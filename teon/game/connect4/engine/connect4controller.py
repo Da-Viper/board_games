@@ -1,4 +1,5 @@
 from PySide2.QtCore import QObject, Slot
+from PySide2.QtWidgets import QMessageBox
 
 from teon.game.connect4.engine.board import CBoard, Player
 from teon.game.connect4.gui.connect4scene import TScene
@@ -22,9 +23,10 @@ class Connect4Controller(QObject):
             return
 
         self.scene.slot_update_pos((row, col), self.turn)
-        self.turn *= -1
+        if self.board.has_won((row, col)):
+            self.show_gameover()
+        self.turn = Player(self.turn * -1)
 
     def show_gameover(self):
-        # todo message dialog game over
-        pass
-
+        msg_box = QMessageBox(QMessageBox.Information, "Game-over", f"You Win Player {self.turn}")
+        msg_box.exec_()
