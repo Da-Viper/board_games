@@ -9,6 +9,9 @@ class Player(IntEnum):
     TWO = 2
     EMPTY = 0
 
+    def __repr__(self):
+        return str(int(self))
+
 
 class GameState(IntEnum):
     ONE_WINS = -2
@@ -23,20 +26,28 @@ class CBoard:
         self._cells = np.full(b_row * b_col, Player.EMPTY, dtype=Player)
         self._view = self._cells.view().reshape((b_row, b_col))
         self._size = (b_row, b_col)
+        self._k = 4
+        self.available = [b_row - 1] * b_col
 
     def place_piece(self, col: int, turn: Player) -> Tuple[bool, int]:
         view = self._view
-        cur_col = view[:, col]
-        col_len = len(cur_col)
         is_placed, p_row = False, -1
 
-        for row in range(col_len - 1, -1, -1):
-            if view[row][col] == Player.EMPTY:
-                view[row][col] = turn
-                is_placed, p_row = True, row
-                break
+        if self.is_available(col):
+            pos_row = self.available[col]
+            self.available[col] -= 1
+            view[pos_row][col] = turn
+            is_placed, p_row = True, pos_row
 
+        print(view)
         return is_placed, p_row
+
+    def open_pos(self):
+        _, col = self._size
+        return [i for i in range(col) if self.available[i] > -1]
+
+    def is_available(self, col: int) -> bool:
+        return self.available[col] != 0
 
     def has_won(self, pos: Tuple[int, int]) -> bool:
         k = 4 - 1
