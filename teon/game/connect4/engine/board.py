@@ -28,6 +28,7 @@ class CBoard:
         self._size = (b_row, b_col)
         self._k = 4
         self.available = [b_row - 1] * b_col
+        self.last_pos = (-1, -1)
 
     def place_piece(self, col: int, turn: Player) -> Tuple[bool, int]:
         view = self._view
@@ -80,3 +81,13 @@ class CBoard:
                         board[r - 3][c + 3] == piece:
                     return True
         return False
+
+    def is_terminal(self):
+        is_term = False
+        if self.last_pos != (-1, -1):
+            is_term = self.has_won(self.last_pos)
+
+        is_term or all(elem == -1 for elem in self.open_pos())
+
+    def heuristic(self) -> int:
+        return -1
