@@ -6,7 +6,7 @@ from typing import Tuple
 from PySide2.QtCore import Slot, Signal, QCoreApplication
 from PySide2.QtWidgets import QListWidget
 
-from teon.game.sliding_puzzle.engine.algorithms import ai_play
+from teon.game.sliding_puzzle.engine.algorithms import ai_play, Search, Heuristic
 from teon.game.sliding_puzzle.engine.pboard import PBoard
 from teon.game.sliding_puzzle.gui.puzzlescene import PuzzleScene
 from teon.game.sliding_puzzle.gui.svgview import SvgDialog
@@ -24,6 +24,8 @@ class PController:
         self._board = PBoard(self._board_state, board_size)
         self._init_connections()
         self._result_widget = result_view
+        self._search_type = Search.ASTAR
+        self._heuristic_type = Heuristic.MANHATTAN
         self.slot_shuffle_clicked()
 
     @Slot(Tile)
@@ -71,26 +73,35 @@ class PController:
         moves_view.clear()
 
         print("got to showing item")
-        plays = ai_play(deepcopy(self._board), False)
+        plays = ai_play(deepcopy(self._board), self._search_type, self._heuristic_type)
         for move, direction in plays:
             moves_view.addItem(str(direction))
 
     @Slot()
     def slot_solve_board(self):
         print("go here")
-        plays = ai_play(deepcopy(self._board))
+        plays = ai_play(deepcopy(self._board), self._search_type, self._heuristic_type)
         tiles = self.scene.tiles
-        # start = time.time()
+
         for i, (move, _) in enumerate(plays):
             print(tiles)
             self.move_tile_piece(move)
             utils.qt_sleep(400)
 
+    @Slot(Search)
+    def slot_search_type(self, s_type: Search):
+        self._search_type = s_type
+
+    @Slot(Heuristic)
+    def slot_heuristic(self, h_type: Heuristic):
+        self._heuristic_type = h_type
+
     @Slot()
     def slot_show_svg(self):
         print("got here")
-        search_diag = SvgDialog("udo.svg")
-        search_diag.exec_()
+        print(f"{self._search_type.name}.svg")
+        search_diag = SvgDialog(f"{self._search_type.name}.svg", self.scene.parent())
+        search_diag.show()
 
     def _init_connections(self):
         self.scene.tile_clicked[Tile].connect(self.tile_clicked)

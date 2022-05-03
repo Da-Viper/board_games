@@ -34,44 +34,47 @@ class Ui_SlidingPuzzleMenu(object):
 
         self.verticalLayout.addWidget(self.listWidget)
 
-        self.groupBox = QGroupBox(SlidingPuzzleMenu)
-        self.groupBox.setObjectName(u"groupBox")
-        self.verticalLayout_3 = QVBoxLayout(self.groupBox)
+        self.grpbox_heuristic = QGroupBox(SlidingPuzzleMenu)
+        self.grpbox_heuristic.setObjectName(u"grpbox_heuristic")
+        self.verticalLayout_3 = QVBoxLayout(self.grpbox_heuristic)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.radioButton_2 = QRadioButton(self.groupBox)
-        self.radioButton_2.setObjectName(u"radioButton_2")
+        self.btn_manhattan = QRadioButton(self.grpbox_heuristic)
+        self.btn_manhattan.setObjectName(u"btn_manhattan")
+        self.btn_manhattan.setChecked(True)
 
-        self.verticalLayout_3.addWidget(self.radioButton_2)
+        self.verticalLayout_3.addWidget(self.btn_manhattan)
 
-        self.radioButton = QRadioButton(self.groupBox)
-        self.radioButton.setObjectName(u"radioButton")
+        self.btn_misplaced = QRadioButton(self.grpbox_heuristic)
+        self.btn_misplaced.setObjectName(u"btn_misplaced")
 
-        self.verticalLayout_3.addWidget(self.radioButton)
+        self.verticalLayout_3.addWidget(self.btn_misplaced)
 
 
-        self.verticalLayout.addWidget(self.groupBox)
+        self.verticalLayout.addWidget(self.grpbox_heuristic)
 
-        self.groupBox_2 = QGroupBox(SlidingPuzzleMenu)
-        self.groupBox_2.setObjectName(u"groupBox_2")
-        self.verticalLayout_4 = QVBoxLayout(self.groupBox_2)
+        self.grpbox_search = QGroupBox(SlidingPuzzleMenu)
+        self.grpbox_search.setObjectName(u"grpbox_search")
+        self.verticalLayout_4 = QVBoxLayout(self.grpbox_search)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.radioButton_5 = QRadioButton(self.groupBox_2)
-        self.radioButton_5.setObjectName(u"radioButton_5")
+        self.btn_dfs = QRadioButton(self.grpbox_search)
+        self.btn_dfs.setObjectName(u"btn_dfs")
 
-        self.verticalLayout_4.addWidget(self.radioButton_5)
+        self.verticalLayout_4.addWidget(self.btn_dfs)
 
-        self.radioButton_3 = QRadioButton(self.groupBox_2)
-        self.radioButton_3.setObjectName(u"radioButton_3")
+        self.btn_astar = QRadioButton(self.grpbox_search)
+        self.btn_astar.setObjectName(u"btn_astar")
+        self.btn_astar.setChecked(True)
 
-        self.verticalLayout_4.addWidget(self.radioButton_3)
+        self.verticalLayout_4.addWidget(self.btn_astar)
 
-        self.radioButton_4 = QRadioButton(self.groupBox_2)
-        self.radioButton_4.setObjectName(u"radioButton_4")
+        self.btn_idastar = QRadioButton(self.grpbox_search)
+        self.btn_idastar.setObjectName(u"btn_idastar")
+        self.btn_idastar.setChecked(False)
 
-        self.verticalLayout_4.addWidget(self.radioButton_4)
+        self.verticalLayout_4.addWidget(self.btn_idastar)
 
 
-        self.verticalLayout.addWidget(self.groupBox_2)
+        self.verticalLayout.addWidget(self.grpbox_search)
 
 
         self.horizontalLayout_2.addLayout(self.verticalLayout)
@@ -123,13 +126,13 @@ class Ui_SlidingPuzzleMenu(object):
 
     def retranslateUi(self, SlidingPuzzleMenu):
         SlidingPuzzleMenu.setWindowTitle(QCoreApplication.translate("SlidingPuzzleMenu", u"Dialog", None))
-        self.groupBox.setTitle(QCoreApplication.translate("SlidingPuzzleMenu", u"Heuristic", None))
-        self.radioButton_2.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Man Hattan", None))
-        self.radioButton.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Misplaced Tiles", None))
-        self.groupBox_2.setTitle(QCoreApplication.translate("SlidingPuzzleMenu", u"Search Type", None))
-        self.radioButton_5.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Depth First Search", None))
-        self.radioButton_3.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"A Star", None))
-        self.radioButton_4.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"IDA Star", None))
+        self.grpbox_heuristic.setTitle(QCoreApplication.translate("SlidingPuzzleMenu", u"Heuristic", None))
+        self.btn_manhattan.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Man Hattan", None))
+        self.btn_misplaced.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Misplaced Tiles", None))
+        self.grpbox_search.setTitle(QCoreApplication.translate("SlidingPuzzleMenu", u"Search Type", None))
+        self.btn_dfs.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Depth First Search", None))
+        self.btn_astar.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"A Star", None))
+        self.btn_idastar.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"IDA Star", None))
         self.btn_undo.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Undo", None))
         self.btn_solve.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Solve", None))
         self.btn_show_solution.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Show Solution", None))

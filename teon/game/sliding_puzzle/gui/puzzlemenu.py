@@ -1,6 +1,7 @@
 from PySide2.QtCore import QTimer
 from PySide2.QtWidgets import QDialog, QSpacerItem, QSizePolicy, QPushButton
 
+from teon.game.sliding_puzzle.engine.algorithms import Heuristic, Search
 from teon.game.sliding_puzzle.engine.pcontroller import PController
 from teon.game.sliding_puzzle.gui.puzzlescene import PuzzleScene
 from teon.game.sliding_puzzle.gui.ui_files.ui_slidingpuzzlemenu import Ui_SlidingPuzzleMenu
@@ -45,3 +46,10 @@ class SlidingMenu(QDialog):
         self.ui.btn_show_solution.clicked.connect(self._controller.slot_show_solution)
         self.ui.btn_show_solution.clicked.connect(lambda: self.ui.btn_show_svg.setDisabled(False))
         self.ui.btn_show_svg.clicked.connect(self._controller.slot_show_svg)
+        # heuristic
+        self.ui.btn_manhattan.clicked.connect(lambda: self._controller.slot_heuristic(Heuristic.MANHATTAN))
+        self.ui.btn_misplaced.clicked.connect(lambda: self._controller.slot_heuristic(Heuristic.MISPLACED))
+        # search
+        self.ui.btn_astar.clicked.connect(lambda : self._controller.slot_search_type(Search.ASTAR))
+        self.ui.btn_idastar.clicked.connect(lambda : self._controller.slot_search_type(Search.IDASTAR))
+        # self.ui.btn_id

@@ -1,5 +1,6 @@
 import sys
 import time
+from enum import Enum, unique
 from math import inf
 from queue import PriorityQueue
 from typing import List, Tuple
@@ -10,6 +11,19 @@ from teon.game.sliding_puzzle.engine.pboard import PBoard, Move, Direction
 from teon.game.sliding_puzzle.engine.pnode import PNode
 
 sys.setrecursionlimit(100000)
+
+
+@unique
+class Heuristic(Enum):
+    MANHATTAN = 0
+    MISPLACED = 1
+
+
+@unique
+class Search(Enum):
+    DFS = 0
+    ASTAR = 1
+    IDASTAR = 2
 
 
 def manhattan(start: List[int], goal: List[int], dimen: int) -> int:
@@ -33,23 +47,26 @@ def generate_goal_board(board_dimen: int) -> List[int]:
     return goal_board
 
 
-def ai_play(current_board: PBoard, is_astar=True) -> Tuple[Move, Direction]:
+def ai_play(current_board: PBoard, search_type: Search, h_type: Heuristic = Heuristic.MANHATTAN) -> \
+        Tuple[Move, Direction]:
     goal_board = generate_goal_board(current_board.size)
 
     start = time.perf_counter()
-    if is_astar:
-        res = _solve_astar(current_board, goal_board, manhattan)
+    heur = manhattan if h_type is Heuristic.MANHATTAN else misplaced
+    if search_type is Search.ASTAR:
+        res = _solve_astar(current_board, goal_board, heur)
+        # res = _solve_ida_star2(current_board, goal_board, heur)
     else:
-        res = solve_ida_star(current_board, goal_board, manhattan)
+        res = _solve_ida_star(current_board, goal_board, heur)
     end = time.perf_counter()
 
     print(f"total time taken : {end - start}")
     print(f"res: {res}, depth: {res.n_depth}, history:{res.history}")
-    draw_node(res)
+    draw_node(res, search_type.name)
     return res.history
 
 
-def draw_node(c_node: PNode):
+def draw_node(c_node: PNode, search_name: str):
     p_node = c_node
     p_node.color = "green"
     print(f"the childrens {p_node.children}")
@@ -68,7 +85,7 @@ def draw_node(c_node: PNode):
         return ", ".join(attrs)
 
     DotExporter(p_node, options=["label=Search_Tree", "labelloc=t", "fontsize=60"], nodeattrfunc=set_colour,
-                edgeattrfunc=lambda parent, child: "style=bold").to_picture("udo.svg")
+                edgeattrfunc=lambda parent, child: "style=bold").to_picture(f"{search_name}.svg")
 
 
 def generate_pnode(node: PNode, play: Tuple[Move, Direction], goal: List, heuristic):
@@ -119,7 +136,7 @@ def _solve_astar(s_board: PBoard, goal: List[int], heuristic) -> PNode:
     return start_node
 
 
-def solve_ida_star(s_board: PBoard, goal: List[int], heuristic):
+def _solve_ida_star(s_board: PBoard, goal: List[int], heuristic):
     dimension = s_board.size
     s_bound = heuristic(s_board.puzzle, goal, dimension)
     # start_
@@ -127,7 +144,6 @@ def solve_ida_star(s_board: PBoard, goal: List[int], heuristic):
     s_path = [root]
     visited = set()
     visited.add(root.__hash__())
-    node_explored = 0
 
     def _search(path: List[PNode], g: int, bound: int):
         node = path[-1]
@@ -150,14 +166,17 @@ def solve_ida_star(s_board: PBoard, goal: List[int], heuristic):
             child_node_hash = child_node.__hash__()
 
             if child_node_hash not in visited:
+                child_node.parent = node
                 path.append(child_node)
                 visited.add(child_node_hash)
+
                 t = _search(path, g + 1, bound)
 
                 if t == True:
                     return t
                 if t < b_min:
                     b_min = t
+
                 path.pop()
                 visited.remove(child_node_hash)
 
@@ -172,7 +191,7 @@ def solve_ida_star(s_board: PBoard, goal: List[int], heuristic):
         s_bound = t
 
 
-# def solve_ida_star(s_board: PBoard, goal: List[int], heuristic) -> PNode:
+# def _solve_ida_star2(s_board: PBoard, goal: List[int], heuristic) -> PNode:
 #     node_explored = 0
 #     dimension = s_board.size
 #     cutoff = heuristic(s_board.puzzle, goal, dimension)
@@ -203,7 +222,7 @@ def solve_ida_star(s_board: PBoard, goal: List[int], heuristic):
 #                 child_node_hash = child_node.__hash__()
 #                 if child_node_hash in visited:
 #                     continue
-#
+#                 child_node.parent = current_node
 #                 c_node_fval = child_node.f_value
 #                 if cutoff < c_node_fval:
 #                     if c_node_fval < min_above:
@@ -228,8 +247,8 @@ if __name__ == "__main__":
     # sys.exit(app.exec_())
 
     # result = ai_play(cboard, True)
-    print(f"\n Ida search ")
-    result = ai_play(cboard, False)
+    # print(f"\n Ida search ")
+    result = ai_play(cboard, Search.ASTAR, Heuristic.MANHATTAN)
     print(f"length:{len(result)}")
     # for _, direction in result:
     #     print(direction)

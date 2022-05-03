@@ -61,6 +61,9 @@ class PNode(NodeMixin):
 
         return self.heuristic < other.heuristic
 
+    def __eq__(self, other):
+        return self.__hash__() == other.__hash__()
+
     def __le__(self, other) -> bool:
         return self.f_value <= other.f_value
 
