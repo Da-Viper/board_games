@@ -88,10 +88,10 @@ class Ui_SlidingPuzzleMenu(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer_2)
 
-        self.btn_undo = QPushButton(SlidingPuzzleMenu)
-        self.btn_undo.setObjectName(u"btn_undo")
+        self.btn_show_svg = QPushButton(SlidingPuzzleMenu)
+        self.btn_show_svg.setObjectName(u"btn_show_svg")
 
-        self.horizontalLayout.addWidget(self.btn_undo)
+        self.horizontalLayout.addWidget(self.btn_show_svg)
 
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -115,6 +115,15 @@ class Ui_SlidingPuzzleMenu(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer_4)
 
+        self.btn_shuffle = QPushButton(SlidingPuzzleMenu)
+        self.btn_shuffle.setObjectName(u"btn_shuffle")
+
+        self.horizontalLayout.addWidget(self.btn_shuffle)
+
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_5)
+
 
         self.verticalLayout_2.addLayout(self.horizontalLayout)
 
@@ -133,8 +142,9 @@ class Ui_SlidingPuzzleMenu(object):
         self.btn_dfs.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Depth First Search", None))
         self.btn_astar.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"A Star", None))
         self.btn_idastar.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"IDA Star", None))
-        self.btn_undo.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Undo", None))
+        self.btn_show_svg.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Search Tree", None))
         self.btn_solve.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Solve", None))
         self.btn_show_solution.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Show Solution", None))
+        self.btn_shuffle.setText(QCoreApplication.translate("SlidingPuzzleMenu", u"Shuffle", None))
     # retranslateUi
 
