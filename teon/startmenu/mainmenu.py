@@ -2,9 +2,9 @@ from PySide2.QtCore import Slot
 from PySide2.QtWidgets import QWidget
 
 from teon.game.checkers.gui.gamemenu import GameMenu
-from teon.game.n_queens.gui.queendialog import NQueensMenu
-from teon.game.sliding_puzzle.gui.puzzlemenu import SlidingMenu
 from teon.game.connect4.gui.connect4menu import Connect4Menu
+from teon.game.n_queens.gui.queendialog import NQueensPrefDialog
+from teon.game.sliding_puzzle.gui.puzzlemenu import SlidingMenu
 from teon.startmenu.ui_files.ui_mainmenu import Ui_GameMainMenu
 
 
@@ -37,5 +37,5 @@ class MainMenu(QWidget):
 
     @Slot()
     def show_n_queens(self):
-        dialog = NQueensMenu(self)
+        dialog = NQueensPrefDialog(self)
         dialog.exec_()
