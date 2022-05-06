@@ -1,5 +1,5 @@
 from PySide2.QtCore import QTimer
-from PySide2.QtWidgets import QDialog, QSpacerItem, QSizePolicy, QPushButton
+from PySide2.QtWidgets import QDialog
 
 from teon.game.sliding_puzzle.engine.algorithms import Heuristic, Search
 from teon.game.sliding_puzzle.engine.pcontroller import PController
@@ -27,14 +27,7 @@ class SlidingMenu(QDialog):
         self._init_connections()
 
     def _init_ui(self):
-        hspacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        self.ui.btn_shuffle = QPushButton("Shuffle")
-        self.ui.horizontalLayout.addWidget(self.ui.btn_shuffle)
-        self.ui.horizontalLayout.addItem(hspacer)
-
-        self.ui.btn_show_svg = self.ui.btn_undo
         self.ui.btn_show_svg.setDisabled(True)
-        self.ui.btn_undo.setText("Search Tree")
 
     def _init_connections(self):
         self._timer.timeout.connect(self.scene.advance)
@@ -50,6 +43,6 @@ class SlidingMenu(QDialog):
         self.ui.btn_manhattan.clicked.connect(lambda: self._controller.slot_heuristic(Heuristic.MANHATTAN))
         self.ui.btn_misplaced.clicked.connect(lambda: self._controller.slot_heuristic(Heuristic.MISPLACED))
         # search
-        self.ui.btn_astar.clicked.connect(lambda : self._controller.slot_search_type(Search.ASTAR))
-        self.ui.btn_idastar.clicked.connect(lambda : self._controller.slot_search_type(Search.IDASTAR))
+        self.ui.btn_astar.clicked.connect(lambda: self._controller.slot_search_type(Search.ASTAR))
+        self.ui.btn_idastar.clicked.connect(lambda: self._controller.slot_search_type(Search.IDASTAR))
         # self.ui.btn_id
