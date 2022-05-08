@@ -87,7 +87,7 @@ class SNode:
         Returns:
 
         """
-        if Settings.HEURISTIC == 1:
+        if Settings.HEURISTIC == 2:
             return self.heuristic1(player)
         return self.heuristic2(player)
 

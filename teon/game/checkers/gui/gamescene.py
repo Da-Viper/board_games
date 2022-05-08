@@ -10,6 +10,7 @@ from teon.game.checkers.engine.gameresponse import GameResponse
 from teon.game.checkers.engine.player import Player
 from teon.game.checkers.engine.settings import Settings
 from teon.game.checkers.gui.models import BTile, GPiece
+from teon.utils import utils
 
 
 class GameScene(QGraphicsScene):
@@ -29,6 +30,7 @@ class GameScene(QGraphicsScene):
         self.add_tiles()
         self.add_pieces()
         self.highlight_new_pos()
+        utils.qt_sleep(300)
         self.update()
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:

@@ -30,7 +30,7 @@ def _minimax_move(successors: List[SNode], max_player: Player) -> SNode:
 
     # use multiprocessing
     with Pool() as pl:
-        result = pl.starmap(_alpha_beta, zip(repeat(depth_), successors, repeat(max_player)))
+        result = pl.starmap(_alpha_beta, zip(repeat(depth_), successors, repeat(-inf), repeat(inf)))
 
         for i, val in enumerate(result):
             if val > best_score:
@@ -43,19 +43,19 @@ def _minimax_move(successors: List[SNode], max_player: Player) -> SNode:
 
 
 @lru_cache(maxsize=None)
-def _alpha_beta(depth: int, node: SNode, max_player: Player, alpha: int = -inf, beta: int = inf) -> int:
+def _alpha_beta(depth: int, node: SNode, alpha: int = -inf, beta: int = inf) -> int:
     if (depth == 0) or node.is_game_over():
         return node.compute_heuristic(Player.AI)
 
     node_states = node.get_all_states()
 
-    node_states.sort(key=lambda x: x.compute_heuristic(max_player))
+    node_states.sort(key=lambda x: x.compute_heuristic(node.turn))
 
     # Max player
     if node.turn is Player.AI:
         val = -inf
         for child in node_states:
-            val = max(val, _alpha_beta(depth - 1, child, max_player, alpha, beta))
+            val = max(val, _alpha_beta(depth - 1, child, alpha, beta))
             alpha = max(alpha, val)
             if alpha >= beta:
                 break
@@ -65,7 +65,7 @@ def _alpha_beta(depth: int, node: SNode, max_player: Player, alpha: int = -inf, 
     else:
         val = inf
         for child in node_states:
-            val = min(val, _alpha_beta(depth - 1, child, max_player, alpha, beta))
+            val = min(val, _alpha_beta(depth - 1, child, alpha, beta))
             beta = min(beta, val)
             if alpha >= beta:
                 break
