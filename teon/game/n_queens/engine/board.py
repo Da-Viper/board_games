@@ -31,14 +31,20 @@ class NQueen:
         self.queens_pos = np.zeros((_dimension, _dimension), dtype=np.int8)
         # self.queens_pos = 0
 
-        self.visited_row = np.zeros(_dimension, dtype=bool)
-        self.visited_col = np.zeros(_dimension, dtype=bool)
-        self.fixed_row = np.zeros(_dimension, dtype=bool)
+        # self.visited_row = np.zeros(_dimension, dtype=bool)
+        # self.visited_col = np.zeros(_dimension, dtype=bool)
+        # self.fixed_row = np.zeros(_dimension, dtype=bool)
+        self.visited_col = [False] * _dimension
+        self.visited_row = [False] * _dimension
+        self.fixed_row = [False] * _dimension
 
         dimen_len = 2 * _dimension - 1
-        self.left_diag = np.zeros(dimen_len, dtype=bool)
-        self.right_diag = np.zeros(dimen_len, dtype=bool)
-        print(f"created board : {self.pos_states}")
+
+        # self.left_diag = np.zeros(dimen_len, dtype=bool)
+        # self.right_diag = np.zeros(dimen_len, dtype=bool)
+        self.left_diag = [False] * dimen_len
+        self.right_diag = [False] * dimen_len
+        # print(f"created board : {self.pos_states}")
 
     def place_queen(self, pos: Tuple[int, int], fixed: bool = False):
         row, col = pos
