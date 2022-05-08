@@ -38,6 +38,7 @@ class CBoard:
             pos_row = self.available[col]
             self.available[col] -= 1
             view[pos_row][col] = turn
+            self.last_pos = (pos_row, col)
             is_placed, p_row = True, pos_row
 
         print(view)
@@ -91,3 +92,16 @@ class CBoard:
 
     def heuristic(self) -> int:
         return -1
+
+    def undo(self):
+        if self.last_pos == (-1, -1):
+            return
+        row, col = self.last_pos
+        self._view[row][col] = Player.EMPTY
+        self.available[col] += 1
+
+    def is_tie(self):
+        return len(self.open_pos()) == 0
+
+    def __repr__(self) -> str:
+        return str(self._view)

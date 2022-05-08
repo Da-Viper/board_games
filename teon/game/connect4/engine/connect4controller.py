@@ -6,6 +6,7 @@ from PySide2.QtWidgets import QMessageBox
 
 from teon.game.connect4.engine.board import CBoard, Player
 from teon.game.connect4.gui.connect4scene import TScene
+from teon.utils import utils
 
 
 class Connect4Controller(QObject):
@@ -32,7 +33,7 @@ class Connect4Controller(QObject):
         if self.board.has_won((row, col)):
             self.show_gameover()
         self.turn = Player(self.turn * -1)
-        self.scene.update()
+        utils.qt_sleep(500)
         self.ai_play()
 
     def ai_play(self):
