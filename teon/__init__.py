@@ -18,6 +18,9 @@ def start_game():
     app.setStyle("Adwaita-Dark")
     print(f"style: {app.style().objectName()}")
 
+    if sys.platform == "win32":
+        app.setStyle("Fusion")
+
     style_file = importlib.resources.open_text("assets", "mine.qss")
     with style_file as f:
         _style = f.read()
