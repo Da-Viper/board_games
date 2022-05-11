@@ -3,3 +3,4 @@
 **/.vscode/**
 /html/
 /docs/build/
+/test/.pytest_cache/
