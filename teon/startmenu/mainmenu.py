@@ -22,20 +22,40 @@ class MainMenu(QWidget):
 
     @Slot()
     def show_checkers(self):
+        """
+        Launch the checkers menu
+        Returns:
+
+        """
         checker_menu = GameMenu(self)
         checker_menu.exec_()
 
     @Slot()
     def show_connect_4(self):
+        """
+        Launch the connect4 menu
+        Returns:
+
+        """
         ttt_menu = Connect4Menu(self)
         ttt_menu.exec_()
 
     @Slot()
     def show_15_puzzle(self):
+        """
+        Launches the 15 puzzle menu
+        Returns:
+
+        """
         puzzle_15 = SlidingMenu(self)
         puzzle_15.exec_()
 
     @Slot()
     def show_n_queens(self):
+        """
+        Launches the NQueens Menu
+        Returns:
+
+        """
         dialog = NQueensPrefDialog(self)
         dialog.exec_()

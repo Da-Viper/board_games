@@ -24,6 +24,7 @@ class QueenController(QObject):
 
     @Slot(Tile)
     def update_cell(self, clicked_tile: Tile):
+        """Update board from the value of the clicked tile"""
         pos = clicked_tile.pos
         tile_piece = clicked_tile.p_pos
         game_board = self.board
@@ -39,18 +40,21 @@ class QueenController(QObject):
 
     @Slot(tuple)
     def slot_update_gui(self):
+        """Update the scene on the computer"""
         print(f"board {self.board.pos_states}")
         print(f"conflicts {self.board.queens_pos}")
         self.scene.update()
 
     @Slot()
     def slot_game_over(self):
+        """Launch a dialog box if the game is over"""
         print("game is solved ")
         msg_box = QMessageBox(QMessageBox.Information, "Game-over", "You Win")
         msg_box.exec_()
         self.scene.enable_mouse_press = False
 
     def show_solution(self, next_solution: bool):
+        """Gets all the solution for the current state of the board"""
         self.solution_idx += 1 if next_solution else - 1
         no_of_sol = len(self.board_solutions)
         if no_of_sol < 1:

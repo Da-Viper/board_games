@@ -39,6 +39,7 @@ class NQueenScene(QGraphicsScene):
         super().mousePressEvent(event)
 
     def draw_board_solution(self, sol_board: ndarray):
+        """Draw the board solution to the scene gotten from the controller"""
         tiles = self.tiles
         for row, r_val in enumerate(sol_board):
             for col, col_val in enumerate(r_val):

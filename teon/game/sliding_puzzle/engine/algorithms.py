@@ -56,8 +56,10 @@ def ai_play(current_board: PBoard, search_type: Search, h_type: Heuristic = Heur
     if search_type is Search.ASTAR:
         res = _solve_astar(current_board, goal_board, heur)
         # res = _solve_ida_star2(current_board, goal_board, heur)
-    else:
+    elif search_type is Search.IDASTAR:
         res = _solve_ida_star(current_board, goal_board, heur)
+    else:
+        res = _solve_dfs(current_board, goal_board, heur)
     end = time.perf_counter()
 
     print(f"total time taken : {end - start}")
@@ -98,6 +100,34 @@ def generate_pnode(node: PNode, play: Tuple[Move, Direction], goal: List, heuris
     new_node.heuristic = heuristic(new_node.puzzle, goal, new_node.size)
 
     return new_node
+
+
+def _solve_dfs(s_board: PBoard, goal: List[int], heuristic, depth_limit=30):
+    start_node = PNode(s_board, 0)
+
+    stack = [start_node]
+    visited = set()
+    visited.add(start_node)
+    stack.append(start_node)
+    current_depth = start_node.n_depth
+
+    while len(stack):
+        node = stack.pop()
+
+        if current_depth != node.n_depth:
+            current_depth = node.n_depth
+
+        if node.is_goal(goal):
+            return node
+        print(f"the depth {node.n_depth}")
+
+        for play in node.generate_moves():
+            child_node = generate_pnode(node, play, goal, heuristic)
+            if child_node.n_depth <= depth_limit and child_node.__hash__() not in visited:
+                visited.add(child_node)
+                stack.append(child_node)
+
+    return start_node
 
 
 def _solve_astar(s_board: PBoard, goal: List[int], heuristic) -> PNode:
@@ -235,8 +265,8 @@ def _solve_ida_star(s_board: PBoard, goal: List[int], heuristic):
 #
 
 if __name__ == "__main__":
-    s_puzzle = [8, 1, 5, 6, 3, 2, 4, 7, 0]
-    # s_puzzle = [1, 2, 3, 4, 0, 5, 7, 8, 6]
+    # s_puzzle = [8, 1, 5, 6, 3, 2, 4, 7, 0]
+    s_puzzle = [1, 2, 3, 4, 0, 5, 7, 8, 6]
     # s_puzzle = [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1]
     # s_puzzle = [5, 12, 10, 7, 15, 11, 14, 0, 8, 2, 1, 13, 3, 4, 9, 6]
     # s_puzzle = [14, 13, 15, 7, 11, 12, 9, 5, 6, 0, 2, 1, 4, 8, 10, 3]
@@ -248,7 +278,11 @@ if __name__ == "__main__":
 
     # result = ai_play(cboard, True)
     # print(f"\n Ida search ")
+    start = time.perf_counter_ns()
     result = ai_play(cboard, Search.ASTAR, Heuristic.MANHATTAN)
+    # result = ai_play(cboard, Search.ASTAR, Heuristic.MANHATTAN)
+    end = time.perf_counter_ns()
+    print(f"total time taken {end - start}")
     print(f"length:{len(result)}")
     # for _, direction in result:
     #     print(direction)

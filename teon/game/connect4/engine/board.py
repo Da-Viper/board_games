@@ -1,5 +1,5 @@
 from enum import IntEnum, Enum
-from typing import Tuple
+from typing import Tuple, List
 
 import numpy as np
 
@@ -31,6 +31,15 @@ class CBoard:
         self.last_pos = (-1, -1)
 
     def place_piece(self, col: int, turn: Player) -> Tuple[bool, int]:
+        """
+        Places the piece of the given player on a column
+        Args:
+            col: the column to place the piece
+            turn: the turn of the current player
+
+        Returns:
+
+        """
         view = self._view
         is_placed, p_row = False, -1
 
@@ -44,14 +53,21 @@ class CBoard:
         print(view)
         return is_placed, p_row
 
-    def open_pos(self):
+    def open_pos(self) -> List[int]:
+        """
+        Show the list of columns that you can place a piece on
+        Returns: the open columns
+
+        """
         _, col = self._size
         return [i for i in range(col) if self.available[i] > -1]
 
     def is_available(self, col: int) -> bool:
+        """Checks if you can place a piece on the column"""
         return self.available[col] != 0
 
     def has_won(self, pos: Tuple[int, int]) -> bool:
+        """checks if there is a win after placement in that position"""
         k = 4 - 1
         prow, pcol = pos
         board = self._view
@@ -84,6 +100,9 @@ class CBoard:
         return False
 
     def is_terminal(self):
+        """
+        Checks if there is a win  or loose
+        """
         is_term = False
         if self.last_pos != (-1, -1):
             is_term = self.has_won(self.last_pos)

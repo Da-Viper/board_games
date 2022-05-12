@@ -47,6 +47,13 @@ class NQueen:
         # print(f"created board : {self.pos_states}")
 
     def place_queen(self, pos: Tuple[int, int], fixed: bool = False):
+        """
+        Places a queen on a board in a particular position
+        Args:
+            pos: The position to place the queen
+            fixed: If the placed queen is fixed
+
+        """
         row, col = pos
 
         self.pos_states[row][col].has_queen = True
@@ -64,12 +71,18 @@ class NQueen:
             val.conflicts += 1
 
     def is_solved(self) -> bool:
+        """Checks whether if the current board is solved"""
         for row in self.queens_pos:
             if np.count_nonzero(row == Piece.Q_VALUE) != 1:
                 return False
         return True
 
     def remove_queen(self, pos: Tuple[int, int], fixed: bool = False):
+        """Removes a queen from a particular position
+        Args:
+            pos: the position to remove the queen from
+            fixed: if the queen is fixed
+        """
         row, col = pos
 
         self.pos_states[row][col].has_queen = False
@@ -86,6 +99,7 @@ class NQueen:
             val.conflicts -= 1
 
     def reset(self):
+        """Resets the board class to it default state after the __init__ function"""
         dimension = self.dimension
         state_flatten = self.pos_states.flatten()
         for pos in state_flatten:

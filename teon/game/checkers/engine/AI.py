@@ -18,6 +18,7 @@ def move(state: SNode, player: Player):
 
 
 def _minimax_move(successors: List[SNode], max_player: Player) -> SNode:
+    """Perform alphabeta with multiprocessing """
     if len(successors) == 1:
         return successors[0]
 
@@ -44,11 +45,12 @@ def _minimax_move(successors: List[SNode], max_player: Player) -> SNode:
 
 @lru_cache(maxsize=None)
 def _alpha_beta(depth: int, node: SNode, alpha: int = -inf, beta: int = inf) -> int:
+    """Perform alpha beta depending on whose turn it is"""
+
     if (depth == 0) or node.is_game_over():
         return node.compute_heuristic(Player.AI)
 
     node_states = node.get_all_states()
-
     node_states.sort(key=lambda x: x.compute_heuristic(node.turn))
 
     # Max player

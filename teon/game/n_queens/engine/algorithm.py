@@ -97,7 +97,6 @@ def _all_solution(nqueen: NQueen, row: int, solutions: List) -> List:
         ldiag_i, rdiag_i = col - row, col + row
         # check if there is a queen in the row, column, left diagonal and right diagonal
         if not (v_row[row] or v_col[col] or l_diag[ldiag_i] or r_diag[rdiag_i]):
-
             # set the row, col, left diagonal, right diagonal  as having a queen
             board[row][col] = Piece.Q_VALUE
             v_row[row], v_col[col] = True, True
@@ -173,11 +172,6 @@ def another(board, dimen: int, col: int, v_row: int, v_col: int, v_ldiag: int, v
     # while current_open & mask:
     for row in range(dimen):
         if _is_safe(col, row, v_row, v_col, v_ldiag, v_rdiag, offset):
-            # if current_open & mask:
-            # ss = bit_value(current_open, col)
-            # if ss ^ 1:
-            # pos = current_open & -current_open
-            # current_open -= pos
             ldiag, rdiag = offset + row - col, row + col
 
             board[col][row] = Piece.Q_VALUE
@@ -189,8 +183,9 @@ def another(board, dimen: int, col: int, v_row: int, v_col: int, v_ldiag: int, v
 
 
 if __name__ == '__main__':
-    board_size = 13
+    board_size = 14
     nqueen_pos = np.empty((board_size, board_size), dtype=np.int8)
+    # nqueen_pos = [[0] * board_size for _ in range(board_size)]
     # print(nqueen_pos)
 
     nqueen_b = NQueen(nqueen_pos, board_size)
@@ -227,3 +222,4 @@ if __name__ == '__main__':
 # 11 -> 484
 # 12 -> 2438
 # 13 -> 14344
+# 14 -> 91687

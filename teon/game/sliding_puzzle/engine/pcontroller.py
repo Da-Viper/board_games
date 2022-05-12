@@ -30,6 +30,7 @@ class PController:
 
     @Slot(Tile)
     def tile_clicked(self, tile: Tile):
+
         current_pos = tile.idx_pos
         tiles = self.scene.tiles
         cpos = current_pos[0] * self._board.size + current_pos[1]
@@ -69,22 +70,21 @@ class PController:
 
     @Slot()
     def slot_show_solution(self):
+        """call the backtracking algorithm when the button (show current state) is clicked"""
         moves_view = self._result_widget
         moves_view.clear()
 
-        print("got to showing item")
         plays = ai_play(deepcopy(self._board), self._search_type, self._heuristic_type)
         for move, direction in plays:
             moves_view.addItem(str(direction))
 
     @Slot()
     def slot_solve_board(self):
-        print("go here")
+        """Simulate how the computer performs the backtracking for the user  """
         plays = ai_play(deepcopy(self._board), self._search_type, self._heuristic_type)
         tiles = self.scene.tiles
 
         for i, (move, _) in enumerate(plays):
-            print(tiles)
             self.move_tile_piece(move)
             utils.qt_sleep(400)
 
@@ -94,12 +94,16 @@ class PController:
 
     @Slot(Heuristic)
     def slot_heuristic(self, h_type: Heuristic):
+        """set the heuristic used in the sliding puzzle
+            manhattan or misplaced tiles
+        """
         self._heuristic_type = h_type
 
     @Slot()
     def slot_show_svg(self):
-        print("got here")
-        print(f"{self._search_type.name}.svg")
+        """
+            Render the svg produced by the search algorithm  in a new dialog
+        """
         search_diag = SvgDialog(f"{self._search_type.name}.svg", self.scene.parent())
         search_diag.show()
 

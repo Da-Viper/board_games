@@ -24,6 +24,14 @@ class Connect4Controller(QObject):
 
     @Slot(int)
     def slot_column_clicked(self, col: int):
+        """
+        Place a piece on the column that is clicked
+        Args:
+            col: The column clicked
+
+        Returns:
+
+        """
         print(f"current turn ")
         is_placed, row = self.board.place_piece(col, self.turn)
         if not is_placed:
@@ -37,6 +45,11 @@ class Connect4Controller(QObject):
         self.ai_play()
 
     def ai_play(self):
+        """
+        Perform the AI moves on the board
+        Returns:
+
+        """
         if self.turn != self.AI:
             return
         time.sleep(0.5)
@@ -45,9 +58,11 @@ class Connect4Controller(QObject):
         self.slot_column_clicked(random.choice(positions))
 
     def show_gameover(self):
+        """Show the game over dialog"""
         self._is_gameover = True
         msg_box = QMessageBox(QMessageBox.Information, "Game-over", f"You Win Player {self.turn}")
         msg_box.exec_()
 
     def _init_connection(self):
+        """Set up the signal and slots in the controller"""
         self.sig_update_scene.connect(self.scene.update())
