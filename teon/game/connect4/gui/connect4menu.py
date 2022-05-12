@@ -16,7 +16,6 @@ class Connect4Menu(QDialog):
         self.ui.setupUi(self)
         self.view = self.ui.g_view
         self.view.setGeometry(0, 0, 700, 600)
-        print(f"view rect {self.view.sceneRect(), self.view.geometry()}")
 
         self.scene = TScene(Connect4Menu.ROW, Connect4Menu.COL, self.view.geometry(), self)
         self._controller = Connect4Controller(Connect4Menu.ROW, Connect4Menu.COL, self.scene)

@@ -25,9 +25,7 @@ def _minimax_move(successors: List[SNode], max_player: Player) -> SNode:
     best_score = -inf
     equal_bests = []
     depth_ = Settings.AI_DEPTH
-    print(f"the minimax depth: {depth_}")
     res = "AI" if max_player == 0 else "HUMAN"
-    print(f"maximizing player: {res}")
 
     # use multiprocessing
     with Pool() as pl:

@@ -32,7 +32,6 @@ class Connect4Controller(QObject):
         Returns:
 
         """
-        print(f"current turn ")
         is_placed, row = self.board.place_piece(col, self.turn)
         if not is_placed:
             return

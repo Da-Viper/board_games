@@ -52,6 +52,5 @@ class Tile(QGraphicsRectItem):
         pass
 
     def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        print(f"the type of scene: {type(self.scene())}")
         self.scene().tile_clicked.emit(self)
         super().mouseReleaseEvent(event)

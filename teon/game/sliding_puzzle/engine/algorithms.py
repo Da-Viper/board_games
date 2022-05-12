@@ -51,7 +51,6 @@ def ai_play(current_board: PBoard, search_type: Search, h_type: Heuristic = Heur
         Tuple[Move, Direction]:
     goal_board = generate_goal_board(current_board.size)
 
-    start = time.perf_counter()
     heur = manhattan if h_type is Heuristic.MANHATTAN else misplaced
     if search_type is Search.ASTAR:
         res = _solve_astar(current_board, goal_board, heur)
@@ -60,10 +59,7 @@ def ai_play(current_board: PBoard, search_type: Search, h_type: Heuristic = Heur
         res = _solve_ida_star(current_board, goal_board, heur)
     else:
         res = _solve_dfs(current_board, goal_board, heur)
-    end = time.perf_counter()
 
-    print(f"total time taken : {end - start}")
-    print(f"res: {res}, depth: {res.n_depth}, history:{res.history}")
     draw_node(res, search_type.name)
     return res.history
 
@@ -169,7 +165,6 @@ def _solve_astar(s_board: PBoard, goal: List[int], heuristic) -> PNode:
 def _solve_ida_star(s_board: PBoard, goal: List[int], heuristic):
     dimension = s_board.size
     s_bound = heuristic(s_board.puzzle, goal, dimension)
-    # start_
     root = PNode(s_board, 0, s_bound)
     s_path = [root]
     visited = set()

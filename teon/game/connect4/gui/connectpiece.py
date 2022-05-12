@@ -32,9 +32,8 @@ class ConnectPiece(QGraphicsRectItem):
         painter.drawEllipse(center, rect.width() / 3, rect.height() / 3)
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        print(f"from press event {self.pos}")
+        pass
 
     def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        print(f"the type of scene: {type(self.scene())}")
         self.scene().tile_clicked.emit(self)
         super().mouseReleaseEvent(event)

@@ -50,7 +50,6 @@ class PController:
         tiles[new_pos_1], tiles[pos_1] = tiles[pos_1], tiles[new_pos_1]
 
         if new_pos != (-1, -1):
-            print("setting new pos")
             tile_at_pos.set_new_pos(new_pos)
 
     @Slot()

@@ -36,14 +36,3 @@ class SvgDialog(QDialog):
         self.layout().addWidget(self.view)
         svg_widget = QSvgWidget(self.img_path)
         self.scene.addWidget(svg_widget)
-
-
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    main = SvgDialog("../engine/udo.svg")
-    main.show()
-    sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()
